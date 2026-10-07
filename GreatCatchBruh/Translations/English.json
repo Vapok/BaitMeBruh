@@ -11,5 +11,6 @@
   "msg_trap_too_deep": "Water too deep",
   "msg_trap_full": "Trap full",
   "msg_trap_active": "Trap Active",
-  "msg_trap_depth": "Depth"
+  "msg_trap_depth": "Depth",
+  "msg_bait_salvaged": "Master Angler: Bait salvaged!"
 }

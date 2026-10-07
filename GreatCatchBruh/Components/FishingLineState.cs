@@ -25,7 +25,7 @@ public class FishingLineState : MonoBehaviour
         IsSnapped = false;
     }
 
-    public void UpdateTension(float fixedDeltaTime, bool isStruggling, bool isReeling, int fishQuality, float skillFactor, float rodDamping)
+    public void UpdateTension(float fixedDeltaTime, bool isStruggling, bool isReeling, int fishQuality, float skillFactor, float rodDamping, float snapToleranceMultiplier = 1.0f)
     {
         float effectiveDamping = Mathf.Max(MinimumRodDamping, rodDamping);
         float tensionGain;
@@ -63,7 +63,8 @@ public class FishingLineState : MonoBehaviour
         if (CurrentTension >= 1.0f)
         {
             OverTensionDuration += fixedDeltaTime;
-            if (OverTensionDuration >= OverTensionSnapThreshold)
+            float threshold = OverTensionSnapThreshold * Mathf.Max(0.5f, snapToleranceMultiplier);
+            if (OverTensionDuration >= threshold)
             {
                 IsSnapped = true;
             }

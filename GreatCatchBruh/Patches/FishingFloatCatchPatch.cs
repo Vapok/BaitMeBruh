@@ -1,4 +1,5 @@
 using HarmonyLib;
+using UnityEngine;
 
 namespace GreatCatchBruh.Patches;
 
@@ -8,7 +9,7 @@ internal static class FishingFloatCatchPatch
     private const float CatchXpBaseMultiplier = 2.0f;
 
     [HarmonyPostfix]
-    private static void Postfix(Fish fish, Character owner)
+    private static void Postfix(FishingFloat __instance, Fish fish, Character owner)
     {
         if (fish == null || owner == null)
         {
@@ -20,5 +21,22 @@ internal static class FishingFloatCatchPatch
 
         float xpAward = quality * CatchXpBaseMultiplier;
         owner.RaiseSkill(Skills.SkillType.Fishing, xpAward);
+
+        if (owner is Player player && player.m_helmetItem != null && player.m_helmetItem.m_dropPrefab != null && player.m_helmetItem.m_dropPrefab.name == "HelmetFishingHat")
+        {
+            if (UnityEngine.Random.value < 0.25f && __instance != null)
+            {
+                string baitName = __instance.GetBait();
+                if (!string.IsNullOrEmpty(baitName) && ZNetScene.instance != null)
+                {
+                    GameObject baitPrefab = ZNetScene.instance.GetPrefab(baitName);
+                    if (baitPrefab != null)
+                    {
+                        player.GetInventory().AddItem(baitPrefab, 1);
+                        player.Message(MessageHud.MessageType.Center, "$msg_bait_salvaged");
+                    }
+                }
+            }
+        }
     }
 }

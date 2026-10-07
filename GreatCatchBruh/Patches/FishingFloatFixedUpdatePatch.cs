@@ -72,7 +72,13 @@ internal static class FishingFloatFixedUpdatePatch
         float skillFactor = owner.GetSkillFactor(Skills.SkillType.Fishing);
         float rodDamping = FishingTensionManager.GetRodTensionDamping(owner);
 
-        lineState.UpdateTension(Time.fixedDeltaTime, isStruggling, isReeling, quality, skillFactor, rodDamping);
+        float snapMultiplier = 1.0f;
+        if (owner is Player player && player.m_helmetItem != null && player.m_helmetItem.m_dropPrefab != null && player.m_helmetItem.m_dropPrefab.name == "HelmetFishingHat")
+        {
+            snapMultiplier = 1.30f;
+        }
+
+        lineState.UpdateTension(Time.fixedDeltaTime, isStruggling, isReeling, quality, skillFactor, rodDamping, snapMultiplier);
 
         if (lineState.IsSnapped)
         {
