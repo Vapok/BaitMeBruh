@@ -232,10 +232,10 @@ graph TD
   - [x] Integrate `EnvMan` weather and time-of-day bonuses.
   - [x] Allow passenger rod equipping and casting while seated on ships.
   - [x] Implement line trolling dynamics for moving vessels.
-- [ ] **Phase 4: Passive Harvesting Build Pieces**
-  - Assemble and register `BaitTrap` (Biome Creel), `Coastal Fish Net` (Tier 1), and `Deep-Sea Anchored Net` (Tier 2) using vanilla visual assets.
+- [x] **Phase 4: Passive Harvesting Build Pieces**
+  - Assemble and register `BaitCreel`, `Coastal Fish Net` (Tier 1), and `Deep-Sea Anchored Net` (Tier 2) using vanilla visual assets.
   - Implement regional automated production loops with water depth constraints.
-- [ ] **Phase 5: Culinary, Alchemical & Hat Expansion**
+- [x] **Phase 5: Culinary, Alchemical & Hat Expansion**
   - Expand star-tier butchering yields and add whole-fish recipes (meads, stews, skewers).
   - Rebalance `HelmetFishingHat` tiered progression and master perks.
   - Full configuration registry setup with server-sync via `ConfigSyncBase`.
