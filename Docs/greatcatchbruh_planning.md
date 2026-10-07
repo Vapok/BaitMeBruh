@@ -221,10 +221,10 @@ graph TD
 
 ## 4. Phased Implementation Roadmap
 
-- [ ] **Phase 1: Foundation & Mini-Game Core**
-  - Implement Tension & Struggle/Rest mechanics in `FishingFloat`.
-  - Fix pickup/achievement bug in `Fish.Interact`.
-  - Rebalance XP progression on hook and catch.
+- [x] **Phase 1: Foundation & Mini-Game Core**
+  - [x] Implement Tension & Struggle/Rest mechanics in `FishingFloat`.
+  - [x] Fix pickup/achievement bug in `Fish.Interact`.
+  - [x] Rebalance XP progression on hook and catch.
 - [ ] **Phase 2: Rod & Bait Progression**
   - Register `Primitive Fishing Rod` at Workbench Tier 1.
   - Implement alternative Cauldron bait recipes using common monster drops.
