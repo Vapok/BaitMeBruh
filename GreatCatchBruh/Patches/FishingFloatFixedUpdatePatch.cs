@@ -20,9 +20,27 @@ internal static class FishingFloatFixedUpdatePatch
     private static readonly MethodInfo _interceptReelMethod =
         AccessTools.Method(typeof(FishingFloatFixedUpdatePatch), nameof(InterceptReelUseStamina));
 
+    private static readonly AccessTools.FieldRef<FishingFloat, float> _lineLengthRef =
+        AccessTools.FieldRefAccess<FishingFloat, float>("m_lineLength");
+
     [HarmonyPrefix]
     private static bool Prefix(FishingFloat __instance)
     {
+        Character owner = __instance.GetOwner();
+        if (owner != null && (owner.IsAttachedToShip() || owner.GetStandingOnShip() != null))
+        {
+            Transform rodTop = __instance.GetRodTop(owner);
+            if (rodTop != null)
+            {
+                float currentDistance = Vector3.Distance(rodTop.position, __instance.transform.position);
+                float lineLength = _lineLengthRef(__instance);
+                if (currentDistance > lineLength && currentDistance <= __instance.m_maxDistance)
+                {
+                    _lineLengthRef(__instance) = currentDistance;
+                }
+            }
+        }
+
         Fish fish = __instance.GetCatch();
         FishingLineState lineState = __instance.GetComponent<FishingLineState>();
 
@@ -40,7 +58,6 @@ internal static class FishingFloatFixedUpdatePatch
             lineState = __instance.gameObject.AddComponent<FishingLineState>();
         }
 
-        Character owner = __instance.GetOwner();
         if (owner == null)
         {
             return true;
