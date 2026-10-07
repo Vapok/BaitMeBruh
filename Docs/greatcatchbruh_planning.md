@@ -225,9 +225,9 @@ graph TD
   - [x] Implement Tension & Struggle/Rest mechanics in `FishingFloat`.
   - [x] Fix pickup/achievement bug in `Fish.Interact`.
   - [x] Rebalance XP progression on hook and catch.
-- [ ] **Phase 2: Rod & Bait Progression**
-  - Register `Primitive Fishing Rod` at Workbench Tier 1.
-  - Implement alternative Cauldron bait recipes using common monster drops.
+- [x] **Phase 2: Rod & Bait Progression**
+  - [x] Register `Primitive Fishing Rod` at Workbench Tier 1.
+  - [x] Implement alternative Cauldron bait recipes using common monster drops.
 - [ ] **Phase 3: Weather & Seafaring Integration**
   - Integrate `EnvMan` weather and time-of-day bonuses.
   - Allow passenger rod equipping and casting while seated on ships.
