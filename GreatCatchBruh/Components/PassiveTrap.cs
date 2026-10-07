@@ -3,29 +3,30 @@ using UnityEngine;
 
 namespace GreatCatchBruh.Components;
 
-public class PassiveTrap : MonoBehaviour
+public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 {
     private static readonly int s_trapProgress = "greatcatch_trap_progress".GetStableHashCode();
     private static readonly int s_trapLastTime = "greatcatch_trap_lasttime".GetStableHashCode();
+    private static readonly int s_trapItems = "greatcatch_trap_items".GetStableHashCode();
 
     public TrapType m_trapType = TrapType.BaitCreel;
-    public float m_secPerUnit = 360f;
-    public int m_maxCapacity = 20;
-    public float m_minDepth = 0.5f;
+    public float m_secPerUnit = 300f;
+    public int m_maxCapacity = 3;
+    public float m_minDepth = 0.1f;
     public float m_maxDepth = 2.0f;
 
     private ZNetView m_nview;
-    private Container m_container;
 
     private void Awake()
     {
         m_nview = GetComponent<ZNetView>();
-        m_container = GetComponent<Container>();
 
         if (m_nview == null || m_nview.GetZDO() == null)
         {
             return;
         }
+
+        m_nview.Register("RPC_Extract", RPC_Extract);
 
         if (m_nview.IsOwner() && m_nview.GetZDO().GetLong(s_trapLastTime, 0L) == 0L)
         {
@@ -34,6 +35,164 @@ public class PassiveTrap : MonoBehaviour
         }
 
         InvokeRepeating(nameof(UpdateTrap), UnityEngine.Random.Range(2f, 5f), 10f);
+    }
+
+    public string GetHoverName()
+    {
+        Piece piece = GetComponent<Piece>();
+        return piece != null ? piece.m_name : "$piece_bait_creel";
+    }
+
+    public string GetHoverText()
+    {
+        if (!PrivateArea.CheckAccess(transform.position, 0f, flash: false))
+        {
+            return Localization.instance.Localize(GetHoverName() + "\n$piece_noaccess");
+        }
+
+        int currentCount = GetTrapLevel();
+        string status = GetStatusHoverText();
+        string hoverName = Localization.instance.Localize(GetHoverName());
+
+        string text = hoverName;
+        if (currentCount > 0)
+        {
+            string harvestName = Localization.instance.Localize(GetHarvestItemDisplayName());
+            text += $" ( {harvestName} x {currentCount} / {m_maxCapacity} )\n[<color=yellow><b>$KEY_Use</b></color>] $piece_beehive_extract";
+        }
+        else
+        {
+            text += " ( $piece_container_empty )";
+        }
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            text += "\n" + status;
+        }
+
+        return Localization.instance.Localize(text);
+    }
+
+    public float GetHoverOffset()
+    {
+        return 0f;
+    }
+
+    public bool Interact(Humanoid character, bool repeat, bool alt)
+    {
+        if (repeat)
+        {
+            return false;
+        }
+
+        if (!PrivateArea.CheckAccess(transform.position))
+        {
+            return true;
+        }
+
+        int currentCount = GetTrapLevel();
+        if (currentCount > 0)
+        {
+            Extract();
+            return true;
+        }
+
+        float depth = GetWaterDepth();
+        if (depth < m_minDepth)
+        {
+            character.Message(MessageHud.MessageType.Center, "$msg_trap_too_shallow");
+        }
+        else if (depth > m_maxDepth)
+        {
+            character.Message(MessageHud.MessageType.Center, "$msg_trap_too_deep");
+        }
+        else
+        {
+            character.Message(MessageHud.MessageType.Center, $"$msg_trap_active ($msg_trap_depth: {depth:F1}m)");
+        }
+
+        return true;
+    }
+
+    public bool UseItem(Humanoid user, ItemDrop.ItemData item)
+    {
+        return false;
+    }
+
+    private void Extract()
+    {
+        if (m_nview != null && m_nview.IsValid())
+        {
+            m_nview.InvokeRPC("RPC_Extract");
+        }
+    }
+
+    private void RPC_Extract(long caller)
+    {
+        if (m_nview == null || !m_nview.IsValid() || !m_nview.IsOwner())
+        {
+            return;
+        }
+
+        string items = m_nview.GetZDO().GetString(s_trapItems, string.Empty);
+        if (string.IsNullOrEmpty(items))
+        {
+            return;
+        }
+
+        string[] itemPrefabs = items.Split(';');
+        Vector3 basePos = transform.position + Vector3.up * 0.6f;
+
+        for (int i = 0; i < itemPrefabs.Length; i++)
+        {
+            string prefabName = itemPrefabs[i];
+            if (string.IsNullOrEmpty(prefabName))
+            {
+                continue;
+            }
+
+            GameObject itemPrefab = ObjectDB.instance != null ? ObjectDB.instance.GetItemPrefab(prefabName) : null;
+            if (itemPrefab == null)
+            {
+                continue;
+            }
+
+            Vector2 rand = UnityEngine.Random.insideUnitCircle * 0.4f;
+            Vector3 spawnPos = basePos + new Vector3(rand.x, 0.2f * i, rand.y);
+            GameObject spawned = UnityEngine.Object.Instantiate(itemPrefab, spawnPos, Quaternion.identity);
+            ItemDrop itemDrop = spawned.GetComponent<ItemDrop>();
+            if (itemDrop != null)
+            {
+                itemDrop.m_itemData.m_stack = 1;
+            }
+        }
+
+        m_nview.GetZDO().Set(s_trapItems, string.Empty);
+    }
+
+    public int GetTrapLevel()
+    {
+        if (m_nview == null || m_nview.GetZDO() == null)
+        {
+            return 0;
+        }
+
+        string items = m_nview.GetZDO().GetString(s_trapItems, string.Empty);
+        if (string.IsNullOrEmpty(items))
+        {
+            return 0;
+        }
+
+        string[] parts = items.Split(';');
+        int count = 0;
+        for (int i = 0; i < parts.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(parts[i]))
+            {
+                count++;
+            }
+        }
+        return count;
     }
 
     public float GetWaterDepth()
@@ -53,7 +212,12 @@ public class PassiveTrap : MonoBehaviour
             return 0f;
         }
 
-        float liquid = Floating.GetLiquidLevel(position, 1f, LiquidType.All);
+        float liquid = Floating.GetLiquidLevel(position + Vector3.up * 0.5f, 1f, LiquidType.All);
+        if (liquid <= -9000f)
+        {
+            liquid = Floating.GetLiquidLevel(position, 1f, LiquidType.All);
+        }
+
         float waterSurface = liquid > -9000f ? liquid : (ZoneSystem.instance != null ? ZoneSystem.instance.m_waterLevel : 30f);
 
         if (waterSurface > groundHeight)
@@ -77,13 +241,9 @@ public class PassiveTrap : MonoBehaviour
             return "<color=orange>$msg_trap_too_deep</color>";
         }
 
-        if (m_container != null)
+        if (GetTrapLevel() >= m_maxCapacity)
         {
-            Inventory inventory = m_container.GetInventory();
-            if (inventory != null && GetTotalItemCount(inventory) >= m_maxCapacity)
-            {
-                return "<color=yellow>$msg_trap_full</color>";
-            }
+            return "<color=yellow>$msg_trap_full</color>";
         }
 
         return $"<color=#80d0ff>$msg_trap_active</color> ($msg_trap_depth: {depth:F1}m)";
@@ -102,18 +262,7 @@ public class PassiveTrap : MonoBehaviour
             return;
         }
 
-        if (m_container == null)
-        {
-            return;
-        }
-
-        Inventory inventory = m_container.GetInventory();
-        if (inventory == null)
-        {
-            return;
-        }
-
-        int currentCount = GetTotalItemCount(inventory);
+        int currentCount = GetTrapLevel();
         if (currentCount >= m_maxCapacity)
         {
             return;
@@ -134,15 +283,13 @@ public class PassiveTrap : MonoBehaviour
 
             for (int i = 0; i < unitsProduced; i++)
             {
-                if (GetTotalItemCount(inventory) >= m_maxCapacity)
+                if (GetTrapLevel() >= m_maxCapacity)
                 {
                     break;
                 }
 
-                SpawnHarvest(inventory);
+                SpawnHarvest();
             }
-
-            m_container.Save();
         }
 
         m_nview.GetZDO().Set(s_trapProgress, currentProgress);
@@ -171,41 +318,55 @@ public class PassiveTrap : MonoBehaviour
         return seconds;
     }
 
-    private int GetTotalItemCount(Inventory inventory)
-    {
-        int count = 0;
-        foreach (ItemDrop.ItemData item in inventory.GetAllItems())
-        {
-            count += item.m_stack;
-        }
-        return count;
-    }
-
-    private void SpawnHarvest(Inventory inventory)
+    private void SpawnHarvest()
     {
         Heightmap.Biome biome = Heightmap.FindBiome(transform.position);
+        string prefabName = string.Empty;
 
         if (m_trapType == TrapType.BaitCreel)
         {
-            string baitPrefab = GetBaitForBiome(biome);
-            inventory.AddItem(baitPrefab, 1, 1, 0, 0L, string.Empty, false, false);
-            return;
-        }
-
-        string fishPrefab = m_trapType == TrapType.CoastalNet ? GetCoastalFishForBiome(biome) : GetDeepFishForBiome(biome);
-        float qRoll = UnityEngine.Random.value;
-        int quality = 1;
-
-        if (m_trapType == TrapType.CoastalNet)
-        {
-            quality = qRoll < 0.80f ? 1 : (qRoll < 0.95f ? 2 : 3);
+            prefabName = GetBaitForBiome(biome);
         }
         else
         {
-            quality = qRoll < 0.70f ? 1 : (qRoll < 0.90f ? 2 : 3);
+            prefabName = m_trapType == TrapType.CoastalNet ? GetCoastalFishForBiome(biome) : GetDeepFishForBiome(biome);
         }
 
-        inventory.AddItem(fishPrefab, 1, quality, 0, 0L, string.Empty, false, false);
+        if (string.IsNullOrEmpty(prefabName))
+        {
+            return;
+        }
+
+        string current = m_nview.GetZDO().GetString(s_trapItems, string.Empty);
+        string updated = string.IsNullOrEmpty(current) ? prefabName : current + ";" + prefabName;
+        m_nview.GetZDO().Set(s_trapItems, updated);
+    }
+
+    private string GetHarvestItemDisplayName()
+    {
+        string items = m_nview != null && m_nview.GetZDO() != null ? m_nview.GetZDO().GetString(s_trapItems, string.Empty) : string.Empty;
+        if (!string.IsNullOrEmpty(items))
+        {
+            string[] parts = items.Split(';');
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(parts[i]))
+                {
+                    GameObject prefab = ObjectDB.instance != null ? ObjectDB.instance.GetItemPrefab(parts[i]) : null;
+                    if (prefab != null)
+                    {
+                        ItemDrop itemDrop = prefab.GetComponent<ItemDrop>();
+                        if (itemDrop != null)
+                        {
+                            return itemDrop.m_itemData.m_shared.m_name;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return m_trapType == TrapType.BaitCreel ? "$item_fishingbait" : "$item_fish_raw";
     }
 
     private string GetBaitForBiome(Heightmap.Biome biome)

@@ -65,25 +65,6 @@ public static class TrapPieceManager
             UnityEngine.Object.DestroyImmediate(beeEffect.gameObject);
         }
 
-        Container container = piece.PiecePrefab.AddComponent<Container>();
-        container.m_name = "$piece_bait_creel";
-        container.m_width = 4;
-        container.m_height = 2;
-        container.m_checkGuardStone = true;
-        container.m_privacy = Container.PrivacySetting.Public;
-
-        UnityEngine.GameObject chestPrefab = PrefabManager.Cache.GetPrefab<UnityEngine.GameObject>("piece_chest");
-        if (chestPrefab != null)
-        {
-            Container chestContainer = chestPrefab.GetComponent<Container>();
-            if (chestContainer != null)
-            {
-                container.m_bkg = chestContainer.m_bkg;
-                container.m_openEffects = chestContainer.m_openEffects;
-                container.m_closeEffects = chestContainer.m_closeEffects;
-            }
-        }
-
         Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
         if (pieceComp != null)
         {
@@ -94,6 +75,7 @@ public static class TrapPieceManager
             pieceComp.m_noInWater = false;
             pieceComp.m_groundPiece = false;
             pieceComp.m_groundOnly = false;
+            pieceComp.m_noClipping = false;
             pieceComp.m_extraPlacementDistance = 3;
         }
 
@@ -107,9 +89,9 @@ public static class TrapPieceManager
 
         PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
         trap.m_trapType = TrapType.BaitCreel;
-        trap.m_secPerUnit = 360f;
-        trap.m_maxCapacity = 20;
-        trap.m_minDepth = 0.5f;
+        trap.m_secPerUnit = 300f;
+        trap.m_maxCapacity = 3;
+        trap.m_minDepth = 0.1f;
         trap.m_maxDepth = 2.0f;
 
         PieceManager.Instance.AddPiece(piece);
@@ -135,6 +117,12 @@ public static class TrapPieceManager
 
         CustomPiece piece = new CustomPiece("piece_fishnet_coastal", "piece_chest", config);
 
+        Container container = piece.PiecePrefab.GetComponent<Container>();
+        if (container != null)
+        {
+            UnityEngine.Object.DestroyImmediate(container);
+        }
+
         Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
         if (pieceComp != null)
         {
@@ -154,20 +142,12 @@ public static class TrapPieceManager
             wearNTear.m_supports = true;
         }
 
-        Container container = piece.PiecePrefab.GetComponent<Container>();
-        if (container != null)
-        {
-            container.m_name = "$piece_fishnet_coastal";
-            container.m_width = 3;
-            container.m_height = 1;
-        }
-
         PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
         trap.m_trapType = TrapType.CoastalNet;
-        trap.m_secPerUnit = 900f;
+        trap.m_secPerUnit = 600f;
         trap.m_maxCapacity = 3;
-        trap.m_minDepth = 1.5f;
-        trap.m_maxDepth = 4.0f;
+        trap.m_minDepth = 1.0f;
+        trap.m_maxDepth = 5.0f;
 
         PieceManager.Instance.AddPiece(piece);
     }
@@ -192,6 +172,12 @@ public static class TrapPieceManager
 
         CustomPiece piece = new CustomPiece("piece_fishnet_deep", "piece_chest", config);
 
+        Container container = piece.PiecePrefab.GetComponent<Container>();
+        if (container != null)
+        {
+            UnityEngine.Object.DestroyImmediate(container);
+        }
+
         Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
         if (pieceComp != null)
         {
@@ -211,20 +197,12 @@ public static class TrapPieceManager
             wearNTear.m_supports = true;
         }
 
-        Container container = piece.PiecePrefab.GetComponent<Container>();
-        if (container != null)
-        {
-            container.m_name = "$piece_fishnet_deep";
-            container.m_width = 3;
-            container.m_height = 2;
-        }
-
         PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
         trap.m_trapType = TrapType.DeepNet;
-        trap.m_secPerUnit = 600f;
+        trap.m_secPerUnit = 450f;
         trap.m_maxCapacity = 6;
-        trap.m_minDepth = 3.5f;
-        trap.m_maxDepth = 12.0f;
+        trap.m_minDepth = 3.0f;
+        trap.m_maxDepth = 20.0f;
 
         PieceManager.Instance.AddPiece(piece);
     }
