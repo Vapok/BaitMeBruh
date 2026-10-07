@@ -7,6 +7,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Jotunn.Managers;
 using GreatCatchBruh.Configuration;
+using GreatCatchBruh.Content;
 using Vapok.Common.Abstractions;
 using Vapok.Common.Managers;
 using Vapok.Common.Managers.Configuration;
@@ -48,6 +49,9 @@ public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
         Initializer.LoadManagers(localization);
 
         _config = new ConfigRegistry(_instance);
+
+        RodManager.Initialize();
+        BaitRecipeManager.Initialize();
 
         Localizer.Waiter.StatusChanged += InitializeModule;
 
