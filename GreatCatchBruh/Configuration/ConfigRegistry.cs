@@ -8,8 +8,6 @@ namespace GreatCatchBruh.Configuration;
 public class ConfigRegistry : ConfigSyncBase
 {
     internal static ConfigEntry<bool> Enabled;
-    internal static ConfigEntry<bool> ShowSplashOnStartup;
-    internal static ConfigEntry<bool> EnableTelemetry;
 
     public static Waiting Waiter;
 
@@ -25,17 +23,9 @@ public class ConfigRegistry : ConfigSyncBase
         if (_config == null)
             return;
 
-        UnsyncedConfig("Local Settings", "Enable GreatCatchBruh", true,
+        SyncedConfig("Server Settings", "Enable GreatCatchBruh", true,
             new ConfigDescription("If enabled, enables GreatCatchBruh features.",
-                null, new ConfigurationManagerAttributes { Category = "Local Settings", Order = 1 }), ref Enabled);
-
-        UnsyncedConfig("Local Config", "Show Splash on Startup", true,
-            new ConfigDescription("If enabled, displays the mod overview and links splash screen on game startup.",
-                null, new ConfigurationManagerAttributes { Order = 4 }), ref ShowSplashOnStartup);
-
-        UnsyncedConfig("Local Config", "Enable Anonymous Telemetry", true,
-            new ConfigDescription("If enabled, sends anonymous mod launch and heartbeat telemetry to help improve mod stability and track active versions.",
-                null, new ConfigurationManagerAttributes { Order = 5 }), ref EnableTelemetry);
+                null, new ConfigurationManagerAttributes { IsAdminOnly = true, Order = 1 }), ref Enabled);
     }
 }
 
