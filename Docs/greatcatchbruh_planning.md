@@ -228,10 +228,10 @@ graph TD
 - [x] **Phase 2: Rod & Bait Progression**
   - [x] Register `Primitive Fishing Rod` at Workbench Tier 1.
   - [x] Implement alternative Cauldron bait recipes using common monster drops.
-- [ ] **Phase 3: Weather & Seafaring Integration**
-  - Integrate `EnvMan` weather and time-of-day bonuses.
-  - Allow passenger rod equipping and casting while seated on ships.
-  - Implement line trolling dynamics for moving vessels.
+- [x] **Phase 3: Weather & Seafaring Integration**
+  - [x] Integrate `EnvMan` weather and time-of-day bonuses.
+  - [x] Allow passenger rod equipping and casting while seated on ships.
+  - [x] Implement line trolling dynamics for moving vessels.
 - [ ] **Phase 4: Passive Harvesting Build Pieces**
   - Assemble and register `BaitTrap` (Biome Creel), `Coastal Fish Net` (Tier 1), and `Deep-Sea Anchored Net` (Tier 2) using vanilla visual assets.
   - Implement regional automated production loops with water depth constraints.
