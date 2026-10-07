@@ -52,6 +52,7 @@ public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
 
         RodManager.Initialize();
         BaitRecipeManager.Initialize();
+        TrapPieceManager.Initialize();
 
         Localizer.Waiter.StatusChanged += InitializeModule;
 

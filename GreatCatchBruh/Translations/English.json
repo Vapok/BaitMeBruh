@@ -1,4 +1,15 @@
 {
   "item_fishingrod_primitive": "Primitive Fishing Rod",
-  "item_fishingrod_primitive_desc": "A simple hazel switch with bone hook and gut line. Perfect for catching fish in shallow Meadows streams."
+  "item_fishingrod_primitive_desc": "A simple hazel switch with bone hook and gut line. Perfect for catching fish in shallow Meadows streams.",
+  "piece_bait_creel": "Bait Creel",
+  "piece_bait_creel_desc": "A woven wicker creel submerged in shallow waters to attract and gather native fishing bait.",
+  "piece_fishnet_coastal": "Coastal Fish Net",
+  "piece_fishnet_coastal_desc": "A weighted net suspended in coastal waters to capture local freshwater and near-shore fish over time.",
+  "piece_fishnet_deep": "Deep-Sea Anchored Net",
+  "piece_fishnet_deep_desc": "A heavy anchored deep-water net deployed from vessels to harvest pelagic ocean and deep shelf fish.",
+  "msg_trap_too_shallow": "Water too shallow",
+  "msg_trap_too_deep": "Water too deep",
+  "msg_trap_full": "Trap full",
+  "msg_trap_active": "Trap Active",
+  "msg_trap_depth": "Depth"
 }
