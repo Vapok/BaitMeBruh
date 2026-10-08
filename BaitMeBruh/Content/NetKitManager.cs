@@ -8,9 +8,32 @@ namespace BaitMeBruh.Content;
 public static class NetKitManager
 {
     private static bool _registered;
+    private static ConfigurableRecipe _coastalKitRecipe;
+    private static ConfigurableRecipe _deepKitRecipe;
+
+    internal static ConfigurableRecipe CoastalKitRecipe => _coastalKitRecipe;
+    internal static ConfigurableRecipe DeepKitRecipe => _deepKitRecipe;
 
     public static void Initialize()
     {
+        _coastalKitRecipe = new ConfigurableRecipe(
+            "Recipe: Coastal Fish Net Kit",
+            "Recipe_ItemFishnetCoastal",
+            "ItemFishnetCoastal",
+            "piece_workbench",
+            1,
+            1,
+            "RoundLog:15,FineWood:10,Bronze:4,BronzeNails:8,TrollHide:4,Stone:4");
+
+        _deepKitRecipe = new ConfigurableRecipe(
+            "Recipe: Deep-Sea Anchored Net Kit",
+            "Recipe_ItemFishnetDeep",
+            "ItemFishnetDeep",
+            "forge",
+            1,
+            1,
+            "ElderBark:15,Iron:6,IronNails:12,Chain:4,Guck:4");
+
         PrefabManager.OnVanillaPrefabsAvailable += RegisterNetKits;
     }
 
@@ -37,21 +60,15 @@ public static class NetKitManager
         {
             Name = "$item_fishnet_coastal",
             Description = "$item_fishnet_coastal_desc",
-            CraftingStation = "piece_workbench",
-            MinStationLevel = 1,
+            CraftingStation = _coastalKitRecipe.GetStationString(),
+            MinStationLevel = _coastalKitRecipe.MinStationLevel.Value,
             Icons = icon != null ? new[] { icon } : null,
-            Requirements = new[]
-            {
-                new RequirementConfig { Item = "RoundLog", Amount = 15, Recover = true },
-                new RequirementConfig { Item = "FineWood", Amount = 10, Recover = true },
-                new RequirementConfig { Item = "Bronze", Amount = 4, Recover = true },
-                new RequirementConfig { Item = "BronzeNails", Amount = 8, Recover = true },
-                new RequirementConfig { Item = "TrollHide", Amount = 4, Recover = true },
-                new RequirementConfig { Item = "Stone", Amount = 4, Recover = true }
-            }
+            Requirements = _coastalKitRecipe.GetRequirementConfigs()
         };
 
         CustomItem coastalKit = new CustomItem("ItemFishnetCoastal", "LinenThread", coastalConfig);
+        _coastalKitRecipe.BindCustomItem(coastalKit);
+
         if (coastalKit.ItemPrefab != null)
         {
             ItemDrop itemDrop = coastalKit.ItemDrop;
@@ -78,20 +95,15 @@ public static class NetKitManager
         {
             Name = "$item_fishnet_deep",
             Description = "$item_fishnet_deep_desc",
-            CraftingStation = "forge",
-            MinStationLevel = 1,
+            CraftingStation = _deepKitRecipe.GetStationString(),
+            MinStationLevel = _deepKitRecipe.MinStationLevel.Value,
             Icons = icon != null ? new[] { icon } : null,
-            Requirements = new[]
-            {
-                new RequirementConfig { Item = "ElderBark", Amount = 15, Recover = true },
-                new RequirementConfig { Item = "Iron", Amount = 6, Recover = true },
-                new RequirementConfig { Item = "IronNails", Amount = 12, Recover = true },
-                new RequirementConfig { Item = "Chain", Amount = 4, Recover = true },
-                new RequirementConfig { Item = "Guck", Amount = 4, Recover = true }
-            }
+            Requirements = _deepKitRecipe.GetRequirementConfigs()
         };
 
         CustomItem deepKit = new CustomItem("ItemFishnetDeep", "LinenThread", deepConfig);
+        _deepKitRecipe.BindCustomItem(deepKit);
+
         if (deepKit.ItemPrefab != null)
         {
             ItemDrop itemDrop = deepKit.ItemDrop;
@@ -112,35 +124,60 @@ public static class NetKitManager
         Jotunn.Managers.ItemManager.Instance.AddItem(deepKit);
     }
 
-    private static void SetupCrateVisual(GameObject itemPrefab, AssetBundle bundle, string cratePrefabName, Vector3 colSize, Vector3 colCenter)
+    private static void SetupCrateVisual(GameObject itemPrefab, AssetBundle bundle, string modelName, Vector3 colliderSize, Vector3 colliderCenter)
     {
-        if (itemPrefab == null || bundle == null)
+        if (bundle == null)
         {
             return;
         }
 
-        Renderer[] renderers = itemPrefab.GetComponentsInChildren<Renderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
+        GameObject modelPrefab = bundle.LoadAsset<GameObject>(modelName);
+        if (modelPrefab == null)
         {
-            renderers[i].enabled = false;
+            return;
         }
 
-        GameObject cratePrefab = bundle.LoadAsset<GameObject>(cratePrefabName);
-        if (cratePrefab != null)
+        Transform existingVisual = itemPrefab.transform.Find("visual");
+        if (existingVisual != null)
         {
-            GameObject crateVisual = Object.Instantiate(cratePrefab, itemPrefab.transform, false);
-            crateVisual.name = "CrateVisual";
-            crateVisual.transform.localPosition = Vector3.zero;
-            crateVisual.transform.localRotation = Quaternion.identity;
-            crateVisual.transform.localScale = Vector3.one;
-
-            SetupVisualShaders(crateVisual);
+            UnityEngine.Object.Destroy(existingVisual.gameObject);
         }
 
-        Collider existingCol = itemPrefab.GetComponent<Collider>();
-        if (existingCol != null && !(existingCol is BoxCollider))
+        GameObject visualInstance = UnityEngine.Object.Instantiate(modelPrefab, itemPrefab.transform);
+        visualInstance.name = "visual";
+        visualInstance.transform.localPosition = Vector3.zero;
+        visualInstance.transform.localRotation = Quaternion.identity;
+        visualInstance.transform.localScale = Vector3.one;
+
+        int itemLayer = LayerMask.NameToLayer("item");
+        if (itemLayer >= 0)
         {
-            existingCol.enabled = false;
+            visualInstance.layer = itemLayer;
+            foreach (Transform child in visualInstance.GetComponentsInChildren<Transform>(true))
+            {
+                child.gameObject.layer = itemLayer;
+            }
+        }
+
+        Shader pieceShader = Shader.Find("Custom/Piece");
+        if (pieceShader == null)
+        {
+            pieceShader = Shader.Find("Standard");
+        }
+
+        if (pieceShader != null)
+        {
+            Renderer[] visualRenderers = visualInstance.GetComponentsInChildren<Renderer>(true);
+            foreach (Renderer renderer in visualRenderers)
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    if (mat != null)
+                    {
+                        mat.shader = pieceShader;
+                    }
+                }
+            }
         }
 
         BoxCollider boxCol = itemPrefab.GetComponent<BoxCollider>();
@@ -149,39 +186,25 @@ public static class NetKitManager
             boxCol = itemPrefab.AddComponent<BoxCollider>();
         }
 
-        boxCol.enabled = true;
-        boxCol.size = colSize;
-        boxCol.center = colCenter;
-    }
+        boxCol.size = colliderSize;
+        boxCol.center = colliderCenter;
 
-    private static void SetupVisualShaders(GameObject visual)
-    {
-        int itemLayer = LayerMask.NameToLayer("item");
-        if (itemLayer >= 0)
+        Transform attach = itemPrefab.transform.Find("attach");
+        if (attach == null)
         {
-            visual.layer = itemLayer;
-            foreach (Transform child in visual.GetComponentsInChildren<Transform>(true))
-            {
-                child.gameObject.layer = itemLayer;
-            }
+            GameObject attachObj = new GameObject("attach");
+            attachObj.transform.SetParent(itemPrefab.transform, false);
+            attachObj.transform.localPosition = Vector3.zero;
+            attachObj.transform.localRotation = Quaternion.identity;
         }
 
-        Shader pieceShader = Shader.Find("Custom/Piece");
-        if (pieceShader != null)
+        Transform attachBack = itemPrefab.transform.Find("attach_back");
+        if (attachBack == null)
         {
-            Renderer[] visualRenderers = visual.GetComponentsInChildren<Renderer>(true);
-            for (int r = 0; r < visualRenderers.Length; r++)
-            {
-                Material[] mats = visualRenderers[r].materials;
-                for (int m = 0; m < mats.Length; m++)
-                {
-                    if (mats[m] != null)
-                    {
-                        mats[m].shader = pieceShader;
-                    }
-                }
-                visualRenderers[r].materials = mats;
-            }
+            GameObject attachBackObj = new GameObject("attach_back");
+            attachBackObj.transform.SetParent(itemPrefab.transform, false);
+            attachBackObj.transform.localPosition = Vector3.zero;
+            attachBackObj.transform.localRotation = Quaternion.identity;
         }
     }
 }

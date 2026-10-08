@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using Jotunn.Managers;
 using BaitMeBruh.Configuration;
 using BaitMeBruh.Content;
+using BaitMeBruh.Content.Factories;
 using Vapok.Common.Abstractions;
 using Vapok.Common.Managers;
 using Vapok.Common.Managers.Configuration;
@@ -57,10 +58,14 @@ public class BaitMeBruh : BaseUnityPlugin, IPluginInfo
         });
 
         RodManager.Initialize();
-        BaitRecipeManager.Initialize();
         NetKitManager.Initialize();
         TrapPieceManager.Initialize();
-        FishCulinaryManager.Initialize();
+
+        BaitFactory baitFactory = new BaitFactory(_log, _config);
+        baitFactory.CreateAssets();
+
+        FoodFactory foodFactory = new FoodFactory(_log, _config);
+        foodFactory.CreateAssets();
 
         Localizer.Waiter.StatusChanged += InitializeModule;
 
