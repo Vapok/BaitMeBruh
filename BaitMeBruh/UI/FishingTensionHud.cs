@@ -42,6 +42,18 @@ public class FishingTensionHud : MonoBehaviour
     private float _targetAlpha;
     private float _promptTargetAlpha;
     private float _maxWidth;
+    private float _biteAlertTimer;
+    private float _hookedAlertTimer;
+
+    public void OnBiteAlert()
+    {
+        _biteAlertTimer = 1.25f;
+    }
+
+    public void OnHookedAlert()
+    {
+        _hookedAlertTimer = 1.0f;
+    }
 
     public static void EnsureInitialized(Hud hud)
     {
@@ -84,16 +96,25 @@ public class FishingTensionHud : MonoBehaviour
         _rootTransform.sizeDelta = new Vector2(GaugeWidth, GaugeHeight);
         UpdatePosition();
 
-        _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        GameObject gaugeContainer = new GameObject("GaugeContainer");
+        gaugeContainer.transform.SetParent(transform, false);
+
+        RectTransform gaugeRect = gaugeContainer.AddComponent<RectTransform>();
+        gaugeRect.anchorMin = Vector2.zero;
+        gaugeRect.anchorMax = Vector2.one;
+        gaugeRect.offsetMin = Vector2.zero;
+        gaugeRect.offsetMax = Vector2.zero;
+
+        _canvasGroup = gaugeContainer.AddComponent<CanvasGroup>();
         _canvasGroup.alpha = 0.0f;
         _canvasGroup.blocksRaycasts = false;
         _canvasGroup.interactable = false;
 
-        Image bgImage = gameObject.AddComponent<Image>();
+        Image bgImage = gaugeContainer.AddComponent<Image>();
         bgImage.color = BackgroundColor;
 
         GameObject fillObject = new GameObject("Fill");
-        fillObject.transform.SetParent(transform, false);
+        fillObject.transform.SetParent(gaugeContainer.transform, false);
 
         _fillTransform = fillObject.AddComponent<RectTransform>();
         _fillTransform.anchorMin = new Vector2(0.0f, 0.5f);
@@ -162,6 +183,16 @@ public class FishingTensionHud : MonoBehaviour
     {
         UpdatePosition();
 
+        if (_hookedAlertTimer > 0f)
+        {
+            _hookedAlertTimer -= Time.deltaTime;
+        }
+
+        if (_biteAlertTimer > 0f)
+        {
+            _biteAlertTimer -= Time.deltaTime;
+        }
+
         Player localPlayer = Player.m_localPlayer;
         if (localPlayer == null)
         {
@@ -214,26 +245,33 @@ public class FishingTensionHud : MonoBehaviour
             _promptTargetAlpha = 1.0f;
             UpdateGauge(activeFloat);
 
-            FishingLineState lineState = activeFloat.GetComponent<FishingLineState>();
-            float tension = lineState != null ? lineState.CurrentTension : 0.0f;
-            float clampedTension = Mathf.Clamp01(tension);
-            float currentLineLen = _lineLengthRef(activeFloat);
-            int meters = Mathf.Max(0, Mathf.RoundToInt(currentLineLen));
-
-            if (clampedTension >= 0.75f)
+            if (_hookedAlertTimer > 0f)
             {
-                _promptText.text = $"RELEASE REEL! • {meters}m";
-                _promptText.color = CriticalTensionColor;
-            }
-            else if (clampedTension >= 0.40f)
-            {
-                _promptText.text = $"REELING [RMB] • {meters}m";
-                _promptText.color = WarningTensionColor;
+                _promptText.text = "<color=#FFD700><b><size=22>HOOKED!</size></b></color>";
             }
             else
             {
-                _promptText.text = $"REELING [RMB] • {meters}m";
-                _promptText.color = SafeTensionColor;
+                FishingLineState lineState = activeFloat.GetComponent<FishingLineState>();
+                float tension = lineState != null ? lineState.CurrentTension : 0.0f;
+                float clampedTension = Mathf.Clamp01(tension);
+                float currentLineLen = _lineLengthRef(activeFloat);
+                int meters = Mathf.Max(0, Mathf.RoundToInt(currentLineLen));
+
+                if (clampedTension >= 0.75f)
+                {
+                    _promptText.text = $"RELEASE REEL! • {meters}m";
+                    _promptText.color = CriticalTensionColor;
+                }
+                else if (clampedTension >= 0.40f)
+                {
+                    _promptText.text = $"REELING [RMB] • {meters}m";
+                    _promptText.color = WarningTensionColor;
+                }
+                else
+                {
+                    _promptText.text = $"REELING [RMB] • {meters}m";
+                    _promptText.color = SafeTensionColor;
+                }
             }
         }
         else if (isFishingRod && localPlayer.IsBlocking())
@@ -256,12 +294,11 @@ public class FishingTensionHud : MonoBehaviour
         {
             _targetAlpha = 0.0f;
             Fish nibbler = _nibblerRef(activeFloat);
-            if (nibbler != null)
+            if (nibbler != null || _biteAlertTimer > 0f)
             {
-                _promptText.text = "[RMB] STRIKE!";
-                _promptText.color = new Color(1.0f, 0.84f, 0.0f, 1.0f);
-                float pulse = Mathf.PingPong(Time.time * 8.0f, 0.4f) + 0.6f;
-                _promptTargetAlpha = pulse;
+                _promptText.text = "<b><size=22>[RMB] STRIKE!</size></b>";
+                _promptText.color = Color.Lerp(new Color(1.0f, 0.85f, 0.0f, 1.0f), new Color(1.0f, 0.45f, 0.0f, 1.0f), Mathf.PingPong(Time.time * 6.0f, 1.0f));
+                _promptTargetAlpha = 1.0f;
             }
             else
             {

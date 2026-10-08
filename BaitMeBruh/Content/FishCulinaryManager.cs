@@ -370,14 +370,14 @@ public static class FishCulinaryManager
         {
             Name = "Recipe_SwampFishBroth",
             Item = "BlackSoup",
-            Amount = 1,
+            Amount = 2,
             CraftingStation = "piece_cauldron",
             MinStationLevel = 2,
             Requirements = new[]
             {
                 new RequirementConfig { Item = "Fish6", Amount = 1, Recover = false },
-                new RequirementConfig { Item = "Bloodbag", Amount = 2, Recover = false },
-                new RequirementConfig { Item = "Entrails", Amount = 2, Recover = false }
+                new RequirementConfig { Item = "Honey", Amount = 2, Recover = false },
+                new RequirementConfig { Item = "Turnip", Amount = 2, Recover = false }
             }
         });
 

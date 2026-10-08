@@ -60,8 +60,8 @@ public static class BaitRecipeManager
         RegisterRecipe("Recipe_FishingBaitOcean_Alt", "FishingBaitOcean", 20, "piece_cauldron", 3, new[]
         {
             new RequirementConfig { Item = "FishingBait", Amount = 20 },
-            new RequirementConfig { Item = "Chitin", Amount = 6 },
-            new RequirementConfig { Item = "SerpentMeat", Amount = 2 }
+            new RequirementConfig { Item = "SerpentScale", Amount = 2 },
+            new RequirementConfig { Item = "Guck", Amount = 4 }
         });
 
         RegisterRecipe("Recipe_FishingBaitMistlands_Alt", "FishingBaitMistlands", 20, "piece_cauldron", 4, new[]
