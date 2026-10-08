@@ -16,6 +16,13 @@
   * Implemented `TransientLightFader.cs` mono component smoothly fading real-time PointLights without shadows and safely destroying GameObjects upon expiration.
   * Decoupled `StrikePrompt` from gauge `CanvasGroup` in `FishingTensionHud.cs` by nesting the gauge background and fill under an isolated `GaugeContainer`, allowing the `[RMB] STRIKE!` banner to display at full brightness independently.
   * Updated `FishingFloatTryToHookPatch.cs` to trigger `FishingCueManager.TriggerHookedCue`, playing hook-set audio at player position, `m_jumpEffects` splash burst at the float, a golden water flash, and an alert header.
+* **Trap Piece Physics & Ghost Placement Calibration**:
+  * Implemented `AddBuoyancy` helper on `ItemFishnetCoastal` and `ItemFishnetDeep` attaching `Floating` component with `m_waterLevelOffset = 0.1f` so deconstructed kits surface naturally.
+  * Re-introduced `PlayerUpdatePlacementGhostPatch.cs` correcting vanilla Valheim's hardcoded `m_waterPiece` +3m ghost offset, with auto-leveling correction in `PassiveTrap.Start()` for previously misaligned instances.
+* **Bait Creel Procedural Mesh Architecture**:
+  * Refactored `CreateNettingMesh()` in `BuildBaitCreelBundle.cs` to decouple top lid netting cap from side drape skirt, preventing cross-boundary triangle distortion.
+  * Synchronized metric UV density ($0.6205$m/tile) across planar top projection and cylindrical skirt unwrap to enforce identical 15.5cm diamond grid pitch.
+  * Rebalanced default recipe for `ItemFishnetCoastal` in `NetKitManager.cs` to 18 Bronze Nails, 15 Core Wood, 4 Troll Hide, and 4 Stone.
 * **Documentation**:
   * Updated README comparison table to refer to "rare trophies" instead of "boss trophies".
 
