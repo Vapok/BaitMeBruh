@@ -1,3 +1,16 @@
+# 0.0.1 - Development Release
+* **Refactoring & Technical Debt Elimination**:
+  * Extracted `FishSpawnerBackup` from `SpawnSystemUpdateSpawnListPatch.cs` into standalone class file `FishSpawnerBackup.cs` to adhere strictly to single-class per file invariant.
+  * Centralized hammer piece discovery and recipe unlocking into `PieceUnlockHelper.cs`, consolidating duplicate reflection logic across `PlayerOnInventoryChangedPatch` and `PlayerUpdateKnownRecipesListPatch`.
+  * Removed dead / problematic `PlayerUpdatePlacementGhostPatch.cs` which had imposed an artificial -3m vertical translation on water pieces, resolving the issue where placed fish nets sank below the surface.
+  * Enforced fail-fast invariants in `TrapPieceManager.cs` (`InvalidOperationException`) when embedded asset bundle prefabs are missing, removing legacy fallback code that created chest containers.
+  * Cleaned up unused `_fishingFloat` field in `FishingLineState.cs` and speculative forward check for `FishingRodReinforced` in `FishingTensionManager.cs`.
+  * Corrected indentation and formatting in `FishingFloatCatchPatch.cs`.
+* **Localization & Guidance**:
+  * Added missing `$tutorial_gc_firstfish_text` localization key to `Translations/English.json` to complete Hugin tutorial sequence on initial fish catch.
+* **Branding & Presentation**:
+  * Staged and packaged authentic in-game low-poly boat angling scene icon with Norse knotwork title typography.
+
 # 0.0.0 - Development Release
 * **Initial Project Architecture**:
   * Established modular BepInEx plugin architecture utilizing `Vapok.Common` 3.21.1015 and `JotunnLib` 2.30.2.

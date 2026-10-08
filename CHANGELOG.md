@@ -1,3 +1,9 @@
+# 0.0.1 - Development Release
+* **Refactoring & Polish**: Streamlined internal systems, removed redundant code, and improved overall stability.
+* **Fish Net Placement Fix**: Fixed an issue where fish nets placed in water would immediately sink and disappear.
+* **Hugin Dialogue**: Restored missing advice from Hugin when catching your very first fish.
+* **Updated Branding**: Added a new custom icon showing seated boat fishing in the authentic Valheim art style.
+
 # 0.0.0 - Development Release
 * **Complete Fishing Overhaul**: Overhauled the vanilla fishing system with a dynamic line tension mini-game instead of flat stamina drain.
 * **Early Rod Progression**: Added the Primitive Fishing Rod craftable at Workbench Tier 1 with basic early Meadows materials.
