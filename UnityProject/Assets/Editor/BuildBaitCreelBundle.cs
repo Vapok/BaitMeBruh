@@ -805,18 +805,23 @@ public static class BuildBaitCreelBundle
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
-        // Center apex on top of barrel lid (elevated so wood lid never clips through)
+        // Uniform metric UV density across entire netting (top lid and side drape skirt)
+        float rimRadius = 0.395f;
+        float circumference = Mathf.PI * 2f * rimRadius;
+        float uRepeats = 4.0f;
+        float metersPerTile = circumference / uRepeats; // ~0.6205m per UV tile (15.5cm diamond cells)
+
+        // 1. Top Lid Netting Cap (elevated dome with organic fabric texture, covers wood lid)
         int centerIdx = verts.Count;
-        verts.Add(new Vector3(0f, 1.035f, 0f));
+        verts.Add(new Vector3(0f, 1.030f, 0f));
         norms.Add(Vector3.up);
         uvs.Add(new Vector2(0.5f, 0.5f));
 
-        // Top lid concentric rings
         int topRings = 5;
-        float[] topRadii = new float[] { 0.10f, 0.20f, 0.29f, 0.37f, 0.405f };
-        float[] topHeights = new float[] { 1.033f, 1.030f, 1.026f, 1.022f, 1.010f };
+        float[] topRadii = new float[] { 0.10f, 0.20f, 0.29f, 0.37f, 0.400f };
+        float[] topHeights = new float[] { 1.028f, 1.025f, 1.021f, 1.016f, 1.008f };
 
-        int prevRingStart = -1;
+        int prevTopRingStart = -1;
 
         for (int r = 0; r < topRings; r++)
         {
@@ -829,31 +834,30 @@ public static class BuildBaitCreelBundle
                 float u = (float)seg / radialSegments;
                 float angle = u * Mathf.PI * 2f;
 
-                // Subtle organic fabric variation across the top of the barrel
-                float wrinkle = (0.003f * Mathf.Sin(angle * 6f) + 0.002f * Mathf.Cos(angle * 10f)) * (baseRadius / 0.40f);
+                float wrinkle = (0.0025f * Mathf.Sin(angle * 6f) + 0.0015f * Mathf.Cos(angle * 10f)) * (baseRadius / 0.40f);
                 float y = baseHeight + wrinkle;
                 float x = Mathf.Cos(angle) * baseRadius;
                 float z = Mathf.Sin(angle) * baseRadius;
 
                 Vector3 pos = new Vector3(x, y, z);
-                Vector3 norm = (r == topRings - 1)
-                    ? new Vector3(Mathf.Cos(angle) * 0.7f, 0.7f, Mathf.Sin(angle) * 0.7f).normalized
-                    : Vector3.up;
+                Vector3 norm = Vector3.Lerp(Vector3.up, new Vector3(Mathf.Cos(angle) * 0.7f, 0.7f, Mathf.Sin(angle) * 0.7f).normalized, (float)r / (topRings - 1));
 
                 verts.Add(pos);
                 norms.Add(norm);
-                uvs.Add(new Vector2(0.5f + (x / 0.41f) * 0.45f, 0.5f + (z / 0.41f) * 0.45f));
+                // Planar Cartesian UV projection using exact same metric scale as side skirt
+                uvs.Add(new Vector2(0.5f + (x / metersPerTile), 0.5f + (z / metersPerTile)));
             }
 
             if (r == 0)
             {
-                // Connect center point to first ring
                 for (int seg = 0; seg < radialSegments; seg++)
                 {
+                    // Upward
                     tris.Add(centerIdx);
                     tris.Add(ringStart + seg);
                     tris.Add(ringStart + seg + 1);
 
+                    // Downward (two-sided visibility)
                     tris.Add(centerIdx);
                     tris.Add(ringStart + seg + 1);
                     tris.Add(ringStart + seg);
@@ -861,42 +865,43 @@ public static class BuildBaitCreelBundle
             }
             else
             {
-                // Connect previous ring to this ring
                 for (int seg = 0; seg < radialSegments; seg++)
                 {
-                    int p0 = prevRingStart + seg;
-                    int p1 = prevRingStart + seg + 1;
+                    int p0 = prevTopRingStart + seg;
+                    int p1 = prevTopRingStart + seg + 1;
                     int c0 = ringStart + seg;
                     int c1 = ringStart + seg + 1;
 
+                    // Upward
                     tris.Add(p0); tris.Add(c0); tris.Add(p1);
                     tris.Add(p1); tris.Add(c0); tris.Add(c1);
 
+                    // Downward
                     tris.Add(p0); tris.Add(p1); tris.Add(c0);
                     tris.Add(p1); tris.Add(c1); tris.Add(c0);
                 }
             }
 
-            prevRingStart = ringStart;
+            prevTopRingStart = ringStart;
         }
 
-        // Side drape skirt cascading down past the cinch rope into the water
+        // 2. Side Drape Skirt (separate vertex loop starting seamlessly at rim, draping down into water)
         int skirtRings = 16;
+        float skirtStartHeight = 1.014f;
+
         for (int r = 0; r < skirtRings; r++)
         {
             int ringStart = verts.Count;
-            float t = (float)(r + 1) / skirtRings;
+            float t = (float)r / (skirtRings - 1);
 
             for (int seg = 0; seg <= radialSegments; seg++)
             {
                 float u = (float)seg / radialSegments;
                 float angle = u * Mathf.PI * 2f;
 
-                // Organic scalloped hem variations along bottom
-                float hemY = -0.06f + 0.05f * Mathf.Sin(angle * 5f) + 0.03f * Mathf.Cos(angle * 9f + 0.8f);
-                float y = Mathf.Lerp(0.96f, hemY, t);
+                float hemY = -0.05f + 0.04f * Mathf.Sin(angle * 5f) + 0.025f * Mathf.Cos(angle * 9f + 0.8f);
+                float y = Mathf.Lerp(skirtStartHeight, hemY, t);
 
-                // Barrel staves radius profile
                 float bY = Mathf.Clamp01(y);
                 float barrelR = 0.38f + 0.07f * (1.0f - Mathf.Pow(2f * (bY - 0.5f), 2f));
 
@@ -905,22 +910,20 @@ public static class BuildBaitCreelBundle
 
                 if (y >= 0.78f)
                 {
-                    // Upper gathered section (rim down to cinch rope at y=0.78)
-                    float upperT = (1.0f - y) / 0.22f;
-                    float standOff = Mathf.Lerp(0.024f, 0.016f, upperT);
-                    float folds = 0.008f * Mathf.Sin(angle * 8f);
+                    float upperT = (skirtStartHeight - y) / (skirtStartHeight - 0.78f);
+                    float standOff = Mathf.Lerp(0.022f, 0.015f, upperT);
+                    float folds = 0.006f * Mathf.Sin(angle * 8f);
                     float rad = barrelR + standOff + folds;
 
                     x = Mathf.Cos(angle) * rad;
                     z = Mathf.Sin(angle) * rad;
-                    norm = new Vector3(Mathf.Cos(angle), 0.15f, Mathf.Sin(angle)).normalized;
+                    norm = new Vector3(Mathf.Cos(angle), 0.12f, Mathf.Sin(angle)).normalized;
                 }
                 else
                 {
-                    // Free drape section below the cinch rope cascading into water
                     float lowerT = (0.78f - y) / (0.78f - hemY);
-                    float standOff = Mathf.Lerp(0.018f, 0.065f, lowerT);
-                    float folds = (0.022f * Mathf.Sin(angle * 7f) + 0.014f * Mathf.Cos(angle * 11f + 1.2f)) * Mathf.Sqrt(lowerT);
+                    float standOff = Mathf.Lerp(0.015f, 0.060f, lowerT);
+                    float folds = (0.020f * Mathf.Sin(angle * 7f) + 0.012f * Mathf.Cos(angle * 11f + 1.2f)) * Mathf.Sqrt(lowerT);
                     float rad = barrelR + standOff + folds;
 
                     x = Mathf.Cos(angle) * rad;
@@ -930,25 +933,30 @@ public static class BuildBaitCreelBundle
 
                 verts.Add(new Vector3(x, y, z));
                 norms.Add(norm);
-                uvs.Add(new Vector2(u * 5.0f, (1.035f - y) * 2.2f));
+
+                float dist = skirtStartHeight - y;
+                uvs.Add(new Vector2(u * uRepeats, dist / metersPerTile));
             }
 
-            // Connect previous ring to this skirt ring
-            for (int seg = 0; seg < radialSegments; seg++)
+            if (r > 0)
             {
-                int p0 = prevRingStart + seg;
-                int p1 = prevRingStart + seg + 1;
-                int c0 = ringStart + seg;
-                int c1 = ringStart + seg + 1;
+                int prevSkirtRing = ringStart - (radialSegments + 1);
+                for (int seg = 0; seg < radialSegments; seg++)
+                {
+                    int p0 = prevSkirtRing + seg;
+                    int p1 = prevSkirtRing + seg + 1;
+                    int c0 = ringStart + seg;
+                    int c1 = ringStart + seg + 1;
 
-                tris.Add(p0); tris.Add(c0); tris.Add(p1);
-                tris.Add(p1); tris.Add(c0); tris.Add(c1);
+                    // Outward
+                    tris.Add(p0); tris.Add(c0); tris.Add(p1);
+                    tris.Add(p1); tris.Add(c0); tris.Add(c1);
 
-                tris.Add(p0); tris.Add(p1); tris.Add(c0);
-                tris.Add(p1); tris.Add(c1); tris.Add(c0);
+                    // Inward
+                    tris.Add(p0); tris.Add(p1); tris.Add(c0);
+                    tris.Add(p1); tris.Add(c1); tris.Add(c0);
+                }
             }
-
-            prevRingStart = ringStart;
         }
 
         mesh.SetVertices(verts);
