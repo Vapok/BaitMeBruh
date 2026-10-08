@@ -279,6 +279,20 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     private void Start()
     {
+        if (m_nview != null && m_nview.IsValid() && m_nview.IsOwner())
+        {
+            float liquid = Floating.GetLiquidLevel(transform.position, 1f, LiquidType.All);
+            float waterSurface = liquid > -9000f ? liquid : (ZoneSystem.instance != null ? ZoneSystem.instance.m_waterLevel : 30f);
+
+            if (transform.position.y - waterSurface > 1.5f)
+            {
+                Vector3 correctedPos = transform.position;
+                correctedPos.y = waterSurface;
+                transform.position = correctedPos;
+                m_nview.GetZDO().SetPosition(correctedPos);
+            }
+        }
+
         Player localPlayer = Player.m_localPlayer;
         if (localPlayer != null && Vector3.Distance(localPlayer.transform.position, transform.position) < 25.0f)
         {

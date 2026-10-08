@@ -189,6 +189,18 @@ public static class NetKitManager
         boxCol.size = colliderSize;
         boxCol.center = colliderCenter;
 
+        Floating floating = itemPrefab.GetComponent<Floating>();
+        if (floating == null)
+        {
+            floating = itemPrefab.AddComponent<Floating>();
+        }
+
+        floating.m_waterLevelOffset = 0.2f;
+        floating.m_force = 0.5f;
+        floating.m_balanceForceFraction = 0.05f;
+        floating.m_damping = 0.05f;
+        floating.m_forceDistance = 1.0f;
+
         Transform attach = itemPrefab.transform.Find("attach");
         if (attach == null)
         {
