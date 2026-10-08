@@ -7,6 +7,12 @@
   * Created and registered custom `SE_Stats` (`SE_TrollfishChowder`) with Jotunn's `ItemManager`.
   * Configured `m_skillLevel = Skills.SkillType.Sneak` and `m_skillLevelModifier = 10f` for 1200s duration.
   * Bound status effect to `ItemDrop.ItemData.SharedData.m_consumeStatusEffect` for automatic execution on item consumption.
+* **3D Drop Model & Willybach HD Texture Support**:
+  * Implemented procedural 3D model generator in `BuildTrollfishChowder.cs` producing `drop_trollfish_chowder` within the `greatcatch` AssetBundle.
+  * Designed custom 24-segment radial carved Scandinavian oak bowl mesh, concave soup surface disc with edge meniscus, and 3D garnish meshes (3 yellow mushroom caps + organic fan-shaped dorsal fin).
+  * Generated high-definition (1024x1024 / 2K) PBR textures: `T_BowlWood_HD.png`, `T_TrollfishSoup_HD.png`, and `T_TrollfishGarnish_HD.png` for full compatibility with Willybach's HD Valheim.
+  * Configured physical `BoxCollider` (`0.36m x 0.165m x 0.36m`) and `Rigidbody` for natural freeform world dropping.
+  * Added `"attach"` child transform on `ItemPrefab` and registered `customChowder.ItemDrop` in `itemstandh.m_supportedItems` for seamless snapping onto horizontal table item stands.
 * **Localization & Documentation**:
   * Added `$item_trollfish_chowder`, `$item_trollfish_chowder_desc`, `$se_trollfish_chowder`, and `$se_trollfish_chowder_tooltip` keys in `Translations/English.json`.
   * Updated README whole-fish cooking table and added the Valheim Native Fish Species & Biome Compendium.

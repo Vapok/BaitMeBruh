@@ -87,6 +87,9 @@ public static class BuildBaitCreelBundle
 
         BuildDeepCratePrefab(deepCrateWoodMesh, deepCrateIronMesh, deepCrateIconMesh, woodMat, ironMat, iconDeepMat);
 
+        // 6. Trollfish Chowder Drop Model & HD Textures
+        BuildTrollfishChowder.Build();
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
