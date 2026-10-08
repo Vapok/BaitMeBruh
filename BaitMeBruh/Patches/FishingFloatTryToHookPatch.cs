@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using BaitMeBruh.Managers;
 
 namespace BaitMeBruh.Patches;
 
@@ -44,7 +45,6 @@ internal static class FishingFloatTryToHookPatch
         float nibbleTime = _nibbleTimeRef(__instance);
         if (Time.time - nibbleTime < allowedWindow)
         {
-            __instance.Message("$msg_fishing_hooked", true);
             __instance.SetCatch(nibbler);
             _nibblerRef(__instance) = null;
             Game.instance.IncrementPlayerStat(PlayerStatType.FishHooked);
@@ -53,6 +53,8 @@ internal static class FishingFloatTryToHookPatch
             {
                 owner.RaiseSkill(Skills.SkillType.Fishing, HookXpAward);
             }
+
+            FishingCueManager.TriggerHookedCue(__instance, owner, nibbler);
         }
 
         return false;
