@@ -22,7 +22,7 @@ namespace GreatCatchBruh;
 [BepInDependency("com.ValheimModding.YamlDotNetDetector")]
 public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
 {
-    private const string _pluginId = "vapok.mods.greatcatchbruh";
+    private const string _pluginId = "vapok.mods.GreatCatchBruh";
     private const string _displayName = "GreatCatchBruh";
     private const string _version = "0.0.0";
     public static bool ValheimAwake;
@@ -50,6 +50,12 @@ public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
 
         _config = new ConfigRegistry(_instance);
 
+        ModSplashManager.Register(new ModSplashDossier(_instance)
+        {
+            Tagline = "An immersive fishing overhaul featuring dynamic line tension, rod progression, coastal traps, and deep-sea angling.",
+            ShowOnStartup = ConfigRegistry.ShowSplashOnStartup,
+        });
+
         RodManager.Initialize();
         BaitRecipeManager.Initialize();
         TrapPieceManager.Initialize();
@@ -59,13 +65,6 @@ public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
 
         _harmony = new Harmony(Info.Metadata.GUID);
         _harmony.PatchAll(Assembly.GetExecutingAssembly());
-
-        ModSplashManager.Register(new ModSplashDossier(_instance)
-        {
-            Tagline = "An immersive fishing overhaul featuring dynamic line tension, rod progression, coastal traps, and deep-sea angling.",
-            ShowOnStartup = ConfigRegistry.ShowSplashOnStartup,
-            EnableTelemetry = ConfigRegistry.EnableTelemetry,
-        });
 
         if (GUIManager.IsHeadless())
         {

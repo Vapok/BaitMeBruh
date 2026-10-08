@@ -24,24 +24,29 @@ public static class FishCulinaryManager
 
         _registered = true;
 
-        ConfigureEarlyButchering();
         ConfigureCampfireFishCooking();
         RegisterWholeFishRecipes();
+        UpdateItemDescriptions();
     }
 
-    private static void ConfigureEarlyButchering()
+    private static void UpdateItemDescriptions()
     {
-        Recipe recipeFish1 = PrefabManager.Cache.GetPrefab<Recipe>("Recipe_Fish1");
-        if (recipeFish1 != null)
+        ItemDrop fish1 = PrefabManager.Cache.GetPrefab<ItemDrop>("Fish1");
+        if (fish1 != null)
         {
-            CraftingStation workbench = PrefabManager.Cache.GetPrefab<CraftingStation>("piece_workbench");
-            if (workbench != null)
-            {
-                recipeFish1.m_craftingStation = workbench;
-                recipeFish1.m_minStationLevel = 1;
-                recipeFish1.m_amount = 2;
-                recipeFish1.m_qualityResultAmountMultiplier = 2.0f;
-            }
+            fish1.m_itemData.m_shared.m_description = "$item_fish1_desc";
+        }
+
+        ItemDrop fish2 = PrefabManager.Cache.GetPrefab<ItemDrop>("Fish2");
+        if (fish2 != null)
+        {
+            fish2.m_itemData.m_shared.m_description = "$item_fish2_desc";
+        }
+
+        ItemDrop bait = PrefabManager.Cache.GetPrefab<ItemDrop>("FishingBait");
+        if (bait != null)
+        {
+            bait.m_itemData.m_shared.m_description = "$item_fishingbait_desc";
         }
     }
 

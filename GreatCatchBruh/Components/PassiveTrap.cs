@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using GreatCatchBruh.Configuration;
+using GreatCatchBruh.Managers;
 
 namespace GreatCatchBruh.Components;
 
@@ -8,6 +11,9 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
     private static readonly int s_trapProgress = "greatcatch_trap_progress".GetStableHashCode();
     private static readonly int s_trapLastTime = "greatcatch_trap_lasttime".GetStableHashCode();
     private static readonly int s_trapItems = "greatcatch_trap_items".GetStableHashCode();
+    private static readonly int s_trapFuel = "greatcatch_trap_fuel".GetStableHashCode();
+
+    private static readonly List<PassiveTrap> s_allTraps = new();
 
     public TrapType m_trapType = TrapType.BaitCreel;
     public float m_secPerUnit = 300f;
@@ -15,10 +21,29 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
     public float m_minDepth = 0.1f;
     public float m_maxDepth = 2.0f;
 
+    private const int MaxChumTails = 5;
+
     private ZNetView m_nview;
+
+    public int GetMaxFuel()
+    {
+        int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
+        return perChum * MaxChumTails;
+    }
+
+    public float GetSecPerUnit()
+    {
+        if (m_trapType == TrapType.BaitCreel && ConfigRegistry.CreelMinutesPerBait != null)
+        {
+            return Mathf.Max(1.0f, ConfigRegistry.CreelMinutesPerBait.Value * 60f);
+        }
+        return m_secPerUnit;
+    }
 
     private void Awake()
     {
+        s_allTraps.Add(this);
+
         m_nview = GetComponent<ZNetView>();
 
         if (m_nview == null || m_nview.GetZDO() == null)
@@ -27,14 +52,95 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         }
 
         m_nview.Register("RPC_Extract", RPC_Extract);
+        m_nview.Register<string>("RPC_ExtractResponse", RPC_ExtractResponse);
+        m_nview.Register<int>("RPC_AddFuel", RPC_AddFuel);
 
         if (m_nview.IsOwner() && m_nview.GetZDO().GetLong(s_trapLastTime, 0L) == 0L)
         {
-            long nowTicks = ZNet.instance != null ? ZNet.instance.GetTime().Ticks : DateTime.UtcNow.Ticks;
+            long nowTicks = DateTime.UtcNow.Ticks;
             m_nview.GetZDO().Set(s_trapLastTime, nowTicks);
         }
 
         InvokeRepeating(nameof(UpdateTrap), UnityEngine.Random.Range(2f, 5f), 10f);
+    }
+
+    private void OnDestroy()
+    {
+        s_allTraps.Remove(this);
+    }
+
+    public bool IsCrowded()
+    {
+        if (m_trapType != TrapType.BaitCreel)
+        {
+            return false;
+        }
+
+        float minDistance = ConfigRegistry.CreelProximityDistance != null ? ConfigRegistry.CreelProximityDistance.Value : 20.0f;
+        float minDistanceSq = minDistance * minDistance;
+        Vector3 myPos = transform.position;
+
+        for (int i = 0; i < s_allTraps.Count; i++)
+        {
+            PassiveTrap other = s_allTraps[i];
+            if (other == null || other == this || other.m_trapType != TrapType.BaitCreel)
+            {
+                continue;
+            }
+
+            Vector3 diff = other.transform.position - myPos;
+            if (diff.sqrMagnitude < minDistanceSq)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int GetFuel()
+    {
+        if (m_nview == null || m_nview.GetZDO() == null)
+        {
+            return 0;
+        }
+
+        return m_nview.GetZDO().GetInt(s_trapFuel, 0);
+    }
+
+    private void AddFuel(int amount)
+    {
+        if (m_nview != null && m_nview.IsValid())
+        {
+            if (!m_nview.HasOwner())
+            {
+                m_nview.ClaimOwnership();
+            }
+            m_nview.InvokeRPC("RPC_AddFuel", amount);
+        }
+    }
+
+    private void RPC_AddFuel(long caller, int amount)
+    {
+        if (m_nview == null || !m_nview.IsValid() || !m_nview.IsOwner())
+        {
+            return;
+        }
+
+        int current = GetFuel();
+        m_nview.GetZDO().Set(s_trapFuel, current + amount);
+    }
+
+    private void Start()
+    {
+        if (m_trapType == TrapType.BaitCreel)
+        {
+            Player localPlayer = Player.m_localPlayer;
+            if (localPlayer != null && Vector3.Distance(localPlayer.transform.position, transform.position) < 15.0f)
+            {
+                HuginTutorialManager.TriggerBaitCreelPlaced();
+            }
+        }
     }
 
     public string GetHoverName()
@@ -63,6 +169,35 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         else
         {
             text += " ( $piece_container_empty )";
+        }
+
+        if (m_trapType == TrapType.BaitCreel)
+        {
+            int fuel = GetFuel();
+            int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
+            int maxFuel = GetMaxFuel();
+
+            if (fuel > 0)
+            {
+                text += $"\n$msg_trap_chum: {fuel} / {maxFuel}";
+            }
+            else
+            {
+                text += "\n<color=orange>$msg_trap_needs_chum</color>";
+            }
+
+            if (fuel + perChum <= maxFuel)
+            {
+                Player localPlayer = Player.m_localPlayer;
+                if (localPlayer != null && localPlayer.GetInventory() != null && localPlayer.GetInventory().HaveItem("$item_necktail") && currentCount == 0)
+                {
+                    text += "\n[<color=yellow><b>$KEY_Use</b></color>] $msg_trap_add_chum";
+                }
+                else
+                {
+                    text += "\n[<color=yellow><b>1-8</b></color>] $msg_trap_add_chum";
+                }
+            }
         }
 
         if (!string.IsNullOrEmpty(status))
@@ -97,6 +232,35 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return true;
         }
 
+        if (m_trapType == TrapType.BaitCreel)
+        {
+            int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
+            int maxFuel = GetMaxFuel();
+            int currentFuel = GetFuel();
+
+            if (currentFuel + perChum <= maxFuel && character != null)
+            {
+                Inventory inventory = character.GetInventory();
+                if (inventory != null)
+                {
+                    ItemDrop.ItemData neckTail = inventory.GetItem("$item_necktail");
+                    if (neckTail != null)
+                    {
+                        inventory.RemoveOneItem(neckTail);
+                        AddFuel(perChum);
+                        character.Message(MessageHud.MessageType.Center, $"$msg_trap_chum_added ($msg_trap_chum: {currentFuel + perChum} / {maxFuel})");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        if (IsCrowded())
+        {
+            character.Message(MessageHud.MessageType.Center, "$msg_trap_crowded");
+            return true;
+        }
+
         float depth = GetWaterDepth();
         if (depth < m_minDepth)
         {
@@ -105,6 +269,10 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         else if (depth > m_maxDepth)
         {
             character.Message(MessageHud.MessageType.Center, "$msg_trap_too_deep");
+        }
+        else if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        {
+            character.Message(MessageHud.MessageType.Center, "$msg_trap_needs_chum");
         }
         else
         {
@@ -116,13 +284,46 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     public bool UseItem(Humanoid user, ItemDrop.ItemData item)
     {
-        return false;
+        if (m_trapType != TrapType.BaitCreel)
+        {
+            return false;
+        }
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        bool isNeckTail = (item.m_dropPrefab != null && item.m_dropPrefab.name == "NeckTail") || item.m_shared.m_name == "$item_necktail";
+        if (!isNeckTail)
+        {
+            return false;
+        }
+
+        int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
+        int maxFuel = GetMaxFuel();
+        int currentFuel = GetFuel();
+
+        if (currentFuel + perChum > maxFuel)
+        {
+            user.Message(MessageHud.MessageType.Center, "$msg_trap_fuel_full");
+            return true;
+        }
+
+        user.GetInventory().RemoveOneItem(item);
+        AddFuel(perChum);
+        user.Message(MessageHud.MessageType.Center, $"$msg_trap_chum_added ($msg_trap_chum: {currentFuel + perChum} / {maxFuel})");
+        return true;
     }
 
     private void Extract()
     {
         if (m_nview != null && m_nview.IsValid())
         {
+            if (!m_nview.HasOwner())
+            {
+                m_nview.ClaimOwnership();
+            }
             m_nview.InvokeRPC("RPC_Extract");
         }
     }
@@ -140,8 +341,25 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return;
         }
 
+        m_nview.GetZDO().Set(s_trapItems, string.Empty);
+        m_nview.InvokeRPC(caller, "RPC_ExtractResponse", items);
+    }
+
+    private void RPC_ExtractResponse(long caller, string items)
+    {
+        if (string.IsNullOrEmpty(items))
+        {
+            return;
+        }
+
+        Player localPlayer = Player.m_localPlayer;
+        if (localPlayer == null)
+        {
+            return;
+        }
+
         string[] itemPrefabs = items.Split(';');
-        Vector3 basePos = transform.position + Vector3.up * 0.6f;
+        Dictionary<string, int> grouped = new();
 
         for (int i = 0; i < itemPrefabs.Length; i++)
         {
@@ -151,23 +369,70 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
                 continue;
             }
 
-            GameObject itemPrefab = ObjectDB.instance != null ? ObjectDB.instance.GetItemPrefab(prefabName) : null;
-            if (itemPrefab == null)
+            if (grouped.ContainsKey(prefabName))
+            {
+                grouped[prefabName]++;
+            }
+            else
+            {
+                grouped[prefabName] = 1;
+            }
+        }
+
+        Inventory inventory = localPlayer.GetInventory();
+        Vector3 dropPos = localPlayer.transform.position + Vector3.up * 0.5f;
+
+        foreach (KeyValuePair<string, int> entry in grouped)
+        {
+            string prefabName = entry.Key;
+            int totalCount = entry.Value;
+
+            GameObject prefab = ObjectDB.instance != null ? ObjectDB.instance.GetItemPrefab(prefabName) : null;
+            if (prefab == null)
             {
                 continue;
             }
 
-            Vector2 rand = UnityEngine.Random.insideUnitCircle * 0.4f;
-            Vector3 spawnPos = basePos + new Vector3(rand.x, 0.2f * i, rand.y);
-            GameObject spawned = UnityEngine.Object.Instantiate(itemPrefab, spawnPos, Quaternion.identity);
-            ItemDrop itemDrop = spawned.GetComponent<ItemDrop>();
-            if (itemDrop != null)
+            ItemDrop itemDrop = prefab.GetComponent<ItemDrop>();
+            if (itemDrop == null)
             {
-                itemDrop.m_itemData.m_stack = 1;
+                continue;
+            }
+
+            int addedCount = 0;
+            for (int i = 0; i < totalCount; i++)
+            {
+                if (inventory.AddItem(prefab, 1))
+                {
+                    addedCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (addedCount > 0)
+            {
+                localPlayer.ShowPickupMessage(itemDrop.m_itemData, addedCount);
+                HuginTutorialManager.TriggerBaitHarvested(prefabName);
+            }
+
+            int remaining = totalCount - addedCount;
+            if (remaining > 0)
+            {
+                localPlayer.Message(MessageHud.MessageType.Center, "$msg_noroom");
+                ItemDrop dropped = ItemDrop.DropItem(itemDrop.m_itemData, remaining, dropPos, localPlayer.transform.rotation);
+                if (dropped != null)
+                {
+                    Rigidbody rb = dropped.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.linearVelocity = Vector3.up * 3f;
+                    }
+                }
             }
         }
-
-        m_nview.GetZDO().Set(s_trapItems, string.Empty);
     }
 
     public int GetTrapLevel()
@@ -230,6 +495,11 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     public string GetStatusHoverText()
     {
+        if (IsCrowded())
+        {
+            return "<color=orange>$msg_trap_crowded</color>";
+        }
+
         float depth = GetWaterDepth();
         if (depth < m_minDepth)
         {
@@ -239,6 +509,11 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         if (depth > m_maxDepth)
         {
             return "<color=orange>$msg_trap_too_deep</color>";
+        }
+
+        if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        {
+            return "<color=yellow>$msg_trap_dormant</color>";
         }
 
         if (GetTrapLevel() >= m_maxCapacity)
@@ -251,7 +526,22 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     private void UpdateTrap()
     {
-        if (m_nview == null || !m_nview.IsValid() || !m_nview.IsOwner())
+        if (m_nview == null || !m_nview.IsValid())
+        {
+            return;
+        }
+
+        if (!m_nview.HasOwner())
+        {
+            m_nview.ClaimOwnership();
+        }
+
+        if (!m_nview.IsOwner())
+        {
+            return;
+        }
+
+        if (IsCrowded())
         {
             return;
         }
@@ -268,6 +558,11 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return;
         }
 
+        if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        {
+            return;
+        }
+
         float deltaSeconds = GetTimeSinceLastUpdate();
         if (deltaSeconds <= 0f)
         {
@@ -276,16 +571,27 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
         float currentProgress = m_nview.GetZDO().GetFloat(s_trapProgress, 0f) + deltaSeconds;
 
-        if (currentProgress >= m_secPerUnit)
+        float secPerUnit = GetSecPerUnit();
+        if (currentProgress >= secPerUnit)
         {
-            int unitsProduced = (int)(currentProgress / m_secPerUnit);
-            currentProgress %= m_secPerUnit;
+            int unitsProduced = (int)(currentProgress / secPerUnit);
+            currentProgress %= secPerUnit;
 
             for (int i = 0; i < unitsProduced; i++)
             {
                 if (GetTrapLevel() >= m_maxCapacity)
                 {
                     break;
+                }
+
+                if (m_trapType == TrapType.BaitCreel)
+                {
+                    int fuel = GetFuel();
+                    if (fuel <= 0)
+                    {
+                        break;
+                    }
+                    m_nview.GetZDO().Set(s_trapFuel, fuel - 1);
                 }
 
                 SpawnHarvest();
@@ -297,17 +603,22 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     private float GetTimeSinceLastUpdate()
     {
-        if (m_nview == null || m_nview.GetZDO() == null || ZNet.instance == null)
+        if (m_nview == null || m_nview.GetZDO() == null)
         {
             return 0f;
         }
 
-        DateTime now = ZNet.instance.GetTime();
+        DateTime now = DateTime.UtcNow;
         long lastTicks = m_nview.GetZDO().GetLong(s_trapLastTime, now.Ticks);
-        DateTime lastTime = new DateTime(lastTicks);
+        DateTime lastTime = new DateTime(lastTicks, DateTimeKind.Utc);
         TimeSpan delta = now - lastTime;
 
         m_nview.GetZDO().Set(s_trapLastTime, now.Ticks);
+
+        if (delta.TotalDays > 1.0)
+        {
+            return 0f;
+        }
 
         float seconds = (float)delta.TotalSeconds;
         if (seconds < 0f)

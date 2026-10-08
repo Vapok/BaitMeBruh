@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using GreatCatchBruh.Managers;
 
 namespace GreatCatchBruh.Patches;
 
@@ -22,7 +23,11 @@ internal static class FishingFloatCatchPatch
         float xpAward = quality * CatchXpBaseMultiplier;
         owner.RaiseSkill(Skills.SkillType.Fishing, xpAward);
 
-        if (owner is Player player && player.m_helmetItem != null && player.m_helmetItem.m_dropPrefab != null && player.m_helmetItem.m_dropPrefab.name == "HelmetFishingHat")
+        if (owner is Player player)
+        {
+            HuginTutorialManager.TriggerFirstFishCaught(player);
+
+            if (player.m_helmetItem != null && player.m_helmetItem.m_dropPrefab != null && player.m_helmetItem.m_dropPrefab.name == "HelmetFishingHat")
         {
             if (UnityEngine.Random.value < 0.25f && __instance != null)
             {
@@ -39,4 +44,5 @@ internal static class FishingFloatCatchPatch
             }
         }
     }
+}
 }

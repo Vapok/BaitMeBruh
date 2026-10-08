@@ -20,6 +20,12 @@ internal static class FishingFloatFixedUpdatePatch
     private static readonly MethodInfo _interceptReelMethod =
         AccessTools.Method(typeof(FishingFloatFixedUpdatePatch), nameof(InterceptReelUseStamina));
 
+    private static readonly MethodInfo _raiseSkillMethod =
+        AccessTools.Method(typeof(Character), nameof(Character.RaiseSkill), new[] { typeof(Skills.SkillType), typeof(float) });
+
+    private static readonly MethodInfo _interceptRaiseSkillMethod =
+        AccessTools.Method(typeof(FishingFloatFixedUpdatePatch), nameof(InterceptRaiseSkill));
+
     private static readonly AccessTools.FieldRef<FishingFloat, float> _lineLengthRef =
         AccessTools.FieldRefAccess<FishingFloat, float>("m_lineLength");
 
@@ -27,16 +33,88 @@ internal static class FishingFloatFixedUpdatePatch
     private static bool Prefix(FishingFloat __instance)
     {
         Character owner = __instance.GetOwner();
-        if (owner != null && (owner.IsAttachedToShip() || owner.GetStandingOnShip() != null))
+        if (owner == null)
         {
-            Transform rodTop = __instance.GetRodTop(owner);
-            if (rodTop != null)
+            return true;
+        }
+
+        Transform rodTop = __instance.GetRodTop(owner);
+        if (rodTop != null)
+        {
+            float currentDistance = Vector3.Distance(rodTop.position, __instance.transform.position);
+            float lineLength = _lineLengthRef(__instance);
+
+            if (!__instance.IsInWater())
             {
-                float currentDistance = Vector3.Distance(rodTop.position, __instance.transform.position);
-                float lineLength = _lineLengthRef(__instance);
-                if (currentDistance > lineLength && currentDistance <= __instance.m_maxDistance)
+                if (currentDistance >= __instance.m_maxDistance - 0.25f)
+                {
+                    Vector3 directionFromRod = (__instance.transform.position - rodTop.position).normalized;
+                    __instance.transform.position = rodTop.position + (directionFromRod * (__instance.m_maxDistance - 0.3f));
+                    currentDistance = __instance.m_maxDistance - 0.3f;
+                    _lineLengthRef(__instance) = currentDistance;
+
+                    Rigidbody body = __instance.GetComponent<Rigidbody>();
+                    if (body != null)
+                    {
+                        body.linearVelocity = new Vector3(0f, Mathf.Min(body.linearVelocity.y, 0f), 0f);
+                    }
+                }
+                else if (currentDistance > lineLength)
                 {
                     _lineLengthRef(__instance) = currentDistance;
+                }
+            }
+            else
+            {
+                if (currentDistance >= __instance.m_maxDistance - 0.25f)
+                {
+                    Vector3 directionFromRod = (__instance.transform.position - rodTop.position).normalized;
+                    __instance.transform.position = rodTop.position + (directionFromRod * (__instance.m_maxDistance - 0.3f));
+                    currentDistance = __instance.m_maxDistance - 0.3f;
+                    _lineLengthRef(__instance) = currentDistance;
+                }
+                else if ((owner.IsAttachedToShip() || owner.GetStandingOnShip() != null) && currentDistance > lineLength)
+                {
+                    _lineLengthRef(__instance) = currentDistance;
+                }
+            }
+
+            Fish currentFish = __instance.GetCatch();
+            if (owner.IsBlocking())
+            {
+                if (currentFish != null && owner.HaveStamina())
+                {
+                    float fishDistance = Vector3.Distance(currentFish.transform.position, owner.transform.position);
+                    if (lineLength <= 1.8f || currentDistance <= 2.2f || fishDistance <= 2.5f)
+                    {
+                        string msg = FishingFloat.Catch(currentFish, owner);
+                        __instance.Message(msg, true);
+                        __instance.SetCatch(null);
+                        currentFish.OnHooked(null);
+                        ZNetView catchNetView = __instance.GetComponent<ZNetView>();
+                        if (catchNetView != null && catchNetView.IsValid())
+                        {
+                            catchNetView.Destroy();
+                        }
+                        return false;
+                    }
+                }
+                else if (currentFish == null)
+                {
+                    if (lineLength <= 1.5f || currentDistance <= 1.8f || (!__instance.IsInWater() && currentDistance <= 2.5f))
+                    {
+                        MethodInfo returnBaitMethod = AccessTools.Method(typeof(FishingFloat), "ReturnBait");
+                        if (returnBaitMethod != null)
+                        {
+                            returnBaitMethod.Invoke(__instance, null);
+                        }
+                        ZNetView baitNetView = __instance.GetComponent<ZNetView>();
+                        if (baitNetView != null && baitNetView.IsValid())
+                        {
+                            baitNetView.Destroy();
+                        }
+                        return false;
+                    }
                 }
             }
         }
@@ -56,11 +134,6 @@ internal static class FishingFloatFixedUpdatePatch
         if (lineState == null)
         {
             lineState = __instance.gameObject.AddComponent<FishingLineState>();
-        }
-
-        if (owner == null)
-        {
-            return true;
         }
 
         bool isStruggling = fish.IsEscaping();
@@ -124,11 +197,26 @@ internal static class FishingFloatFixedUpdatePatch
                     yield return new CodeInstruction(OpCodes.Call, _interceptReelMethod);
                 }
             }
+            else if (instruction.Calls(_raiseSkillMethod))
+            {
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return new CodeInstruction(OpCodes.Call, _interceptRaiseSkillMethod);
+            }
             else
             {
                 yield return instruction;
             }
         }
+    }
+
+    public static void InterceptRaiseSkill(Character owner, Skills.SkillType skill, float value, FishingFloat floatInstance)
+    {
+        if (owner == null || floatInstance == null || floatInstance.GetCatch() == null)
+        {
+            return;
+        }
+
+        owner.RaiseSkill(skill, value);
     }
 
     public static void InterceptHookedUseStamina(Character owner, float fallbackStamina, FishingFloat floatInstance)

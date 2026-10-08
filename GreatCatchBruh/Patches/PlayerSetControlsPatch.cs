@@ -65,6 +65,14 @@ internal static class PlayerSetControlsPatch
             new CodeInstruction(OpCodes.Call, _shouldDetachMethod)
         };
 
+        for (int i = exprStart; i < exprEnd; i++)
+        {
+            if (list[i].labels != null && list[i].labels.Count > 0)
+            {
+                replacement[0].labels.AddRange(list[i].labels);
+            }
+        }
+
         list.RemoveRange(exprStart, exprEnd - exprStart);
         list.InsertRange(exprStart, replacement);
 
@@ -73,10 +81,10 @@ internal static class PlayerSetControlsPatch
 
     public static bool ShouldDetachOnInput(Player player, Vector3 movedir, bool attack, bool secondaryAttack, bool block, bool blockHold, bool jump, bool crouch)
     {
-        if (player.IsAttachedToShip())
+        if ((player.IsAttached() || player.InEmote()) && !player.InBed())
         {
-            ItemDrop.ItemData rightItem = player.GetRightItem();
-            if (rightItem != null && rightItem.m_dropPrefab != null && rightItem.m_dropPrefab.name.StartsWith("FishingRod"))
+            ItemDrop.ItemData currentWeapon = player.GetCurrentWeapon();
+            if (currentWeapon != null && currentWeapon.m_dropPrefab != null && currentWeapon.m_dropPrefab.name.StartsWith("FishingRod"))
             {
                 return (movedir != Vector3.zero) || jump || crouch;
             }

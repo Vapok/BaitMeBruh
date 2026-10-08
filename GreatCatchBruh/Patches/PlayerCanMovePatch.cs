@@ -8,13 +8,18 @@ internal static class PlayerCanMovePatch
     [HarmonyPostfix]
     private static void Postfix(Player __instance, ref bool __result)
     {
-        if (__result || !__instance.IsAttachedToShip())
+        if (__result)
         {
             return;
         }
 
-        ItemDrop.ItemData rightItem = __instance.GetRightItem();
-        if (rightItem != null && rightItem.m_dropPrefab != null && rightItem.m_dropPrefab.name.StartsWith("FishingRod"))
+        if ((!__instance.IsAttached() && !__instance.InEmote()) || __instance.InBed())
+        {
+            return;
+        }
+
+        ItemDrop.ItemData currentWeapon = __instance.GetCurrentWeapon();
+        if (currentWeapon != null && currentWeapon.m_dropPrefab != null && currentWeapon.m_dropPrefab.name.StartsWith("FishingRod"))
         {
             __result = true;
         }

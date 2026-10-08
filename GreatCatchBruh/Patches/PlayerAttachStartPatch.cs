@@ -6,15 +6,15 @@ namespace GreatCatchBruh.Patches;
 internal static class PlayerAttachStartPatch
 {
     [HarmonyPrefix]
-    private static void Prefix(Player __instance, bool onShip, ref bool hideWeapons)
+    private static void Prefix(Player __instance, bool isBed, ref bool hideWeapons)
     {
-        if (!onShip)
+        if (isBed)
         {
             return;
         }
 
-        ItemDrop.ItemData rightItem = __instance.GetRightItem();
-        if (rightItem != null && rightItem.m_dropPrefab != null && rightItem.m_dropPrefab.name.StartsWith("FishingRod"))
+        ItemDrop.ItemData currentWeapon = __instance.GetCurrentWeapon();
+        if (currentWeapon != null && currentWeapon.m_dropPrefab != null && currentWeapon.m_dropPrefab.name.StartsWith("FishingRod"))
         {
             hideWeapons = false;
         }

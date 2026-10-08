@@ -5,10 +5,10 @@ namespace GreatCatchBruh.Managers;
 
 public static class FishingTensionManager
 {
-    private const float BaseReelStamina = 6.0f;
-    private const float TensionReelStaminaFactor = 8.0f;
-    private const float BaseHookedStamina = 1.0f;
-    private const float TensionHookedStaminaFactor = 1.5f;
+    private const float BaseReelStamina = 2.0f;
+    private const float TensionReelStaminaFactor = 2.5f;
+    private const float BaseHookedStamina = 0.3f;
+    private const float TensionHookedStaminaFactor = 0.5f;
 
     private const float DefaultRodDamping = 1.3f;
     private const float PrimitiveRodDamping = 1.0f;

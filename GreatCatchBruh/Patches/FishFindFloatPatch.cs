@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
+using GreatCatchBruh.Managers;
 
 namespace GreatCatchBruh.Patches;
 
@@ -21,6 +22,9 @@ internal static class FishFindFloatPatch
             }
         }
 
+        float baseDetectionRange = MorningFishManager.GetDetectionRange();
+        float hookChance = MorningFishManager.GetBaseHookChance(__instance.m_baseHookChance);
+
         foreach (FishingFloat floatInstance in FishingFloat.GetAllInstances())
         {
             if (floatInstance == null || !floatInstance.IsInWater() || floatInstance.GetCatch() != null)
@@ -28,12 +32,12 @@ internal static class FishFindFloatPatch
                 continue;
             }
 
-            float effectiveRange = floatInstance.m_range * rangeMultiplier;
+            float effectiveRange = Mathf.Max(floatInstance.m_range, baseDetectionRange) * rangeMultiplier;
             float distance = Vector3.Distance(__instance.transform.position, floatInstance.transform.position);
 
             if (distance <= effectiveRange)
             {
-                if (Random.value < __instance.m_baseHookChance)
+                if (Random.value < hookChance)
                 {
                     __result = floatInstance;
                     return false;

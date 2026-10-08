@@ -40,7 +40,7 @@ public static class TrapPieceManager
             Requirements = new[]
             {
                 new RequirementConfig { Item = "Wood", Amount = 10, Recover = true },
-                new RequirementConfig { Item = "FineWood", Amount = 4, Recover = true },
+                new RequirementConfig { Item = "TrophyNeck", Amount = 1, Recover = true },
                 new RequirementConfig { Item = "Stone", Amount = 2, Recover = true }
             }
         };
