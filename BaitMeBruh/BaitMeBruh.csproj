@@ -142,6 +142,7 @@
     <ItemGroup>
         <EmbeddedResource Include="Translations\English.json" />
         <EmbeddedResource Include="Assets\Bundles\greatcatch" />
+        <EmbeddedResource Include="Assets\Icons\trollfish_chowder.png" />
         <Content Include="ILRepack.Config.props" />
         <Content Include="ILRepack.targets" />
     </ItemGroup>

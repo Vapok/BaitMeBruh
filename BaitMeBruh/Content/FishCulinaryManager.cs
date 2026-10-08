@@ -24,9 +24,75 @@ public static class FishCulinaryManager
 
         _registered = true;
 
+        RegisterCustomFoods();
         ConfigureCampfireFishCooking();
         RegisterWholeFishRecipes();
         UpdateItemDescriptions();
+    }
+
+    private static void RegisterCustomFoods()
+    {
+        Sprite chowderIcon = LoadEmbeddedSprite("BaitMeBruh.Assets.Icons.trollfish_chowder.png");
+
+        ItemConfig chowderConfig = new ItemConfig
+        {
+            Name = "$item_trollfish_chowder",
+            Description = "$item_trollfish_chowder_desc",
+            CraftingStation = "piece_cauldron",
+            MinStationLevel = 1,
+            Icons = chowderIcon != null ? new[] { chowderIcon } : null,
+            Requirements = new[]
+            {
+                new RequirementConfig { Item = "Fish5", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "MushroomYellow", Amount = 2, Recover = false }
+            }
+        };
+
+        CustomItem customChowder = new CustomItem("TrollfishChowder", "CarrotSoup", chowderConfig);
+        if (customChowder.ItemPrefab != null)
+        {
+            ItemDrop itemDrop = customChowder.ItemDrop;
+            if (itemDrop != null)
+            {
+                ItemDrop.ItemData.SharedData shared = itemDrop.m_itemData.m_shared;
+                shared.m_name = "$item_trollfish_chowder";
+                shared.m_description = "$item_trollfish_chowder_desc";
+                shared.m_itemType = ItemDrop.ItemData.ItemType.Consumable;
+                shared.m_food = 15f;
+                shared.m_foodStamina = 45f;
+                shared.m_foodBurnTime = 1200f;
+                shared.m_foodRegen = 2f;
+                shared.m_weight = 1.0f;
+                shared.m_maxStackSize = 10;
+                if (chowderIcon != null)
+                {
+                    shared.m_icons = new[] { chowderIcon };
+                }
+            }
+        }
+
+        Jotunn.Managers.ItemManager.Instance.AddItem(customChowder);
+    }
+
+    private static Sprite LoadEmbeddedSprite(string resourceName)
+    {
+        System.Reflection.Assembly assembly = typeof(FishCulinaryManager).Assembly;
+        using System.IO.Stream stream = assembly.GetManifestResourceStream(resourceName);
+        if (stream == null)
+        {
+            return null;
+        }
+
+        byte[] buffer = new byte[stream.Length];
+        stream.Read(buffer, 0, buffer.Length);
+
+        Texture2D texture = Jotunn.Utils.AssetUtils.LoadImage(buffer);
+        if (texture != null)
+        {
+            return Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
+        }
+
+        return null;
     }
 
     private static void UpdateItemDescriptions()
@@ -93,20 +159,6 @@ public static class FishCulinaryManager
 
     private static void RegisterWholeFishRecipes()
     {
-        RegisterRecipe(new RecipeConfig
-        {
-            Name = "Recipe_TrollfishChowder",
-            Item = "FishSoup",
-            Amount = 1,
-            CraftingStation = "piece_cauldron",
-            MinStationLevel = 1,
-            Requirements = new[]
-            {
-                new RequirementConfig { Item = "Fish5", Amount = 1, Recover = false },
-                new RequirementConfig { Item = "MushroomYellow", Amount = 2, Recover = false }
-            }
-        });
-
         RegisterRecipe(new RecipeConfig
         {
             Name = "Recipe_FrostBiteMeadBase",
