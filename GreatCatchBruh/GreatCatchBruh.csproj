@@ -154,7 +154,7 @@
     </Target>
     <Target Name="Copy" AfterTargets="ILRepack" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <ItemGroup>
-            <TranslationFiles Include="$(ModRoot)/$(ProjectName)/Translations/*.json" />
+            <TranslationFiles Include="$(ProjectDir)Translations\*.json" />
             <PackageDocs Include="$(ModRoot)/$(ProjectName)/LICENSE.md;$(ModRoot)/$(ProjectName)/manifest.json;$(ModRoot)/$(ProjectName)/CHANGELOG.md;$(ModRoot)/$(ProjectName)/README.md;$(ModRoot)/$(ProjectName)/icon.png" />
         </ItemGroup>
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ReleaseRoot)/$(ProjectName)-Vapok/plugins" SkipUnchangedFiles="true" />
