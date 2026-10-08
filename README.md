@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🛡️ GreatCatchBruh
+# 🛡️ BaitMeBruh
 
 ### *An extensive complete overhaul of Valheim's vanilla fishing system featuring dynamic line tension, primitive rod progression, biome bait crafting, passive harvesting nets, seated seafaring angling, and culinary expansions.*
 
-[![GitHub Release](https://img.shields.io/github/v/release/Vapok/GreatCatchBruh?include_prereleases&logo=github&style=for-the-badge)](https://github.com/Vapok/GreatCatchBruh/releases)
-[![Thunderstore Version](https://img.shields.io/thunderstore/v/Vapok/GreatCatchBruh?logo=thunderstore&style=for-the-badge)](https://thunderstore.io/c/valheim/p/Vapok/GreatCatchBruh/)
+[![GitHub Release](https://img.shields.io/github/v/release/Vapok/BaitMeBruh?include_prereleases&logo=github&style=for-the-badge)](https://github.com/Vapok/BaitMeBruh/releases)
+[![Thunderstore Version](https://img.shields.io/thunderstore/v/Vapok/BaitMeBruh?logo=thunderstore&style=for-the-badge)](https://thunderstore.io/c/valheim/p/Vapok/BaitMeBruh/)
 <br>
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/5YAJkRFBXt)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -14,7 +14,7 @@
 
 </div>
 
-**GreatCatchBruh** completely overhauls Valheim's vanilla fishing mechanics from the ground level up. Instead of fishing being gated behind locating the Haldor merchant in the Black Forest and suffering flat stamina attrition, GreatCatchBruh establishes an authentic angling progression path starting in the Meadows at Workbench Tier 1. It replaces the vanilla stamina depletion with a responsive line tension and rhythm mini-game, decouples regional baits from merchant purchases and late-game trophies with comprehensive Cauldron crafting recipes, introduces autonomous coastal fish nets and bait creels, and allows anglers to fish while seated aboard sailing vessels with line trolling.
+**BaitMeBruh** completely overhauls Valheim's vanilla fishing mechanics from the ground level up. Instead of fishing being gated behind locating the Haldor merchant in the Black Forest and suffering flat stamina attrition, BaitMeBruh establishes an authentic angling progression path starting in the Meadows at Workbench Tier 1. It replaces the vanilla stamina depletion with a responsive line tension and rhythm mini-game, decouples regional baits from merchant purchases and late-game trophies with comprehensive Cauldron crafting recipes, introduces autonomous coastal fish nets and bait creels, and allows anglers to fish while seated aboard sailing vessels with line trolling.
 
 ---
 
@@ -22,13 +22,13 @@
 
 <br>
 
-[![Survival Servers](https://raw.githubusercontent.com/Vapok/GreatCatchBruh/main/images/survivalservers_banner.png)](https://www.survivalservers.com/services/game_servers/valheim/?ref=vapok)
+[![Survival Servers](https://raw.githubusercontent.com/Vapok/BaitMeBruh/main/images/survivalservers_banner.png)](https://www.survivalservers.com/services/game_servers/valheim/?ref=vapok)
 
 </div>
 
-## 🛡️ How GreatCatchBruh Overhauls Vanilla Fishing
+## 🛡️ How BaitMeBruh Overhauls Vanilla Fishing
 
-| Vanilla Fishing System | GreatCatchBruh Overhaul |
+| Vanilla Fishing System | BaitMeBruh Overhaul |
 | :--- | :--- |
 | **Gated Behind Haldor**: Must find the merchant in the Black Forest to purchase a fishing rod and basic bait. | **Meadows Tier 1 Progression**: Craft the **Primitive Fishing Rod** at Workbench Tier 1 using early Meadows materials. |
 | **Stamina Attrition**: Reeling constantly drains player stamina until depleted, resulting in lost fish. | **Dynamic Tension Rhythm Mini-Game**: Flat stamina drain is replaced by line tension ($T \in [0.0, 1.0]$) with fish struggle and rest cycles. Reeling during struggle builds tension; reeling during rest easily pulls the fish in. |
@@ -79,15 +79,15 @@ Fish behavior dynamically responds to environmental conditions in the world:
 
 ## 🎒 Passive Harvesting Equipment & Deployable Kits
 
-GreatCatchBruh introduces autonomous harvesting pieces and portable deployable net kits. Coastal and deep-sea nets are crafted at stations as portable kits, then placed in the water via the Hammer anywhere without requiring a nearby crafting station.
+BaitMeBruh introduces autonomous harvesting pieces and portable deployable net kits. Coastal and deep-sea nets are crafted at stations as portable kits, then placed in the water via the Hammer anywhere without requiring a nearby crafting station.
 
 ### 1. Equipment & Kit Crafting Recipes
 
 | Icon | Item / Piece Name | Station | Crafting Requirements | Weight / Stack | Placement & Operational Specs |
 | :---: | :--- | :---: | :--- | :---: | :--- |
-| <img src="https://raw.githubusercontent.com/Vapok/GreatCatchBruh/main/images/I_BaitCreel.png" width="28" height="28" alt="Bait Creel" /> | **Bait Creel**<br>`piece_bait_creel` | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Hammer<br>*(Workbench)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/wood.png" width="18" height="18" alt="Wood" /> 10x Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/TrophyNeck.png" width="18" height="18" alt="Neck Trophy" /> 1x Neck Trophy<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/stone.png" width="18" height="18" alt="Stone" /> 2x Stone | — | • **Placement**: Hammer (Crafting tab) in shallow waters ($0.1\text{m} - 2.0\text{m}$)<br>• **Reach**: 3.0m placement reach<br>• **Territory**: Enforces 20.0m minimum distance between creels<br>• **Health**: 200 HP |
-| <img src="https://raw.githubusercontent.com/Vapok/GreatCatchBruh/main/images/I_FishnetCoastal.png" width="28" height="28" alt="Coastal Fish Net Kit" /> | **Coastal Fish Net Kit**<br>`ItemFishnetCoastal`<br>*(Piece: `piece_fishnet_coastal`)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Workbench 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/roundlog.png" width="18" height="18" alt="Core Wood" /> 15x Core Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/finewood.png" width="18" height="18" alt="Fine Wood" /> 10x Fine Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bronze.png" width="18" height="18" alt="Bronze" /> 4x Bronze<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bronzenails.png" width="18" height="18" alt="Bronze Nails" /> 8x Bronze Nails<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/troll_hide.png" width="18" height="18" alt="Troll Hide" /> 4x Troll Hide<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/stone.png" width="18" height="18" alt="Stone" /> 4x Stone | **25.0**<br>*(Stack: 1)* | • **Placement**: Hammer anywhere in coastal waters ($1.0\text{m} - 6.0\text{m}$)<br>• **Station Gating**: Consumes kit; **no workbench required nearby**<br>• **Reach**: 8.0m placement reach for shore and boat deployment<br>• **Dismantle**: Demolishing with Hammer refunds the complete kit<br>• **Health**: 400 HP |
-| <img src="https://raw.githubusercontent.com/Vapok/GreatCatchBruh/main/images/I_FishnetDeep.png" width="28" height="28" alt="Deep-Sea Anchored Net Kit" /> | **Deep-Sea Anchored Net Kit**<br>`ItemFishnetDeep`<br>*(Piece: `piece_fishnet_deep`)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/forge.png" width="20" height="20" alt="Forge" /> Forge 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/elderbark.png" width="18" height="18" alt="Ancient Bark" /> 15x Ancient Bark<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/iron.png" width="18" height="18" alt="Iron" /> 6x Iron<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/ironnails.png" width="18" height="18" alt="Iron Nails" /> 12x Iron Nails<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/chain.png" width="18" height="18" alt="Chain" /> 4x Chain<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/guck.png" width="18" height="18" alt="Guck" /> 4x Guck | **50.0**<br>*(Stack: 1)* | • **Placement**: Hammer in deep open ocean ($5.0\text{m} - 50.0\text{m}$)<br>• **Station Gating**: Consumes kit; **no forge required nearby**<br>• **Reach**: 10.0m placement reach for deployment over ship gunwales<br>• **Dismantle**: Demolishing with Hammer refunds the complete kit<br>• **Health**: 800 HP |
+| <img src="https://raw.githubusercontent.com/Vapok/BaitMeBruh/main/images/I_BaitCreel.png" width="28" height="28" alt="Bait Creel" /> | **Bait Creel**<br>`piece_bait_creel` | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Hammer<br>*(Workbench)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/wood.png" width="18" height="18" alt="Wood" /> 10x Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/TrophyNeck.png" width="18" height="18" alt="Neck Trophy" /> 1x Neck Trophy<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/stone.png" width="18" height="18" alt="Stone" /> 2x Stone | — | • **Placement**: Hammer (Crafting tab) in shallow waters ($0.1\text{m} - 2.0\text{m}$)<br>• **Reach**: 3.0m placement reach<br>• **Territory**: Enforces 20.0m minimum distance between creels<br>• **Health**: 200 HP |
+| <img src="https://raw.githubusercontent.com/Vapok/BaitMeBruh/main/images/I_FishnetCoastal.png" width="28" height="28" alt="Coastal Fish Net Kit" /> | **Coastal Fish Net Kit**<br>`ItemFishnetCoastal`<br>*(Piece: `piece_fishnet_coastal`)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Workbench 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/roundlog.png" width="18" height="18" alt="Core Wood" /> 15x Core Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/finewood.png" width="18" height="18" alt="Fine Wood" /> 10x Fine Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bronze.png" width="18" height="18" alt="Bronze" /> 4x Bronze<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bronzenails.png" width="18" height="18" alt="Bronze Nails" /> 8x Bronze Nails<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/troll_hide.png" width="18" height="18" alt="Troll Hide" /> 4x Troll Hide<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/stone.png" width="18" height="18" alt="Stone" /> 4x Stone | **25.0**<br>*(Stack: 1)* | • **Placement**: Hammer anywhere in coastal waters ($1.0\text{m} - 6.0\text{m}$)<br>• **Station Gating**: Consumes kit; **no workbench required nearby**<br>• **Reach**: 8.0m placement reach for shore and boat deployment<br>• **Dismantle**: Demolishing with Hammer refunds the complete kit<br>• **Health**: 400 HP |
+| <img src="https://raw.githubusercontent.com/Vapok/BaitMeBruh/main/images/I_FishnetDeep.png" width="28" height="28" alt="Deep-Sea Anchored Net Kit" /> | **Deep-Sea Anchored Net Kit**<br>`ItemFishnetDeep`<br>*(Piece: `piece_fishnet_deep`)* | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/forge.png" width="20" height="20" alt="Forge" /> Forge 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/elderbark.png" width="18" height="18" alt="Ancient Bark" /> 15x Ancient Bark<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/iron.png" width="18" height="18" alt="Iron" /> 6x Iron<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/ironnails.png" width="18" height="18" alt="Iron Nails" /> 12x Iron Nails<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/chain.png" width="18" height="18" alt="Chain" /> 4x Chain<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/guck.png" width="18" height="18" alt="Guck" /> 4x Guck | **50.0**<br>*(Stack: 1)* | • **Placement**: Hammer in deep open ocean ($5.0\text{m} - 50.0\text{m}$)<br>• **Station Gating**: Consumes kit; **no forge required nearby**<br>• **Reach**: 10.0m placement reach for deployment over ship gunwales<br>• **Dismantle**: Demolishing with Hammer refunds the complete kit<br>• **Health**: 800 HP |
 
 ---
 
@@ -121,7 +121,7 @@ All regional baits can be crafted at the Workbench or Cauldron using organic bio
 
 ## 🍲 Culinary Economy & Whole Fish Cooking
 
-GreatCatchBruh integrates caught fish directly into camp cooking and alchemy, allowing whole fish to be cooked immediately without requiring late-game filleting stations.
+BaitMeBruh integrates caught fish directly into camp cooking and alchemy, allowing whole fish to be cooked immediately without requiring late-game filleting stations.
 
 ### 1. Campfire Spit Roasting
 
@@ -178,10 +178,10 @@ GreatCatchBruh integrates caught fish directly into camp cooking and alchemy, al
 
 ## ⚙️ Configuration Reference
 
-Configuration settings are stored in `BepInEx/config/vapok.mods.GreatCatchBruh.cfg`.
+Configuration settings are stored in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`.
 
 ### Server Settings (Synced)
-* **Enable GreatCatchBruh**: Toggles all mod features (Default: `true`).
+* **Enable BaitMeBruh**: Toggles all mod features (Default: `true`).
 * **Bait Creel Proximity Distance**: Minimum meters required between Bait Creels before waters become overcrowded (Default: `20.0`).
 * **Bait Produced Per Chum**: Number of bait yields produced per Neck Tail added as chum (Default: `3`).
 * **Bait Creel Minutes Per Bait**: Real-world minutes required to produce one unit of bait (Default: `5.0`).
@@ -208,12 +208,12 @@ Configuration settings are stored in `BepInEx/config/vapok.mods.GreatCatchBruh.c
 
 ### Manual Installation
 1. Extract the downloaded `.zip` archive.
-2. Place the `GreatCatchBruh` folder into your `Valheim/BepInEx/plugins/` directory.
+2. Place the `BaitMeBruh` folder into your `Valheim/BepInEx/plugins/` directory.
 3. Launch the game.
 
 ---
 
 ## 💬 Feedback & Community
 
-* Report issues or request features on [GitHub](https://github.com/Vapok/GreatCatchBruh/issues).
+* Report issues or request features on [GitHub](https://github.com/Vapok/BaitMeBruh/issues).
 * Join the community on [Discord](https://discord.gg/5YAJkRFBXt) for discussions and support.

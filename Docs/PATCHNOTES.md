@@ -2,7 +2,7 @@
 * **Initial Project Architecture**:
   * Established modular BepInEx plugin architecture utilizing `Vapok.Common` 3.21.1015 and `JotunnLib` 2.30.2.
   * Synchronized configuration pipeline via `ConfigSyncBase` and `ConfigRegistry`.
-  * Configured `ILRepack` MSBuild task to internalize `Vapok.Valheim.Common.dll` into target assembly `GreatCatchBruh.dll`.
+  * Configured `ILRepack` MSBuild task to internalize `Vapok.Valheim.Common.dll` into target assembly `BaitMeBruh.dll`.
 * **Dynamic Tension Engine**:
   * Implemented `FishingFloat_UpdateLine_Patch` and `FishingFloat_Update_Patch` managing real-time tension calculus $T \in [0.0, 1.0]$.
   * Decoupled stamina drain from line reeling; hooked stamina consumption to tension build and rest phase reeling.

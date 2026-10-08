@@ -10,7 +10,7 @@ public static class BuildBaitCreelBundle
     private const string MaterialsDir = "Assets/Materials";
     private const string TexturesDir = "Assets/Textures";
     private const string BundlesDir = "Assets/AssetBundles";
-    private const string TargetModBundleDir = "/home/vapok/Modding/Valheim/GreatCatchBruh/GreatCatchBruh/Assets/Bundles";
+    private const string TargetModBundleDir = "/home/vapok/Modding/Valheim/BaitMeBruh/BaitMeBruh/Assets/Bundles";
 
     public static void Build()
     {
