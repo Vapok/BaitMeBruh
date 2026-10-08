@@ -23,7 +23,7 @@ public static class NetKitManager
             "piece_workbench",
             1,
             1,
-            "RoundLog:15,FineWood:10,Bronze:4,BronzeNails:8,TrollHide:4,Stone:4");
+            "RoundLog:15,BronzeNails:18,TrollHide:4,Stone:4");
 
         _deepKitRecipe = new ConfigurableRecipe(
             "Recipe: Deep-Sea Anchored Net Kit",
@@ -188,6 +188,18 @@ public static class NetKitManager
 
         boxCol.size = colliderSize;
         boxCol.center = colliderCenter;
+
+        Floating floating = itemPrefab.GetComponent<Floating>();
+        if (floating == null)
+        {
+            floating = itemPrefab.AddComponent<Floating>();
+        }
+
+        floating.m_waterLevelOffset = 0.2f;
+        floating.m_force = 0.5f;
+        floating.m_balanceForceFraction = 0.05f;
+        floating.m_damping = 0.05f;
+        floating.m_forceDistance = 1.0f;
 
         Transform attach = itemPrefab.transform.Find("attach");
         if (attach == null)

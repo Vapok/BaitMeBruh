@@ -5,6 +5,9 @@
 * **Hooked Feedback**: Added splash effects and audio when you successfully hook a fish.
 * **Black Soup Recipe**: Giant Herring can now be used to brew 2x Black Soup at the Cauldron with Honey and Turnips as an alternative to Bloodbags.
 * **Heavy Fishing Bait Recipe**: Decoupled Ocean fishing bait from Chitin by crafting with Serpent Scales and Guck instead, removing the Leviathan bottleneck.
+* **Buoyant Net Kits**: Net kit item drops now float naturally on the water surface when deconstructed or dropped, preventing them from sinking to the seafloor.
+* **Refined Bait Creel Netting**: Redesigned the Bait Creel netting model with uniform mesh grid density across the lid and drape skirt, eliminating rim distortion banding while preserving dynamic wave interaction.
+* **Balanced Coastal Net Recipe**: Reduced Coastal Net Kit recipe to 4 ingredients (18 Bronze Nails, 15 Core Wood, 4 Troll Hide, 4 Stone) to respect Valheim's 4-ingredient UI limit.
 
 # 0.0.2 - Development Release
 * **Trollfish Chowder**: Added a new custom Black Forest recipe brewed at the Cauldron using Trollfish and Yellow Mushrooms.
