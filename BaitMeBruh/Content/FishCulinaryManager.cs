@@ -233,6 +233,19 @@ public static class FishCulinaryManager
                     {
                         mats[m].shader = sourceMaterial.shader;
                     }
+
+                    if (visualRenderers[r].gameObject.name == "Soup")
+                    {
+                        mats[m].color = new Color(1f, 0.98f, 0.92f, 1f);
+                    }
+                    else if (visualRenderers[r].gameObject.name == "Bowl")
+                    {
+                        mats[m].color = new Color(1f, 0.96f, 0.90f, 1f);
+                    }
+                    else
+                    {
+                        mats[m].color = Color.white;
+                    }
                 }
             }
             visualRenderers[r].sharedMaterials = mats;
