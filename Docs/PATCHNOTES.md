@@ -1,3 +1,16 @@
+# 0.0.3 - Development Release
+* **Sensory Cues & HUD Architecture**:
+  * Created `FishingCueManager.cs` centralizing audio playback, particle amplification, and transient light beacon orchestration.
+  * Added `FishingFloatNibblePatch.cs` with Harmony postfix on `FishingFloat.RPC_Nibble` to play `m_nibbleEffect` audio directly at player position (`owner.transform.position`), spawn 2.5x splash effects at the float, and ignite a transient golden light beacon.
+  * Implemented `TransientLightFader.cs` mono component smoothly fading real-time PointLights without shadows and safely destroying GameObjects upon expiration.
+  * Decoupled `StrikePrompt` from gauge `CanvasGroup` in `FishingTensionHud.cs` by nesting the gauge background and fill under an isolated `GaugeContainer`, allowing the `[RMB] STRIKE!` banner to display at full brightness independently.
+  * Updated `FishingFloatTryToHookPatch.cs` to trigger `FishingCueManager.TriggerHookedCue`, playing hook-set audio at player position, `m_jumpEffects` splash burst at the float, a golden water flash, and an alert header.
+* **Recipe Balancing**:
+  * In `BaitRecipeManager.cs`, updated `Recipe_FishingBaitOcean_Alt` requirements to 20x `FishingBait`, 2x `SerpentScale`, 4x `Guck` (Station: `piece_cauldron`, MinLevel: 3), eliminating the circular Chitin dependency.
+  * In `FishCulinaryManager.cs`, replaced `SwampFishBroth` with `Recipe_SwampFishBroth` producing 2x `BlackSoup` from 1x `Fish6`, 2x `Honey`, 2x `Turnip` (Station: `piece_cauldron`, MinLevel: 2).
+* **Documentation**:
+  * Updated README comparison table to refer to "rare trophies" instead of "boss trophies".
+
 # 0.0.2 - Development Release
 * **Custom Culinary Content**:
   * Implemented `RegisterCustomFoods()` in `FishCulinaryManager.cs` registering custom consumable `TrollfishChowder` cloned from `CarrotSoup` template.

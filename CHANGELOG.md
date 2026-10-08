@@ -1,3 +1,9 @@
+# 0.0.3 - Development Release
+* **Bite & Strike Cues**: Added audio and bright visual cues when a fish bites your bait. A warm light illuminates the water around your bobber even in dark or stormy weather, and a clear prompt appears on your screen so you know when to strike.
+* **Hooked Feedback**: Added splash effects and audio when you successfully hook a fish.
+* **Black Soup Recipe**: Giant Herring can now be used to brew 2x Black Soup at the Cauldron with Honey and Turnips as an alternative to Bloodbags.
+* **Heavy Fishing Bait Recipe**: Decoupled Ocean fishing bait from Chitin by crafting with Serpent Scales and Guck instead, removing the Leviathan bottleneck.
+
 # 0.0.2 - Development Release
 * **Trollfish Chowder**: Added a new custom Black Forest recipe brewed at the Cauldron using Trollfish and Yellow Mushrooms.
 * **Troll's Guile Sneak Buff**: Consuming Trollfish Chowder grants a +10 Sneak skill bonus alongside 45 stamina for 20 minutes.
