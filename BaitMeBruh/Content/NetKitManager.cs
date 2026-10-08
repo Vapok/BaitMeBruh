@@ -23,7 +23,7 @@ public static class NetKitManager
             "piece_workbench",
             1,
             1,
-            "RoundLog:15,FineWood:10,Bronze:4,BronzeNails:8,TrollHide:4,Stone:4");
+            "RoundLog:15,BronzeNails:8,TrollHide:4,Stone:4");
 
         _deepKitRecipe = new ConfigurableRecipe(
             "Recipe: Deep-Sea Anchored Net Kit",
