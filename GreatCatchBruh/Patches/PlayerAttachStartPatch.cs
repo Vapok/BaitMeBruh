@@ -8,7 +8,7 @@ internal static class PlayerAttachStartPatch
     [HarmonyPrefix]
     private static void Prefix(Player __instance, bool isBed, ref bool hideWeapons)
     {
-        if (isBed)
+        if (isBed || __instance.GetDoodadController() != null)
         {
             return;
         }

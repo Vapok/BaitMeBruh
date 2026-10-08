@@ -81,7 +81,7 @@ internal static class PlayerSetControlsPatch
 
     public static bool ShouldDetachOnInput(Player player, Vector3 movedir, bool attack, bool secondaryAttack, bool block, bool blockHold, bool jump, bool crouch)
     {
-        if ((player.IsAttached() || player.InEmote()) && !player.InBed())
+        if ((player.IsAttached() || player.InEmote()) && !player.InBed() && player.GetDoodadController() == null)
         {
             ItemDrop.ItemData currentWeapon = player.GetCurrentWeapon();
             if (currentWeapon != null && currentWeapon.m_dropPrefab != null && currentWeapon.m_dropPrefab.name.StartsWith("FishingRod"))

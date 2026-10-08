@@ -13,7 +13,7 @@ internal static class PlayerCanMovePatch
             return;
         }
 
-        if ((!__instance.IsAttached() && !__instance.InEmote()) || __instance.InBed())
+        if ((!__instance.IsAttached() && !__instance.InEmote()) || __instance.InBed() || __instance.GetDoodadController() != null)
         {
             return;
         }

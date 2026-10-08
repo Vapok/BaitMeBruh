@@ -41,12 +41,14 @@ internal static class PlayerUpdateAttackBowDrawPatch
             return false;
         }
 
+        if (player.InBed() || player.GetDoodadController() != null)
+        {
+            return player.IsAttached();
+        }
+
         if (weapon != null && weapon.m_dropPrefab != null && weapon.m_dropPrefab.name.StartsWith("FishingRod"))
         {
-            if (!player.InBed())
-            {
-                return false;
-            }
+            return false;
         }
 
         return player.IsAttached();

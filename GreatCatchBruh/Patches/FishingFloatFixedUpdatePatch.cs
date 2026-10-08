@@ -44,6 +44,8 @@ internal static class FishingFloatFixedUpdatePatch
             float currentDistance = Vector3.Distance(rodTop.position, __instance.transform.position);
             float lineLength = _lineLengthRef(__instance);
 
+            Fish currentFish = __instance.GetCatch();
+
             if (!__instance.IsInWater())
             {
                 if (currentDistance >= __instance.m_maxDistance - 0.25f)
@@ -73,13 +75,12 @@ internal static class FishingFloatFixedUpdatePatch
                     currentDistance = __instance.m_maxDistance - 0.3f;
                     _lineLengthRef(__instance) = currentDistance;
                 }
-                else if ((owner.IsAttachedToShip() || owner.GetStandingOnShip() != null) && currentDistance > lineLength)
+                else if (currentFish == null && !owner.IsBlocking() && (owner.IsAttachedToShip() || owner.GetStandingOnShip() != null) && currentDistance > lineLength)
                 {
                     _lineLengthRef(__instance) = currentDistance;
                 }
             }
 
-            Fish currentFish = __instance.GetCatch();
             if (owner.IsBlocking())
             {
                 if (currentFish != null && owner.HaveStamina())

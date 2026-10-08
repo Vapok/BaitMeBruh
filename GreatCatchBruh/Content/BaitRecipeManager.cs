@@ -24,7 +24,7 @@ public static class BaitRecipeManager
 
         RegisterRecipe("Recipe_FishingBait_Alt", "FishingBait", 20, "piece_workbench", 1, new[]
         {
-            new RequirementConfig { Item = "Resin", Amount = 10 },
+            new RequirementConfig { Item = "NeckTail", Amount = 5 },
             new RequirementConfig { Item = "Honey", Amount = 2 },
             new RequirementConfig { Item = "BoneFragments", Amount = 10 }
         });
