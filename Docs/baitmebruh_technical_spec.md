@@ -118,13 +118,13 @@ Early bait crafting is unlocked at appropriate stations (`piece_workbench` for M
 | Recipe Output | Station | Fish Consumed | Additional Ingredients | Duration / Effect |
 | :--- | :--- | :--- | :--- | :--- |
 | **Viking Fish Skewer** | Cooking Station | 1x Perch (`Fish1`) or Pike (`Fish2`) | None | 20 min; 35 HP, 25 Stamina |
-| **Trollfish Chowder** | Cauldron 2 | 1x Trollfish (`Fish3`) | 2x YellowMushroom, 1x Onion | 25 min; 25 HP, 65 Stamina, +10 Sneak |
+| **Trollfish Chowder** | Cauldron 2 | 1x Trollfish (`Fish5`) | 2x YellowMushroom, 1x Onion | 25 min; 25 HP, 65 Stamina, +10 Sneak |
 | **Frost-Bite Mead Base** | Cauldron 2 | 1x Tetra (`Fish4_cave`) | 10x Honey, 5x Thistle, 2x WolfFang | Ferments into 6x Frost Resistance Mead |
-| **Swamp Broth** | Cauldron 2 | 1x Giant Herring (`Fish5`) | 4x Bloodbag, 2x Guck | 25 min; 55 HP, 30 Stamina, +25% HP Regen |
-| **Mariner's Stew** | Cauldron 3 | 1x Coral Ostracod (`Fish7`) | 2x BarleyFlour, 2x Cloudberry | 30 min; 30 HP, 75 Stamina, -30% Swim Stamina |
-| **Puffer Toxic Extract** | Fermenter | 1x Pufferfish (`Fish11`) | 10x Ooze, 2x Guck | Yields 10x Poison Coating (+50 Poison dmg to ammo/weapons) |
-| **Glowfin Ration** | Cauldron 4 | 1x Anglerfish (`Fish8`) | 2x Magecap, 1x RoyalJelly | 30 min; 35 HP, 40 Stamina, 60 Eitr, Ambient Glow |
-| **Cinderfish Fillet** | Cauldron 5 | 1x Magmafish (`Fish9`) | 2x Fiddleheadfern, 1x SpiceAshlands | 35 min; 85 HP, 40 Stamina, Cold Immunity |
+| **Swamp Broth** | Cauldron 2 | 1x Giant Herring (`Fish6`) | 4x Bloodbag, 2x Guck | 25 min; 55 HP, 30 Stamina, +25% HP Regen |
+| **Mariner's Stew** | Cauldron 3 | 1x Tuna (`Fish3`) | 2x BarleyFlour, 2x Cloudberry | 30 min; 30 HP, 75 Stamina, -30% Swim Stamina |
+| **Puffer Toxic Extract** | Fermenter | 1x Pufferfish (`Fish12`) | 10x Ooze, 2x Guck | Yields 10x Poison Coating (+50 Poison dmg to ammo/weapons) |
+| **Glowfin Ration** | Cauldron 4 | 1x Anglerfish (`Fish9`) | 2x Magecap, 1x RoyalJelly | 30 min; 35 HP, 40 Stamina, 60 Eitr, Ambient Glow |
+| **Cinderfish Fillet** | Cauldron 5 | 1x Magmafish (`Fish11`) | 2x Fiddleheadfern, 1x SpiceAshlands | 35 min; 85 HP, 40 Stamina, Cold Immunity |
 
 ---
 

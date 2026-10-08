@@ -962,19 +962,19 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         switch (baitPrefab)
         {
             case "FishingBaitForest":
-                return roll < 0.70f ? "Fish3" : "Fish2";
+                return roll < 0.70f ? "Fish5" : "Fish2";
             case "FishingBaitSwamp":
-                return roll < 0.70f ? "Fish5" : "Fish12";
+                return "Fish6";
             case "FishingBaitCave":
                 return "Fish4_cave";
             case "FishingBaitPlains":
-                return roll < 0.70f ? "Fish7" : "Fish12";
+                return "Fish7";
             case "FishingBaitOcean":
-                return roll < 0.60f ? "Fish6" : "Fish11";
+                return roll < 0.50f ? "Fish3" : "Fish8";
             case "FishingBaitMistlands":
-                return roll < 0.60f ? "Fish8" : "Fish11";
+                return roll < 0.70f ? "Fish9" : "Fish12";
             case "FishingBaitAshlands":
-                return "Fish9";
+                return "Fish11";
             case "FishingBaitDeepNorth":
                 return "Fish10";
             case "FishingBait":

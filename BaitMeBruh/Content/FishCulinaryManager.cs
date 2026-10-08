@@ -102,7 +102,7 @@ public static class FishCulinaryManager
             MinStationLevel = 1,
             Requirements = new[]
             {
-                new RequirementConfig { Item = "Fish3", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "Fish5", Amount = 1, Recover = false },
                 new RequirementConfig { Item = "MushroomYellow", Amount = 2, Recover = false }
             }
         });
@@ -132,7 +132,7 @@ public static class FishCulinaryManager
             MinStationLevel = 2,
             Requirements = new[]
             {
-                new RequirementConfig { Item = "Fish5", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "Fish6", Amount = 1, Recover = false },
                 new RequirementConfig { Item = "Bloodbag", Amount = 2, Recover = false },
                 new RequirementConfig { Item = "Entrails", Amount = 2, Recover = false }
             }
@@ -147,7 +147,7 @@ public static class FishCulinaryManager
             MinStationLevel = 2,
             Requirements = new[]
             {
-                new RequirementConfig { Item = "Fish7", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "Fish3", Amount = 1, Recover = false },
                 new RequirementConfig { Item = "Honey", Amount = 10, Recover = false },
                 new RequirementConfig { Item = "Cloudberry", Amount = 2, Recover = false }
             }
@@ -162,7 +162,7 @@ public static class FishCulinaryManager
             MinStationLevel = 2,
             Requirements = new[]
             {
-                new RequirementConfig { Item = "Fish11", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "Fish12", Amount = 1, Recover = false },
                 new RequirementConfig { Item = "Honey", Amount = 10, Recover = false },
                 new RequirementConfig { Item = "Thistle", Amount = 4, Recover = false }
             }
@@ -177,7 +177,7 @@ public static class FishCulinaryManager
             MinStationLevel = 4,
             Requirements = new[]
             {
-                new RequirementConfig { Item = "Fish8", Amount = 1, Recover = false },
+                new RequirementConfig { Item = "Fish9", Amount = 1, Recover = false },
                 new RequirementConfig { Item = "Honey", Amount = 10, Recover = false },
                 new RequirementConfig { Item = "Magecap", Amount = 2, Recover = false }
             }

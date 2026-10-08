@@ -97,7 +97,7 @@ Rather than a single static piece, fish trapping evolves with seafaring and meta
      - `6x LeatherScraps` (Tough twine netting)
      - `4x BronzeNails` (Reinforced frame joinery)
      - `2x Stone` (Anchor sinkers)
-   - **Production**: Yields 1 fish every 900s (15 min), up to a max capacity of 3 fish. Catches common local coastal/river species (e.g. Perch `Fish1`, Pike `Fish2`, Trollfish `Fish3`).
+   - **Production**: Yields 1 fish every 900s (15 min), up to a max capacity of 3 fish. Catches common local coastal/river species (e.g. Perch `Fish1`, Pike `Fish2`, Trollfish `Fish5`).
 
 2. **Tier 2: Deep-Sea Anchored Net (`piece_fishnet_deep`)**
    - **Progression / Station**: Swamp (`forge` Lv 2 / `piece_workbench` Lv 3). Unlocks alongside the Longship and Iron Age.
@@ -107,7 +107,7 @@ Rather than a single static piece, fish trapping evolves with seafaring and meta
      - `8x IronNails` (Heavy-duty marine fasteners)
      - `4x Guck` or `8x DeerHide` (Tarred water-resistant rigging)
      - `2x Chain` or `4x Stone` (Heavy ocean mooring weights)
-   - **Production**: Yields 1 fish every 600s (10 min), up to a max capacity of 6 fish. Capable of catching deep-water and ocean pelagic species (e.g. Giant Herring `Fish5`, Tuna `Fish6`, Coral Ostracod `Fish7`).
+   - **Production**: Yields 1 fish every 600s (10 min), up to a max capacity of 6 fish. Capable of catching deep-water and ocean pelagic species (e.g. Giant Herring `Fish6`, Tuna `Fish3`, Coral Cod `Fish8`).
 
 ---
 
