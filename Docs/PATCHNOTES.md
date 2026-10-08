@@ -1,3 +1,16 @@
+# 0.0.2 - Development Release
+* **Custom Culinary Content**:
+  * Implemented `RegisterCustomFoods()` in `FishCulinaryManager.cs` registering custom consumable `TrollfishChowder` cloned from `CarrotSoup` template.
+  * Embedded custom 256x256 icon `trollfish_chowder.png` as an assembly manifest resource loaded via `Jotunn.Utils.AssetUtils.LoadImage`.
+  * Configured food stats: 15 Health, 45 Stamina, 1200s (20 min) burn time, 2 hp/tick regen.
+* **Status Effect Integration**:
+  * Created and registered custom `SE_Stats` (`SE_TrollfishChowder`) with Jotunn's `ItemManager`.
+  * Configured `m_skillLevel = Skills.SkillType.Sneak` and `m_skillLevelModifier = 10f` for 1200s duration.
+  * Bound status effect to `ItemDrop.ItemData.SharedData.m_consumeStatusEffect` for automatic execution on item consumption.
+* **Localization & Documentation**:
+  * Added `$item_trollfish_chowder`, `$item_trollfish_chowder_desc`, `$se_trollfish_chowder`, and `$se_trollfish_chowder_tooltip` keys in `Translations/English.json`.
+  * Updated README whole-fish cooking table and added the Valheim Native Fish Species & Biome Compendium.
+
 # 0.0.1 - Development Release
 * **Refactoring & Technical Debt Elimination**:
   * Extracted `FishSpawnerBackup` from `SpawnSystemUpdateSpawnListPatch.cs` into standalone class file `FishSpawnerBackup.cs` to adhere strictly to single-class per file invariant.

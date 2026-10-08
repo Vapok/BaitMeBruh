@@ -1,3 +1,8 @@
+# 0.0.2 - Development Release
+* **Trollfish Chowder**: Added a new custom Black Forest recipe brewed at the Cauldron using Trollfish and Yellow Mushrooms.
+* **Troll's Guile Sneak Buff**: Consuming Trollfish Chowder grants a +10 Sneak skill bonus alongside 45 stamina for 20 minutes.
+* **Culinary & Fish Balancing**: Updated whole-fish Cauldron recipes and stats to align with native Valheim biomes and progression.
+
 # 0.0.1 - Development Release
 * **Refactoring & Polish**: Streamlined internal systems, removed redundant code, and improved overall stability.
 * **Fish Net Placement Fix**: Fixed an issue where fish nets placed in water would immediately sink and disappear.
