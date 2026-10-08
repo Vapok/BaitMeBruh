@@ -33,6 +33,7 @@ public static class FishCulinaryManager
     private static void RegisterCustomFoods()
     {
         Sprite chowderIcon = LoadEmbeddedSprite("BaitMeBruh.Assets.Icons.trollfish_chowder.png");
+        AssetBundle bundle = TrapAssetManager.GetBundle();
 
         SE_Stats sneakEffect = ScriptableObject.CreateInstance<SE_Stats>();
         sneakEffect.name = "SE_TrollfishChowder";
@@ -80,10 +81,127 @@ public static class FishCulinaryManager
                 {
                     shared.m_icons = new[] { chowderIcon };
                 }
+
+                RegisterItemStandSupport(itemDrop);
             }
+
+            SetupChowderDropVisual(customChowder.ItemPrefab, bundle);
         }
 
         Jotunn.Managers.ItemManager.Instance.AddItem(customChowder);
+    }
+
+    private static void SetupChowderDropVisual(GameObject itemPrefab, AssetBundle bundle)
+    {
+        if (itemPrefab == null || bundle == null)
+        {
+            return;
+        }
+
+        Renderer[] renderers = itemPrefab.GetComponentsInChildren<Renderer>(true);
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].enabled = false;
+        }
+
+        GameObject dropPrefab = bundle.LoadAsset<GameObject>("drop_trollfish_chowder");
+        if (dropPrefab == null)
+        {
+            return;
+        }
+
+        GameObject dropVisual = UnityEngine.Object.Instantiate(dropPrefab, itemPrefab.transform, false);
+        dropVisual.name = "TrollfishChowderVisual";
+        dropVisual.transform.localPosition = Vector3.zero;
+        dropVisual.transform.localRotation = Quaternion.identity;
+        dropVisual.transform.localScale = Vector3.one;
+
+        Rigidbody childRb = dropVisual.GetComponent<Rigidbody>();
+        if (childRb != null)
+        {
+            UnityEngine.Object.Destroy(childRb);
+        }
+
+        Collider childCol = dropVisual.GetComponent<Collider>();
+        if (childCol != null)
+        {
+            UnityEngine.Object.Destroy(childCol);
+        }
+
+        SetupVisualShaders(dropVisual);
+
+        BoxCollider boxCol = itemPrefab.GetComponent<BoxCollider>();
+        if (boxCol == null)
+        {
+            boxCol = itemPrefab.AddComponent<BoxCollider>();
+        }
+        boxCol.enabled = true;
+        boxCol.center = new Vector3(0f, 0.082f, 0f);
+        boxCol.size = new Vector3(0.36f, 0.165f, 0.36f);
+
+        Transform attachTransform = itemPrefab.transform.Find("attach");
+        if (attachTransform == null)
+        {
+            Transform childAttach = dropVisual.transform.Find("attach");
+            if (childAttach != null)
+            {
+                childAttach.SetParent(itemPrefab.transform, false);
+            }
+        }
+    }
+
+    private static void RegisterItemStandSupport(ItemDrop itemDrop)
+    {
+        if (itemDrop == null)
+        {
+            return;
+        }
+
+        GameObject itemStandH = PrefabManager.Cache.GetPrefab<GameObject>("itemstandh");
+        if (itemStandH != null)
+        {
+            ItemStand stand = itemStandH.GetComponent<ItemStand>();
+            if (stand != null && !stand.m_supportedItems.Contains(itemDrop))
+            {
+                stand.m_supportedItems.Add(itemDrop);
+            }
+        }
+    }
+
+    private static void SetupVisualShaders(GameObject visual)
+    {
+        int itemLayer = LayerMask.NameToLayer("item");
+        if (itemLayer >= 0)
+        {
+            visual.layer = itemLayer;
+            foreach (Transform child in visual.GetComponentsInChildren<Transform>(true))
+            {
+                child.gameObject.layer = itemLayer;
+            }
+        }
+
+        Shader litShader = Shader.Find("Custom/Piece");
+        if (litShader == null)
+        {
+            litShader = Shader.Find("Standard");
+        }
+
+        if (litShader != null)
+        {
+            Renderer[] visualRenderers = visual.GetComponentsInChildren<Renderer>(true);
+            for (int r = 0; r < visualRenderers.Length; r++)
+            {
+                Material[] mats = visualRenderers[r].materials;
+                for (int m = 0; m < mats.Length; m++)
+                {
+                    if (mats[m] != null)
+                    {
+                        mats[m].shader = litShader;
+                    }
+                }
+                visualRenderers[r].materials = mats;
+            }
+        }
     }
 
     private static Sprite LoadEmbeddedSprite(string resourceName)

@@ -1,6 +1,7 @@
 # 0.0.2 - Development Release
 * **Trollfish Chowder**: Added a new custom Black Forest recipe brewed at the Cauldron using Trollfish and Yellow Mushrooms.
 * **Troll's Guile Sneak Buff**: Consuming Trollfish Chowder grants a +10 Sneak skill bonus alongside 45 stamina for 20 minutes.
+* **3D Drop Model & World Placement**: Added a custom carved Norse wooden bowl drop model with high-definition textures, yellow mushroom caps, and a trollfish fin garnish. Can be placed on horizontal table item stands or dropped freely in the world.
 * **Culinary & Fish Balancing**: Updated whole-fish Cauldron recipes and stats to align with native Valheim biomes and progression.
 
 # 0.0.1 - Development Release
