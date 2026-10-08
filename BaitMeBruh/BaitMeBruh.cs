@@ -25,7 +25,7 @@ public class BaitMeBruh : BaseUnityPlugin, IPluginInfo
 {
     private const string _pluginId = "vapok.mods.BaitMeBruh";
     private const string _displayName = "BaitMeBruh!";
-    private const string _version = "0.0.3";
+    private const string _version = "0.0.4";
     public static bool ValheimAwake;
     public static Waiting Waiter;
 

@@ -1,3 +1,5 @@
+# 0.0.4 - Development Release
+
 # 0.0.3 - Development Release
 * **Fully Configurable Recipes**: All crafting recipes across the mod—including all 9 biome baits, net kits, primitive fishing rod, cauldron meals, and mead bases—can now be customized in the configuration file or in-game menu. You can change crafting stations, station levels, ingredient costs, and output amounts, or disable recipes completely. Placeable traps remain fixed to their deployable kits.
 * **Configurable Food Stats & Effects**: You can now customize food health, stamina, duration, and health regen in the configuration file, as well as the duration and sneak skill intensity of the Troll's Guile buff.

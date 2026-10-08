@@ -1,3 +1,5 @@
+# 0.0.4 - Development Release
+
 # 0.0.3 - Development Release
 * **Factory Pattern Architecture & Configuration Overhaul**:
   * Implemented `FactoryBase.cs` and `AssetFactory.cs` matching the AdventureBackpacks architecture, providing unified logger and `ConfigSyncBase` references.
