@@ -8,18 +8,6 @@ namespace BaitMeBruh.Patches;
 [HarmonyPatch(typeof(SpawnSystem), "UpdateSpawnList")]
 internal static class SpawnSystemUpdateSpawnListPatch
 {
-    private class FishSpawnerBackup
-    {
-        public SpawnSystem.SpawnData Spawner;
-        public float OriginalSpawnChance;
-        public int OriginalMaxSpawned;
-        public int OriginalGroupSizeMin;
-        public int OriginalGroupSizeMax;
-        public float OriginalSpawnInterval;
-        public bool OriginalSpawnAtDay;
-        public bool OriginalSpawnAtNight;
-    }
-
     [HarmonyPrefix]
     private static void Prefix(List<SpawnSystem.SpawnData> spawners, ref List<FishSpawnerBackup> __state)
     {

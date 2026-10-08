@@ -11,13 +11,6 @@ public class FishingLineState : MonoBehaviour
     public float OverTensionDuration { get; private set; }
     public bool IsSnapped { get; private set; }
 
-    private FishingFloat _fishingFloat;
-
-    private void Awake()
-    {
-        _fishingFloat = GetComponent<FishingFloat>();
-    }
-
     public void ResetTension()
     {
         CurrentTension = 0f;

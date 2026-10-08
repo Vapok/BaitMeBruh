@@ -12,7 +12,6 @@ public static class FishingTensionManager
 
     private const float DefaultRodDamping = 1.3f;
     private const float PrimitiveRodDamping = 1.0f;
-    private const float ReinforcedRodDamping = 1.6f;
 
     public static float GetRodTensionDamping(Character owner)
     {
@@ -25,10 +24,6 @@ public static class FishingTensionManager
                 if (prefabName == "FishingRodPrimitive")
                 {
                     return PrimitiveRodDamping;
-                }
-                if (prefabName == "FishingRodReinforced")
-                {
-                    return ReinforcedRodDamping;
                 }
             }
         }

@@ -81,116 +81,77 @@ public static class TrapPieceManager
         };
 
         GameObject customPrefab = bundle != null ? bundle.LoadAsset<GameObject>("piece_bait_creel") : null;
-
-        CustomPiece piece;
-        if (customPrefab != null)
+        if (customPrefab == null)
         {
-            SetupPrefabVisuals(customPrefab);
-
-            Piece pieceComp = customPrefab.GetComponent<Piece>();
-            if (pieceComp == null)
-            {
-                pieceComp = customPrefab.AddComponent<Piece>();
-            }
-
-            pieceComp.m_name = "$piece_bait_creel";
-            pieceComp.m_description = "$piece_bait_creel_desc";
-            pieceComp.m_category = Piece.PieceCategory.Crafting;
-            pieceComp.m_enabled = true;
-            pieceComp.m_waterPiece = false;
-            pieceComp.m_noInWater = false;
-            pieceComp.m_groundPiece = false;
-            pieceComp.m_groundOnly = false;
-            pieceComp.m_noClipping = true;
-            pieceComp.m_extraPlacementDistance = 3;
-            if (creelIcon != null)
-            {
-                pieceComp.m_icon = creelIcon;
-            }
-
-            WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
-            if (wearNTear == null)
-            {
-                wearNTear = customPrefab.AddComponent<WearNTear>();
-            }
-
-            wearNTear.m_noRoofWear = false;
-            wearNTear.m_noSupportWear = false;
-            wearNTear.m_supports = true;
-            wearNTear.m_health = 200f;
-            wearNTear.m_materialType = WearNTear.MaterialType.Wood;
-            wearNTear.m_staticPosition = true;
-
-            ZNetView netView = customPrefab.GetComponent<ZNetView>();
-            if (netView == null)
-            {
-                netView = customPrefab.AddComponent<ZNetView>();
-            }
-
-            netView.m_persistent = true;
-            netView.m_type = (ZDO.ObjectType)2;
-            netView.m_distant = false;
-            netView.m_syncInitialScale = false;
-
-            PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
-            if (trap == null)
-            {
-                trap = customPrefab.AddComponent<PassiveTrap>();
-            }
-
-            trap.m_trapType = TrapType.BaitCreel;
-            trap.m_secPerUnit = 300f;
-            trap.m_maxCapacity = 3;
-            trap.m_minDepth = 0.1f;
-            trap.m_maxDepth = 2.0f;
-
-            TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
-            if (sway == null)
-            {
-                customPrefab.AddComponent<TrapNetWaveSway>();
-            }
-
-            piece = new CustomPiece(customPrefab, fixReference: true, config);
-        }
-        else
-        {
-            piece = new CustomPiece("piece_bait_creel", "piece_chest_barrel", config);
-            Container container = piece.PiecePrefab.GetComponent<Container>();
-            if (container != null)
-            {
-                UnityEngine.Object.DestroyImmediate(container);
-            }
-
-            Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
-            if (pieceComp != null)
-            {
-                pieceComp.m_name = "$piece_bait_creel";
-                pieceComp.m_description = "$piece_bait_creel_desc";
-                pieceComp.m_category = Piece.PieceCategory.Crafting;
-                pieceComp.m_waterPiece = true;
-                pieceComp.m_noInWater = false;
-                pieceComp.m_groundPiece = false;
-                pieceComp.m_groundOnly = false;
-                pieceComp.m_noClipping = true;
-                pieceComp.m_extraPlacementDistance = 3;
-            }
-
-            WearNTear wearNTear = piece.PiecePrefab.GetComponent<WearNTear>();
-            if (wearNTear != null)
-            {
-                wearNTear.m_noRoofWear = false;
-                wearNTear.m_noSupportWear = false;
-                wearNTear.m_supports = true;
-            }
-
-            PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
-            trap.m_trapType = TrapType.BaitCreel;
-            trap.m_secPerUnit = 300f;
-            trap.m_maxCapacity = 3;
-            trap.m_minDepth = 0.1f;
-            trap.m_maxDepth = 2.0f;
+            throw new System.InvalidOperationException("[BaitMeBruh] Embedded bundle missing 'piece_bait_creel' prefab.");
         }
 
+        SetupPrefabVisuals(customPrefab);
+
+        Piece pieceComp = customPrefab.GetComponent<Piece>();
+        if (pieceComp == null)
+        {
+            pieceComp = customPrefab.AddComponent<Piece>();
+        }
+
+        pieceComp.m_name = "$piece_bait_creel";
+        pieceComp.m_description = "$piece_bait_creel_desc";
+        pieceComp.m_category = Piece.PieceCategory.Crafting;
+        pieceComp.m_enabled = true;
+        pieceComp.m_waterPiece = false;
+        pieceComp.m_noInWater = false;
+        pieceComp.m_groundPiece = false;
+        pieceComp.m_groundOnly = false;
+        pieceComp.m_noClipping = true;
+        pieceComp.m_extraPlacementDistance = 3;
+        if (creelIcon != null)
+        {
+            pieceComp.m_icon = creelIcon;
+        }
+
+        WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
+        if (wearNTear == null)
+        {
+            wearNTear = customPrefab.AddComponent<WearNTear>();
+        }
+
+        wearNTear.m_noRoofWear = false;
+        wearNTear.m_noSupportWear = false;
+        wearNTear.m_supports = true;
+        wearNTear.m_health = 200f;
+        wearNTear.m_materialType = WearNTear.MaterialType.Wood;
+        wearNTear.m_staticPosition = true;
+
+        ZNetView netView = customPrefab.GetComponent<ZNetView>();
+        if (netView == null)
+        {
+            netView = customPrefab.AddComponent<ZNetView>();
+        }
+
+        netView.m_persistent = true;
+        netView.m_type = (ZDO.ObjectType)2;
+        netView.m_distant = false;
+        netView.m_syncInitialScale = false;
+
+        PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
+        if (trap == null)
+        {
+            trap = customPrefab.AddComponent<PassiveTrap>();
+        }
+
+        trap.m_trapType = TrapType.BaitCreel;
+        trap.m_secPerUnit = 300f;
+        trap.m_maxCapacity = 3;
+        trap.m_minDepth = 0.1f;
+        trap.m_maxDepth = 2.0f;
+
+        TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
+        if (sway == null)
+        {
+            customPrefab.AddComponent<TrapNetWaveSway>();
+        }
+
+        CustomPiece piece = new CustomPiece(customPrefab, fixReference: true, config);
         PieceManager.Instance.AddPiece(piece);
     }
 
@@ -213,136 +174,91 @@ public static class TrapPieceManager
         };
 
         GameObject customPrefab = bundle != null ? bundle.LoadAsset<GameObject>("piece_fishnet_coastal") : null;
-        CustomPiece piece;
-
-        if (customPrefab != null)
+        if (customPrefab == null)
         {
-            SetupPrefabVisuals(customPrefab);
+            throw new System.InvalidOperationException("[BaitMeBruh] Embedded bundle missing 'piece_fishnet_coastal' prefab.");
+        }
 
-            Piece pieceComp = customPrefab.GetComponent<Piece>();
-            if (pieceComp == null)
-            {
-                pieceComp = customPrefab.AddComponent<Piece>();
-            }
+        SetupPrefabVisuals(customPrefab);
 
-            pieceComp.m_name = "$piece_fishnet_coastal";
-            pieceComp.m_description = "$piece_fishnet_coastal_desc";
-            pieceComp.m_category = Piece.PieceCategory.Crafting;
-            pieceComp.m_enabled = true;
-            pieceComp.m_craftingStation = null;
-            pieceComp.m_waterPiece = true;
-            pieceComp.m_noInWater = false;
-            pieceComp.m_groundPiece = false;
-            pieceComp.m_groundOnly = false;
-            pieceComp.m_noClipping = true;
-            pieceComp.m_extraPlacementDistance = 8;
+        Piece pieceComp = customPrefab.GetComponent<Piece>();
+        if (pieceComp == null)
+        {
+            pieceComp = customPrefab.AddComponent<Piece>();
+        }
 
-            if (netIcon != null)
-            {
-                pieceComp.m_icon = netIcon;
-            }
-            else
-            {
-                GameObject kitPrefab = PrefabManager.Instance.GetPrefab("ItemFishnetCoastal");
-                if (kitPrefab != null)
-                {
-                    ItemDrop kitDrop = kitPrefab.GetComponent<ItemDrop>();
-                    if (kitDrop != null && kitDrop.m_itemData != null)
-                    {
-                        pieceComp.m_icon = kitDrop.m_itemData.GetIcon();
-                    }
-                }
-            }
+        pieceComp.m_name = "$piece_fishnet_coastal";
+        pieceComp.m_description = "$piece_fishnet_coastal_desc";
+        pieceComp.m_category = Piece.PieceCategory.Crafting;
+        pieceComp.m_enabled = true;
+        pieceComp.m_craftingStation = null;
+        pieceComp.m_waterPiece = true;
+        pieceComp.m_noInWater = false;
+        pieceComp.m_groundPiece = false;
+        pieceComp.m_groundOnly = false;
+        pieceComp.m_noClipping = true;
+        pieceComp.m_extraPlacementDistance = 8;
 
-            WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
-            if (wearNTear == null)
-            {
-                wearNTear = customPrefab.AddComponent<WearNTear>();
-            }
-
-            wearNTear.m_noRoofWear = false;
-            wearNTear.m_noSupportWear = false;
-            wearNTear.m_supports = true;
-            wearNTear.m_health = 300f;
-            wearNTear.m_materialType = WearNTear.MaterialType.Wood;
-            wearNTear.m_staticPosition = true;
-
-            ZNetView netView = customPrefab.GetComponent<ZNetView>();
-            if (netView == null)
-            {
-                netView = customPrefab.AddComponent<ZNetView>();
-            }
-
-            netView.m_persistent = true;
-            netView.m_type = (ZDO.ObjectType)2;
-            netView.m_distant = false;
-            netView.m_syncInitialScale = false;
-
-            PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
-            if (trap == null)
-            {
-                trap = customPrefab.AddComponent<PassiveTrap>();
-            }
-
-            trap.m_trapType = TrapType.CoastalNet;
-            trap.m_secPerUnit = 600f;
-            trap.m_maxCapacity = 2;
-            trap.m_minDepth = 1.0f;
-            trap.m_maxDepth = 6.0f;
-
-            TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
-            if (sway == null)
-            {
-                customPrefab.AddComponent<TrapNetWaveSway>();
-            }
-
-            piece = new CustomPiece(customPrefab, fixReference: true, config);
+        if (netIcon != null)
+        {
+            pieceComp.m_icon = netIcon;
         }
         else
         {
-            piece = new CustomPiece("piece_fishnet_coastal", "piece_chest", config);
-
-            Container container = piece.PiecePrefab.GetComponent<Container>();
-            if (container != null)
+            GameObject kitPrefab = PrefabManager.Instance.GetPrefab("ItemFishnetCoastal");
+            if (kitPrefab != null)
             {
-                UnityEngine.Object.DestroyImmediate(container);
-            }
-
-            Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
-            if (pieceComp != null)
-            {
-                pieceComp.m_craftingStation = null;
-                pieceComp.m_waterPiece = true;
-                pieceComp.m_noInWater = false;
-                pieceComp.m_groundPiece = false;
-                pieceComp.m_groundOnly = false;
-                pieceComp.m_noClipping = true;
-                pieceComp.m_extraPlacementDistance = 8;
-                pieceComp.m_category = Piece.PieceCategory.Crafting;
-                pieceComp.m_enabled = true;
-                if (netIcon != null)
+                ItemDrop kitDrop = kitPrefab.GetComponent<ItemDrop>();
+                if (kitDrop != null && kitDrop.m_itemData != null)
                 {
-                    pieceComp.m_icon = netIcon;
+                    pieceComp.m_icon = kitDrop.m_itemData.GetIcon();
                 }
             }
-
-            WearNTear wearNTear = piece.PiecePrefab.GetComponent<WearNTear>();
-            if (wearNTear != null)
-            {
-                wearNTear.m_noRoofWear = false;
-                wearNTear.m_noSupportWear = false;
-                wearNTear.m_supports = true;
-                wearNTear.m_staticPosition = true;
-            }
-
-            PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
-            trap.m_trapType = TrapType.CoastalNet;
-            trap.m_secPerUnit = 600f;
-            trap.m_maxCapacity = 2;
-            trap.m_minDepth = 1.0f;
-            trap.m_maxDepth = 6.0f;
         }
 
+        WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
+        if (wearNTear == null)
+        {
+            wearNTear = customPrefab.AddComponent<WearNTear>();
+        }
+
+        wearNTear.m_noRoofWear = false;
+        wearNTear.m_noSupportWear = false;
+        wearNTear.m_supports = true;
+        wearNTear.m_health = 300f;
+        wearNTear.m_materialType = WearNTear.MaterialType.Wood;
+        wearNTear.m_staticPosition = true;
+
+        ZNetView netView = customPrefab.GetComponent<ZNetView>();
+        if (netView == null)
+        {
+            netView = customPrefab.AddComponent<ZNetView>();
+        }
+
+        netView.m_persistent = true;
+        netView.m_type = (ZDO.ObjectType)2;
+        netView.m_distant = false;
+        netView.m_syncInitialScale = false;
+
+        PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
+        if (trap == null)
+        {
+            trap = customPrefab.AddComponent<PassiveTrap>();
+        }
+
+        trap.m_trapType = TrapType.CoastalNet;
+        trap.m_secPerUnit = 600f;
+        trap.m_maxCapacity = 2;
+        trap.m_minDepth = 1.0f;
+        trap.m_maxDepth = 6.0f;
+
+        TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
+        if (sway == null)
+        {
+            customPrefab.AddComponent<TrapNetWaveSway>();
+        }
+
+        CustomPiece piece = new CustomPiece(customPrefab, fixReference: true, config);
         AssignPieceRequirement(piece.PiecePrefab, "ItemFishnetCoastal");
         PieceManager.Instance.AddPiece(piece);
     }
@@ -366,136 +282,91 @@ public static class TrapPieceManager
         };
 
         GameObject customPrefab = bundle != null ? bundle.LoadAsset<GameObject>("piece_fishnet_deep") : null;
-        CustomPiece piece;
-
-        if (customPrefab != null)
+        if (customPrefab == null)
         {
-            SetupPrefabVisuals(customPrefab);
+            throw new System.InvalidOperationException("[BaitMeBruh] Embedded bundle missing 'piece_fishnet_deep' prefab.");
+        }
 
-            Piece pieceComp = customPrefab.GetComponent<Piece>();
-            if (pieceComp == null)
-            {
-                pieceComp = customPrefab.AddComponent<Piece>();
-            }
+        SetupPrefabVisuals(customPrefab);
 
-            pieceComp.m_name = "$piece_fishnet_deep";
-            pieceComp.m_description = "$piece_fishnet_deep_desc";
-            pieceComp.m_category = Piece.PieceCategory.Crafting;
-            pieceComp.m_enabled = true;
-            pieceComp.m_craftingStation = null;
-            pieceComp.m_waterPiece = true;
-            pieceComp.m_noInWater = false;
-            pieceComp.m_groundPiece = false;
-            pieceComp.m_groundOnly = false;
-            pieceComp.m_noClipping = true;
-            pieceComp.m_extraPlacementDistance = 10;
+        Piece pieceComp = customPrefab.GetComponent<Piece>();
+        if (pieceComp == null)
+        {
+            pieceComp = customPrefab.AddComponent<Piece>();
+        }
 
-            if (netIcon != null)
-            {
-                pieceComp.m_icon = netIcon;
-            }
-            else
-            {
-                GameObject kitPrefab = PrefabManager.Instance.GetPrefab("ItemFishnetDeep");
-                if (kitPrefab != null)
-                {
-                    ItemDrop kitDrop = kitPrefab.GetComponent<ItemDrop>();
-                    if (kitDrop != null && kitDrop.m_itemData != null)
-                    {
-                        pieceComp.m_icon = kitDrop.m_itemData.GetIcon();
-                    }
-                }
-            }
+        pieceComp.m_name = "$piece_fishnet_deep";
+        pieceComp.m_description = "$piece_fishnet_deep_desc";
+        pieceComp.m_category = Piece.PieceCategory.Crafting;
+        pieceComp.m_enabled = true;
+        pieceComp.m_craftingStation = null;
+        pieceComp.m_waterPiece = true;
+        pieceComp.m_noInWater = false;
+        pieceComp.m_groundPiece = false;
+        pieceComp.m_groundOnly = false;
+        pieceComp.m_noClipping = true;
+        pieceComp.m_extraPlacementDistance = 10;
 
-            WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
-            if (wearNTear == null)
-            {
-                wearNTear = customPrefab.AddComponent<WearNTear>();
-            }
-
-            wearNTear.m_noRoofWear = false;
-            wearNTear.m_noSupportWear = false;
-            wearNTear.m_supports = true;
-            wearNTear.m_health = 600f;
-            wearNTear.m_materialType = WearNTear.MaterialType.Wood;
-            wearNTear.m_staticPosition = true;
-
-            ZNetView netView = customPrefab.GetComponent<ZNetView>();
-            if (netView == null)
-            {
-                netView = customPrefab.AddComponent<ZNetView>();
-            }
-
-            netView.m_persistent = true;
-            netView.m_type = (ZDO.ObjectType)2;
-            netView.m_distant = false;
-            netView.m_syncInitialScale = false;
-
-            PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
-            if (trap == null)
-            {
-                trap = customPrefab.AddComponent<PassiveTrap>();
-            }
-
-            trap.m_trapType = TrapType.DeepNet;
-            trap.m_secPerUnit = 600f;
-            trap.m_maxCapacity = 2;
-            trap.m_minDepth = 5.0f;
-            trap.m_maxDepth = 50.0f;
-
-            TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
-            if (sway == null)
-            {
-                customPrefab.AddComponent<TrapNetWaveSway>();
-            }
-
-            piece = new CustomPiece(customPrefab, fixReference: true, config);
+        if (netIcon != null)
+        {
+            pieceComp.m_icon = netIcon;
         }
         else
         {
-            piece = new CustomPiece("piece_fishnet_deep", "piece_chest", config);
-
-            Container container = piece.PiecePrefab.GetComponent<Container>();
-            if (container != null)
+            GameObject kitPrefab = PrefabManager.Instance.GetPrefab("ItemFishnetDeep");
+            if (kitPrefab != null)
             {
-                UnityEngine.Object.DestroyImmediate(container);
-            }
-
-            Piece pieceComp = piece.PiecePrefab.GetComponent<Piece>();
-            if (pieceComp != null)
-            {
-                pieceComp.m_craftingStation = null;
-                pieceComp.m_waterPiece = true;
-                pieceComp.m_noInWater = false;
-                pieceComp.m_groundPiece = false;
-                pieceComp.m_groundOnly = false;
-                pieceComp.m_noClipping = true;
-                pieceComp.m_extraPlacementDistance = 10;
-                pieceComp.m_category = Piece.PieceCategory.Crafting;
-                pieceComp.m_enabled = true;
-                if (netIcon != null)
+                ItemDrop kitDrop = kitPrefab.GetComponent<ItemDrop>();
+                if (kitDrop != null && kitDrop.m_itemData != null)
                 {
-                    pieceComp.m_icon = netIcon;
+                    pieceComp.m_icon = kitDrop.m_itemData.GetIcon();
                 }
             }
-
-            WearNTear wearNTear = piece.PiecePrefab.GetComponent<WearNTear>();
-            if (wearNTear != null)
-            {
-                wearNTear.m_noRoofWear = false;
-                wearNTear.m_noSupportWear = false;
-                wearNTear.m_supports = true;
-                wearNTear.m_staticPosition = true;
-            }
-
-            PassiveTrap trap = piece.PiecePrefab.AddComponent<PassiveTrap>();
-            trap.m_trapType = TrapType.DeepNet;
-            trap.m_secPerUnit = 600f;
-            trap.m_maxCapacity = 2;
-            trap.m_minDepth = 5.0f;
-            trap.m_maxDepth = 50.0f;
         }
 
+        WearNTear wearNTear = customPrefab.GetComponent<WearNTear>();
+        if (wearNTear == null)
+        {
+            wearNTear = customPrefab.AddComponent<WearNTear>();
+        }
+
+        wearNTear.m_noRoofWear = false;
+        wearNTear.m_noSupportWear = false;
+        wearNTear.m_supports = true;
+        wearNTear.m_health = 600f;
+        wearNTear.m_materialType = WearNTear.MaterialType.Wood;
+        wearNTear.m_staticPosition = true;
+
+        ZNetView netView = customPrefab.GetComponent<ZNetView>();
+        if (netView == null)
+        {
+            netView = customPrefab.AddComponent<ZNetView>();
+        }
+
+        netView.m_persistent = true;
+        netView.m_type = (ZDO.ObjectType)2;
+        netView.m_distant = false;
+        netView.m_syncInitialScale = false;
+
+        PassiveTrap trap = customPrefab.GetComponent<PassiveTrap>();
+        if (trap == null)
+        {
+            trap = customPrefab.AddComponent<PassiveTrap>();
+        }
+
+        trap.m_trapType = TrapType.DeepNet;
+        trap.m_secPerUnit = 600f;
+        trap.m_maxCapacity = 2;
+        trap.m_minDepth = 5.0f;
+        trap.m_maxDepth = 50.0f;
+
+        TrapNetWaveSway sway = customPrefab.GetComponent<TrapNetWaveSway>();
+        if (sway == null)
+        {
+            customPrefab.AddComponent<TrapNetWaveSway>();
+        }
+
+        CustomPiece piece = new CustomPiece(customPrefab, fixReference: true, config);
         AssignPieceRequirement(piece.PiecePrefab, "ItemFishnetDeep");
         PieceManager.Instance.AddPiece(piece);
     }

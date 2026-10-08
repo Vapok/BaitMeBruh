@@ -28,21 +28,21 @@ internal static class FishingFloatCatchPatch
             HuginTutorialManager.TriggerFirstFishCaught(player);
 
             if (player.m_helmetItem != null && player.m_helmetItem.m_dropPrefab != null && player.m_helmetItem.m_dropPrefab.name == "HelmetFishingHat")
-        {
-            if (UnityEngine.Random.value < 0.25f && __instance != null)
             {
-                string baitName = __instance.GetBait();
-                if (!string.IsNullOrEmpty(baitName) && ZNetScene.instance != null)
+                if (UnityEngine.Random.value < 0.25f && __instance != null)
                 {
-                    GameObject baitPrefab = ZNetScene.instance.GetPrefab(baitName);
-                    if (baitPrefab != null)
+                    string baitName = __instance.GetBait();
+                    if (!string.IsNullOrEmpty(baitName) && ZNetScene.instance != null)
                     {
-                        player.GetInventory().AddItem(baitPrefab, 1);
-                        player.Message(MessageHud.MessageType.Center, "$msg_bait_salvaged");
+                        GameObject baitPrefab = ZNetScene.instance.GetPrefab(baitName);
+                        if (baitPrefab != null)
+                        {
+                            player.GetInventory().AddItem(baitPrefab, 1);
+                            player.Message(MessageHud.MessageType.Center, "$msg_bait_salvaged");
+                        }
                     }
                 }
             }
         }
     }
-}
 }
