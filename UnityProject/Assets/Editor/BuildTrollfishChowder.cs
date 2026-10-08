@@ -20,8 +20,8 @@ public static class BuildTrollfishChowder
         Texture2D garnishTex = AssetDatabase.LoadAssetAtPath<Texture2D>(Path.Combine(TexturesDir, "T_TrollfishGarnish_HD.png"));
 
         Material bowlMat = CreateMaterial("M_TrollfishBowl.mat", woodTex, 0.20f, 0.02f);
-        Material soupMat = CreateMaterial("M_TrollfishSoup.mat", soupTex, 0.65f, 0.05f);
-        Material garnishMat = CreateMaterial("M_TrollfishGarnish.mat", garnishTex, 0.45f, 0.05f);
+        Material soupMat = CreateMaterial("M_TrollfishSoup.mat", soupTex, 0.85f, 0.02f);
+        Material garnishMat = CreateMaterial("M_TrollfishGarnish.mat", garnishTex, 0.50f, 0.05f);
 
         Mesh bowlMesh = CreateBowlMesh();
         Mesh soupMesh = CreateSoupMesh();
@@ -89,62 +89,44 @@ public static class BuildTrollfishChowder
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
-        int radialSegments = 24;
+        int radialSegments = 28;
 
-        // Profile points (radius, height): from outer bottom center to outer rim, then inner rim to inner bottom
         Vector2[] profile = new Vector2[]
         {
             new Vector2(0.00f, 0.000f), // 0: bottom center
             new Vector2(0.08f, 0.000f), // 1: foot rim bottom
-            new Vector2(0.09f, 0.015f), // 2: foot flare
-            new Vector2(0.14f, 0.050f), // 3: lower bowl wall
-            new Vector2(0.18f, 0.095f), // 4: belly widest point
-            new Vector2(0.17f, 0.140f), // 5: upper curve
-            new Vector2(0.175f, 0.160f), // 6: outer rim lip
-            new Vector2(0.165f, 0.165f), // 7: rim crest rounded
-            new Vector2(0.152f, 0.160f), // 8: inner rim lip
-            new Vector2(0.145f, 0.130f), // 9: inner upper cavity
-            new Vector2(0.120f, 0.070f), // 10: inner mid cavity
-            new Vector2(0.070f, 0.035f), // 11: inner bottom rim
-            new Vector2(0.000f, 0.030f)  // 12: inner bottom center
+            new Vector2(0.10f, 0.015f), // 2: foot flare
+            new Vector2(0.14f, 0.050f), // 3: lower wall
+            new Vector2(0.17f, 0.095f), // 4: belly widest
+            new Vector2(0.170f, 0.135f),// 5: upper wall
+            new Vector2(0.165f, 0.150f),// 6: outer rim
+            new Vector2(0.155f, 0.153f),// 7: rim crest rounded
+            new Vector2(0.145f, 0.148f),// 8: inner rim lip
+            new Vector2(0.140f, 0.125f),// 9: inner upper cavity
+            new Vector2(0.115f, 0.065f),// 10: inner mid cavity
+            new Vector2(0.065f, 0.035f),// 11: inner bottom rim
+            new Vector2(0.000f, 0.030f) // 12: inner bottom center
         };
 
-        // Calculate total profile length for V texture coordinate
-        float totalProfileLen = 0f;
-        float[] profileV = new float[profile.Length];
-        profileV[0] = 0f;
-        for (int i = 1; i < profile.Length; i++)
-        {
-            totalProfileLen += Vector2.Distance(profile[i], profile[i - 1]);
-            profileV[i] = totalProfileLen;
-        }
-        for (int i = 0; i < profile.Length; i++)
-        {
-            profileV[i] /= totalProfileLen;
-        }
+        float uvDiameter = 0.38f;
 
-        // Generate rings of vertices
         int rings = profile.Length;
         for (int r = 0; r < rings; r++)
         {
             float rad = profile[r].x;
             float y = profile[r].y;
-            float v = profileV[r];
-
-            // Outer surface normals vs inner normals
             bool isInner = (r >= 8);
 
             for (int s = 0; s <= radialSegments; s++)
             {
-                float u = (float)s / radialSegments;
-                float angle = u * Mathf.PI * 2f;
+                float uAngle = (float)s / radialSegments;
+                float angle = uAngle * Mathf.PI * 2f;
                 float cos = Mathf.Cos(angle);
                 float sin = Mathf.Sin(angle);
 
                 Vector3 pos = new Vector3(cos * rad, y, sin * rad);
                 verts.Add(pos);
 
-                // Approximate normal
                 Vector3 normal;
                 if (r == 0)
                 {
@@ -156,39 +138,40 @@ public static class BuildTrollfishChowder
                 }
                 else
                 {
-                    Vector2 tangent = profile[r + 1] - profile[r - 1];
-                    Vector2 n2 = new Vector2(-tangent.y, tangent.x).normalized;
-                    normal = new Vector3(cos * n2.x, n2.y, sin * n2.x);
-                    if (isInner)
-                    {
-                        normal = -normal;
-                    }
+                    Vector2 pPrev = profile[r - 1];
+                    Vector2 pNext = profile[r + 1];
+                    Vector2 dir = (pNext - pPrev).normalized;
+                    Vector2 n2D = new Vector2(-dir.y, dir.x);
+                    normal = new Vector3(cos * n2D.x, n2D.y, sin * n2D.x).normalized;
                 }
-
                 norms.Add(normal);
-                uvs.Add(new Vector2(u * 2f, v));
+
+                float uvX = 0.5f + (cos * rad / uvDiameter);
+                float uvY = 0.5f + (sin * rad / uvDiameter);
+                uvs.Add(new Vector2(uvX, uvY));
             }
         }
 
-        // Stitch quads between consecutive rings
-        int vertsPerRing = radialSegments + 1;
         for (int r = 0; r < rings - 1; r++)
         {
-            bool isInner = (r >= 8);
+            int rowStart = r * (radialSegments + 1);
+            int nextRowStart = (r + 1) * (radialSegments + 1);
+            bool isInner = (r >= 7);
+
             for (int s = 0; s < radialSegments; s++)
             {
-                int curr = r * vertsPerRing + s;
-                int next = curr + 1;
-                int currAbove = (r + 1) * vertsPerRing + s;
-                int nextAbove = currAbove + 1;
+                int curr = rowStart + s;
+                int next = rowStart + s + 1;
+                int currAbove = nextRowStart + s;
+                int nextAbove = nextRowStart + s + 1;
 
-                if (isInner)
+                if (!isInner)
                 {
                     tris.Add(curr);
-                    tris.Add(nextAbove);
+                    tris.Add(currAbove);
                     tris.Add(next);
 
-                    tris.Add(curr);
+                    tris.Add(next);
                     tris.Add(currAbove);
                     tris.Add(nextAbove);
                 }
@@ -196,9 +179,9 @@ public static class BuildTrollfishChowder
                 {
                     tris.Add(curr);
                     tris.Add(next);
-                    tris.Add(nextAbove);
+                    tris.Add(currAbove);
 
-                    tris.Add(curr);
+                    tris.Add(next);
                     tris.Add(nextAbove);
                     tris.Add(currAbove);
                 }
@@ -221,17 +204,15 @@ public static class BuildTrollfishChowder
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
-        int radialSegments = 24;
-        float soupRadius = 0.150f;
-        float soupCenterY = 0.138f;
-        float soupRimY = 0.142f; // Subtle meniscus at bowl edge
+        int radialSegments = 32;
+        float soupRadius = 0.144f;
+        float soupCenterY = 0.134f;
+        float soupRimY = 0.137f;
 
-        // Center vertex
         verts.Add(new Vector3(0f, soupCenterY, 0f));
         norms.Add(Vector3.up);
         uvs.Add(new Vector2(0.5f, 0.5f));
 
-        // Rim vertices
         for (int s = 0; s <= radialSegments; s++)
         {
             float angle = ((float)s / radialSegments) * Mathf.PI * 2f;
@@ -241,17 +222,16 @@ public static class BuildTrollfishChowder
             verts.Add(new Vector3(cos * soupRadius, soupRimY, sin * soupRadius));
             norms.Add(Vector3.up);
 
-            // Planar circular UV mapping
-            float u = 0.5f + (cos * 0.5f);
-            float v = 0.5f + (sin * 0.5f);
+            float u = 0.5f + (cos * 0.44f);
+            float v = 0.5f + (sin * 0.44f);
             uvs.Add(new Vector2(u, v));
         }
 
         for (int s = 1; s <= radialSegments; s++)
         {
             tris.Add(0);
-            tris.Add(s);
             tris.Add(s + 1);
+            tris.Add(s);
         }
 
         mesh.SetVertices(verts);
@@ -270,17 +250,11 @@ public static class BuildTrollfishChowder
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
-        // 1. Mushroom 1 (Yellow Mushroom cap floating on the right)
-        AddMushroomCap(verts, norms, uvs, tris, new Vector3(0.055f, 0.141f, 0.040f), 0.024f, 0.014f, 15f);
+        AddYellowMushroom(verts, norms, uvs, tris, new Vector3(0.050f, 0.137f, 0.040f), 0.032f, 0.016f, Quaternion.Euler(5f, 30f, -8f));
+        AddYellowMushroom(verts, norms, uvs, tris, new Vector3(-0.060f, 0.137f, -0.030f), 0.028f, 0.014f, Quaternion.Euler(-8f, 75f, 10f));
+        AddYellowMushroom(verts, norms, uvs, tris, new Vector3(-0.010f, 0.137f, -0.070f), 0.024f, 0.012f, Quaternion.Euler(10f, 160f, -5f));
 
-        // 2. Mushroom 2 (Smaller Yellow Mushroom cap on the left)
-        AddMushroomCap(verts, norms, uvs, tris, new Vector3(-0.065f, 0.141f, -0.035f), 0.018f, 0.010f, -25f);
-
-        // 3. Mushroom 3 (Small cap near top)
-        AddMushroomCap(verts, norms, uvs, tris, new Vector3(-0.020f, 0.141f, -0.080f), 0.015f, 0.009f, 40f);
-
-        // 4. 3D Trollfish Dorsal Fin emerging from broth
-        AddTrollfishFin(verts, norms, uvs, tris, new Vector3(-0.01f, 0.138f, 0.045f));
+        AddTrollfishFin(verts, norms, uvs, tris, new Vector3(0.010f, 0.136f, 0.025f));
 
         mesh.SetVertices(verts);
         mesh.SetNormals(norms);
@@ -290,19 +264,17 @@ public static class BuildTrollfishChowder
         return mesh;
     }
 
-    private static void AddMushroomCap(List<Vector3> verts, List<Vector3> norms, List<Vector2> uvs, List<int> tris, Vector3 center, float radius, float height, float tiltAngle)
+    private static void AddYellowMushroom(List<Vector3> verts, List<Vector3> norms, List<Vector2> uvs, List<int> tris,
+        Vector3 center, float radius, float height, Quaternion tilt)
     {
-        int segs = 10;
+        int segs = 14;
         int centerIdx = verts.Count;
-        Quaternion tilt = Quaternion.Euler(tiltAngle * 0.5f, tiltAngle, 0f);
 
-        // Apex vertex
         Vector3 apex = center + tilt * new Vector3(0f, height, 0f);
         verts.Add(apex);
         norms.Add(tilt * Vector3.up);
-        uvs.Add(new Vector2(0.5f, 0.5f));
+        uvs.Add(new Vector2(0.25f, 0.75f));
 
-        // Rim vertices
         for (int i = 0; i <= segs; i++)
         {
             float a = ((float)i / segs) * Mathf.PI * 2f;
@@ -312,16 +284,40 @@ public static class BuildTrollfishChowder
             Vector3 rimLocal = new Vector3(cos * radius, 0f, sin * radius);
             verts.Add(center + tilt * rimLocal);
 
-            Vector3 n = tilt * (new Vector3(cos, 0.6f, sin).normalized);
+            Vector3 n = tilt * (new Vector3(cos, 0.7f, sin).normalized);
             norms.Add(n);
-            uvs.Add(new Vector2(0.5f + cos * 0.45f, 0.5f + sin * 0.45f));
+            uvs.Add(new Vector2(0.25f + cos * 0.18f, 0.75f + sin * 0.18f));
         }
 
         for (int i = 1; i <= segs; i++)
         {
             tris.Add(centerIdx);
-            tris.Add(centerIdx + i);
             tris.Add(centerIdx + i + 1);
+            tris.Add(centerIdx + i);
+        }
+
+        int underIdx = verts.Count;
+        verts.Add(center + tilt * new Vector3(0f, 0.002f, 0f));
+        norms.Add(tilt * Vector3.down);
+        uvs.Add(new Vector2(0.25f, 0.40f));
+
+        for (int i = 0; i <= segs; i++)
+        {
+            float a = ((float)i / segs) * Mathf.PI * 2f;
+            float cos = Mathf.Cos(a);
+            float sin = Mathf.Sin(a);
+
+            Vector3 rimLocal = new Vector3(cos * radius * 0.95f, 0.002f, sin * radius * 0.95f);
+            verts.Add(center + tilt * rimLocal);
+            norms.Add(tilt * Vector3.down);
+            uvs.Add(new Vector2(0.25f + cos * 0.10f, 0.40f + sin * 0.10f));
+        }
+
+        for (int i = 1; i <= segs; i++)
+        {
+            tris.Add(underIdx);
+            tris.Add(underIdx + i);
+            tris.Add(underIdx + i + 1);
         }
     }
 
@@ -329,53 +325,48 @@ public static class BuildTrollfishChowder
     {
         int startIdx = verts.Count;
 
-        // An organic fan-shaped dorsal fin emerging from the broth at ~30 deg angle
-        // Fin has thickness (front and back faces)
         Vector3[] spinePoints = new Vector3[]
         {
-            basePos + new Vector3(-0.025f, 0.000f, -0.015f), // 0: base front
-            basePos + new Vector3(-0.010f, 0.025f,  0.005f), // 1: mid front
-            basePos + new Vector3( 0.005f, 0.055f,  0.025f), // 2: tip high point
-            basePos + new Vector3( 0.025f, 0.035f,  0.015f), // 3: trailing edge mid
-            basePos + new Vector3( 0.035f, 0.000f, -0.005f)  // 4: base rear
+            basePos + new Vector3(-0.030f, 0.000f, -0.018f),
+            basePos + new Vector3(-0.015f, 0.035f,  0.005f),
+            basePos + new Vector3( 0.005f, 0.068f,  0.030f),
+            basePos + new Vector3( 0.030f, 0.045f,  0.020f),
+            basePos + new Vector3( 0.045f, 0.000f, -0.005f)
         };
 
-        float halfThick = 0.0025f;
+        float halfThick = 0.003f;
 
-        // Front face (+Z offset)
         for (int i = 0; i < spinePoints.Length; i++)
         {
             verts.Add(spinePoints[i] + new Vector3(0f, 0f, halfThick));
-            norms.Add(new Vector3(0.2f, 0.3f, 0.9f).normalized);
-            uvs.Add(new Vector2((float)i / (spinePoints.Length - 1), 0.8f));
+            norms.Add(new Vector3(0.15f, 0.25f, 0.95f).normalized);
+            float u = 0.55f + ((float)i / (spinePoints.Length - 1)) * 0.40f;
+            uvs.Add(new Vector2(u, 0.85f));
         }
 
-        // Back face (-Z offset)
         for (int i = 0; i < spinePoints.Length; i++)
         {
             verts.Add(spinePoints[i] - new Vector3(0f, 0f, halfThick));
-            norms.Add(new Vector3(-0.2f, 0.3f, -0.9f).normalized);
-            uvs.Add(new Vector2((float)i / (spinePoints.Length - 1), 0.2f));
+            norms.Add(new Vector3(-0.15f, 0.25f, -0.95f).normalized);
+            float u = 0.55f + ((float)i / (spinePoints.Length - 1)) * 0.40f;
+            uvs.Add(new Vector2(u, 0.25f));
         }
 
-        // Front triangles: 0,1,2 and 0,2,3 and 0,3,4
         tris.Add(startIdx + 0); tris.Add(startIdx + 1); tris.Add(startIdx + 2);
         tris.Add(startIdx + 0); tris.Add(startIdx + 2); tris.Add(startIdx + 3);
         tris.Add(startIdx + 0); tris.Add(startIdx + 3); tris.Add(startIdx + 4);
 
-        // Back triangles (reverse winding)
         int b = startIdx + 5;
         tris.Add(b + 0); tris.Add(b + 2); tris.Add(b + 1);
         tris.Add(b + 0); tris.Add(b + 3); tris.Add(b + 2);
         tris.Add(b + 0); tris.Add(b + 4); tris.Add(b + 3);
 
-        // Edge quads along top: 1-2, 2-3
         AddQuad(verts, norms, uvs, tris,
             startIdx + 1, startIdx + 2, b + 2, b + 1,
-            Vector3.up, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f));
+            Vector3.up, new Vector2(0.6f, 0.9f), new Vector2(0.8f, 0.9f));
         AddQuad(verts, norms, uvs, tris,
             startIdx + 2, startIdx + 3, b + 3, b + 2,
-            Vector3.up, new Vector2(0f, 0.5f), new Vector2(1f, 0.5f));
+            Vector3.up, new Vector2(0.8f, 0.9f), new Vector2(0.95f, 0.9f));
     }
 
     private static void AddQuad(List<Vector3> verts, List<Vector3> norms, List<Vector2> uvs, List<int> tris,
@@ -397,7 +388,6 @@ public static class BuildTrollfishChowder
         GameObject root = new GameObject("drop_trollfish_chowder");
         root.layer = LayerMask.NameToLayer("item") >= 0 ? LayerMask.NameToLayer("item") : 0;
 
-        // Rigidbody & BoxCollider for freeform drop physics
         Rigidbody rb = root.AddComponent<Rigidbody>();
         rb.mass = 1.0f;
         rb.collisionDetectionMode = CollisionDetectionMode.Discrete;
@@ -406,7 +396,6 @@ public static class BuildTrollfishChowder
         col.center = new Vector3(0f, 0.082f, 0f);
         col.size = new Vector3(0.36f, 0.165f, 0.36f);
 
-        // Visual child container
         GameObject visual = new GameObject("Visual");
         visual.transform.SetParent(root.transform, false);
         visual.layer = root.layer;
@@ -415,7 +404,6 @@ public static class BuildTrollfishChowder
         CreateSubObject("Soup", visual.transform, soupMesh, soupMat, root.layer);
         CreateSubObject("Garnish", visual.transform, garnishMesh, garnishMat, root.layer);
 
-        // attach child for ItemStand support (itemstandh)
         GameObject attach = new GameObject("attach");
         attach.transform.SetParent(root.transform, false);
         attach.transform.localPosition = Vector3.zero;
