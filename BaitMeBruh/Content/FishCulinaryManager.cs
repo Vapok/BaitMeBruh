@@ -98,10 +98,28 @@ public static class FishCulinaryManager
             return;
         }
 
+        Material sourceMaterial = null;
+        Shader sourceShader = null;
         Renderer[] renderers = itemPrefab.GetComponentsInChildren<Renderer>(true);
         for (int i = 0; i < renderers.Length; i++)
         {
+            if (sourceMaterial == null && renderers[i].sharedMaterial != null)
+            {
+                sourceMaterial = renderers[i].sharedMaterial;
+                sourceShader = renderers[i].sharedMaterial.shader;
+            }
             renderers[i].enabled = false;
+        }
+
+        if (sourceShader == null)
+        {
+            sourceShader = FindGameShader("Custom/Piece") ?? FindGameShader("Custom/Creature");
+        }
+
+        Transform existingAttach = itemPrefab.transform.Find("attach");
+        if (existingAttach != null)
+        {
+            UnityEngine.Object.DestroyImmediate(existingAttach.gameObject);
         }
 
         GameObject dropPrefab = bundle.LoadAsset<GameObject>("drop_trollfish_chowder");
@@ -128,7 +146,20 @@ public static class FishCulinaryManager
             UnityEngine.Object.Destroy(childCol);
         }
 
-        SetupVisualShaders(dropVisual);
+        Transform childAttach = dropVisual.transform.Find("attach");
+        if (childAttach != null)
+        {
+            childAttach.SetParent(itemPrefab.transform, false);
+            childAttach.localPosition = Vector3.zero;
+            childAttach.localRotation = Quaternion.identity;
+            childAttach.localScale = Vector3.one;
+        }
+
+        SetupVisualShaders(dropVisual, sourceShader, sourceMaterial);
+        if (childAttach != null)
+        {
+            SetupVisualShaders(childAttach.gameObject, sourceShader, sourceMaterial);
+        }
 
         BoxCollider boxCol = itemPrefab.GetComponent<BoxCollider>();
         if (boxCol == null)
@@ -138,16 +169,6 @@ public static class FishCulinaryManager
         boxCol.enabled = true;
         boxCol.center = new Vector3(0f, 0.082f, 0f);
         boxCol.size = new Vector3(0.36f, 0.165f, 0.36f);
-
-        Transform attachTransform = itemPrefab.transform.Find("attach");
-        if (attachTransform == null)
-        {
-            Transform childAttach = dropVisual.transform.Find("attach");
-            if (childAttach != null)
-            {
-                childAttach.SetParent(itemPrefab.transform, false);
-            }
-        }
     }
 
     private static void RegisterItemStandSupport(ItemDrop itemDrop)
@@ -156,6 +177,16 @@ public static class FishCulinaryManager
         {
             return;
         }
+
+        ItemDrop.ItemData.SharedData shared = itemDrop.m_itemData.m_shared;
+        shared.m_itemStandOffsets.Clear();
+        shared.m_itemStandOffsets.Add(new ItemStand.OrientationSettings
+        {
+            m_orientations = ItemStand.Orientation.Horizontal,
+            m_position = new Vector3(0f, 0.015f, 0f),
+            m_rotation = Vector3.zero,
+            m_scale = Vector3.one
+        });
 
         GameObject itemStandH = PrefabManager.Cache.GetPrefab<GameObject>("itemstandh");
         if (itemStandH != null)
@@ -168,8 +199,13 @@ public static class FishCulinaryManager
         }
     }
 
-    private static void SetupVisualShaders(GameObject visual)
+    private static void SetupVisualShaders(GameObject visual, Shader litShader, Material sourceMaterial)
     {
+        if (visual == null)
+        {
+            return;
+        }
+
         int itemLayer = LayerMask.NameToLayer("item");
         if (itemLayer >= 0)
         {
@@ -180,28 +216,40 @@ public static class FishCulinaryManager
             }
         }
 
-        Shader litShader = Shader.Find("Custom/Piece");
-        if (litShader == null)
+        Renderer[] visualRenderers = visual.GetComponentsInChildren<Renderer>(true);
+        for (int r = 0; r < visualRenderers.Length; r++)
         {
-            litShader = Shader.Find("Standard");
-        }
-
-        if (litShader != null)
-        {
-            Renderer[] visualRenderers = visual.GetComponentsInChildren<Renderer>(true);
-            for (int r = 0; r < visualRenderers.Length; r++)
+            visualRenderers[r].enabled = true;
+            Material[] mats = visualRenderers[r].sharedMaterials;
+            for (int m = 0; m < mats.Length; m++)
             {
-                Material[] mats = visualRenderers[r].materials;
-                for (int m = 0; m < mats.Length; m++)
+                if (mats[m] != null)
                 {
-                    if (mats[m] != null)
+                    if (litShader != null)
                     {
                         mats[m].shader = litShader;
                     }
+                    else if (sourceMaterial != null && sourceMaterial.shader != null)
+                    {
+                        mats[m].shader = sourceMaterial.shader;
+                    }
                 }
-                visualRenderers[r].materials = mats;
+            }
+            visualRenderers[r].sharedMaterials = mats;
+        }
+    }
+
+    private static Shader FindGameShader(string shaderName)
+    {
+        Shader[] shaders = Resources.FindObjectsOfTypeAll<Shader>();
+        for (int i = 0; i < shaders.Length; i++)
+        {
+            if (shaders[i] != null && shaders[i].name == shaderName)
+            {
+                return shaders[i];
             }
         }
+        return Shader.Find(shaderName);
     }
 
     private static Sprite LoadEmbeddedSprite(string resourceName)
