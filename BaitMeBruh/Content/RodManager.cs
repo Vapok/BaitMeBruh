@@ -8,9 +8,21 @@ namespace BaitMeBruh.Content;
 public static class RodManager
 {
     private static bool _registered;
+    private static ConfigurableRecipe _primitiveRodRecipe;
+
+    internal static ConfigurableRecipe PrimitiveRodRecipe => _primitiveRodRecipe;
 
     public static void Initialize()
     {
+        _primitiveRodRecipe = new ConfigurableRecipe(
+            "Recipe: Primitive Fishing Rod",
+            "Recipe_FishingRodPrimitive",
+            "FishingRodPrimitive",
+            "piece_workbench",
+            1,
+            1,
+            "Wood:5,LeatherScraps:4,BoneFragments:2");
+
         PrefabManager.OnVanillaPrefabsAvailable += RegisterRods;
     }
 
@@ -27,17 +39,14 @@ public static class RodManager
         {
             Name = "$item_fishingrod_primitive",
             Description = "$item_fishingrod_primitive_desc",
-            CraftingStation = "piece_workbench",
-            MinStationLevel = 1,
-            Requirements = new[]
-            {
-                new RequirementConfig { Item = "Wood", Amount = 5, Recover = true },
-                new RequirementConfig { Item = "LeatherScraps", Amount = 4, Recover = true },
-                new RequirementConfig { Item = "BoneFragments", Amount = 2, Recover = true }
-            }
+            CraftingStation = _primitiveRodRecipe.GetStationString(),
+            MinStationLevel = _primitiveRodRecipe.MinStationLevel.Value,
+            Requirements = _primitiveRodRecipe.GetRequirementConfigs()
         };
 
         CustomItem primitiveRod = new CustomItem("FishingRodPrimitive", "FishingRod", rodConfig);
+        _primitiveRodRecipe.BindCustomItem(primitiveRod);
+
         GameObject prefab = primitiveRod.ItemPrefab;
 
         if (prefab != null)
