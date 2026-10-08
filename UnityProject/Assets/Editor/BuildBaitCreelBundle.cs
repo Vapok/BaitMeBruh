@@ -799,101 +799,156 @@ public static class BuildBaitCreelBundle
     {
         Mesh mesh = new Mesh { name = "CreelNettingMesh" };
         int radialSegments = 32;
-        int drapeRings = 14;
 
         List<Vector3> verts = new List<Vector3>();
         List<Vector3> norms = new List<Vector3>();
         List<Vector2> uvs = new List<Vector2>();
         List<int> tris = new List<int>();
 
+        // Center apex on top of barrel lid (elevated so wood lid never clips through)
         int centerIdx = verts.Count;
-        verts.Add(new Vector3(0f, 0.99f, 0f));
+        verts.Add(new Vector3(0f, 1.035f, 0f));
         norms.Add(Vector3.up);
         uvs.Add(new Vector2(0.5f, 0.5f));
 
-        for (int seg = 0; seg <= radialSegments; seg++)
-        {
-            float u = (float)seg / radialSegments;
-            float angle = u * Mathf.PI * 2f;
-            float r = 0.38f;
-            float x = Mathf.Cos(angle) * r;
-            float z = Mathf.Sin(angle) * r;
-            verts.Add(new Vector3(x, 1.01f, z));
-            norms.Add(Vector3.up);
-            uvs.Add(new Vector2(0.5f + Mathf.Cos(angle) * 0.45f, 0.5f + Mathf.Sin(angle) * 0.45f));
-        }
+        // Top lid concentric rings
+        int topRings = 5;
+        float[] topRadii = new float[] { 0.10f, 0.20f, 0.29f, 0.37f, 0.405f };
+        float[] topHeights = new float[] { 1.033f, 1.030f, 1.026f, 1.022f, 1.010f };
 
-        for (int seg = 0; seg < radialSegments; seg++)
-        {
-            tris.Add(centerIdx); tris.Add(centerIdx + 1 + seg); tris.Add(centerIdx + 1 + seg + 1);
-            tris.Add(centerIdx); tris.Add(centerIdx + 1 + seg + 1); tris.Add(centerIdx + 1 + seg);
-        }
+        int prevRingStart = -1;
 
-        int drapeStartIdx = verts.Count;
-        for (int ring = 0; ring <= drapeRings; ring++)
+        for (int r = 0; r < topRings; r++)
         {
-            float t = (float)ring / drapeRings;
+            int ringStart = verts.Count;
+            float baseRadius = topRadii[r];
+            float baseHeight = topHeights[r];
+
             for (int seg = 0; seg <= radialSegments; seg++)
             {
                 float u = (float)seg / radialSegments;
                 float angle = u * Mathf.PI * 2f;
 
-                float bell = 0f;
-                if (angle >= 0.1f && angle <= 3.04f)
+                // Subtle organic fabric variation across the top of the barrel
+                float wrinkle = (0.003f * Mathf.Sin(angle * 6f) + 0.002f * Mathf.Cos(angle * 10f)) * (baseRadius / 0.40f);
+                float y = baseHeight + wrinkle;
+                float x = Mathf.Cos(angle) * baseRadius;
+                float z = Mathf.Sin(angle) * baseRadius;
+
+                Vector3 pos = new Vector3(x, y, z);
+                Vector3 norm = (r == topRings - 1)
+                    ? new Vector3(Mathf.Cos(angle) * 0.7f, 0.7f, Mathf.Sin(angle) * 0.7f).normalized
+                    : Vector3.up;
+
+                verts.Add(pos);
+                norms.Add(norm);
+                uvs.Add(new Vector2(0.5f + (x / 0.41f) * 0.45f, 0.5f + (z / 0.41f) * 0.45f));
+            }
+
+            if (r == 0)
+            {
+                // Connect center point to first ring
+                for (int seg = 0; seg < radialSegments; seg++)
                 {
-                    bell = Mathf.Sin((angle - 0.1f) / (3.04f - 0.1f) * Mathf.PI);
+                    tris.Add(centerIdx);
+                    tris.Add(ringStart + seg);
+                    tris.Add(ringStart + seg + 1);
+
+                    tris.Add(centerIdx);
+                    tris.Add(ringStart + seg + 1);
+                    tris.Add(ringStart + seg);
                 }
-
-                float shortHem = 0.55f + 0.08f * Mathf.Sin(angle * 5f);
-                float maxDrapeLength = Mathf.Lerp(shortHem, 1.45f, bell);
-                float dist = t * maxDrapeLength;
-
-                float x, y, z;
-                Vector3 normal;
-
-                if (dist <= 0.95f)
+            }
+            else
+            {
+                // Connect previous ring to this ring
+                for (int seg = 0; seg < radialSegments; seg++)
                 {
-                    y = (dist < 0.08f) ? Mathf.Lerp(1.025f, 0.96f, dist / 0.08f) : (1.04f - dist);
-                    float barrelRadius = 0.38f + 0.07f * (1.0f - Mathf.Pow(2f * (Mathf.Clamp01(y) - 0.5f), 2f));
-                    float fabricFolds = 0.015f * Mathf.Sin(angle * 7f + dist * 5f) + 0.008f * Mathf.Cos(angle * 13f - dist * 4f);
-                    float looseSag = (dist > 0.35f) ? Mathf.Sin((dist - 0.35f) / 0.60f * Mathf.PI) * 0.022f : 0f;
-                    float baseStandOff = (dist < 0.08f) ? 0.015f : 0.038f;
+                    int p0 = prevRingStart + seg;
+                    int p1 = prevRingStart + seg + 1;
+                    int c0 = ringStart + seg;
+                    int c1 = ringStart + seg + 1;
 
-                    float drapeRadius = barrelRadius + baseStandOff + fabricFolds + looseSag;
-                    x = Mathf.Cos(angle) * drapeRadius;
-                    z = Mathf.Sin(angle) * drapeRadius;
-                    normal = new Vector3(Mathf.Cos(angle), 0.12f, Mathf.Sin(angle)).normalized;
+                    tris.Add(p0); tris.Add(c0); tris.Add(p1);
+                    tris.Add(p1); tris.Add(c0); tris.Add(c1);
+
+                    tris.Add(p0); tris.Add(p1); tris.Add(c0);
+                    tris.Add(p1); tris.Add(c1); tris.Add(c0);
+                }
+            }
+
+            prevRingStart = ringStart;
+        }
+
+        // Side drape skirt cascading down past the cinch rope into the water
+        int skirtRings = 16;
+        for (int r = 0; r < skirtRings; r++)
+        {
+            int ringStart = verts.Count;
+            float t = (float)(r + 1) / skirtRings;
+
+            for (int seg = 0; seg <= radialSegments; seg++)
+            {
+                float u = (float)seg / radialSegments;
+                float angle = u * Mathf.PI * 2f;
+
+                // Organic scalloped hem variations along bottom
+                float hemY = -0.06f + 0.05f * Mathf.Sin(angle * 5f) + 0.03f * Mathf.Cos(angle * 9f + 0.8f);
+                float y = Mathf.Lerp(0.96f, hemY, t);
+
+                // Barrel staves radius profile
+                float bY = Mathf.Clamp01(y);
+                float barrelR = 0.38f + 0.07f * (1.0f - Mathf.Pow(2f * (bY - 0.5f), 2f));
+
+                float x, z;
+                Vector3 norm;
+
+                if (y >= 0.78f)
+                {
+                    // Upper gathered section (rim down to cinch rope at y=0.78)
+                    float upperT = (1.0f - y) / 0.22f;
+                    float standOff = Mathf.Lerp(0.024f, 0.016f, upperT);
+                    float folds = 0.008f * Mathf.Sin(angle * 8f);
+                    float rad = barrelR + standOff + folds;
+
+                    x = Mathf.Cos(angle) * rad;
+                    z = Mathf.Sin(angle) * rad;
+                    norm = new Vector3(Mathf.Cos(angle), 0.15f, Mathf.Sin(angle)).normalized;
                 }
                 else
                 {
-                    float groundDist = dist - 0.95f;
-                    y = Mathf.Max(0.015f, 0.045f - 0.030f * (groundDist / 0.50f));
-                    float baseRadius = 0.38f + 0.038f;
-                    float drapeRadius = baseRadius + groundDist;
-                    x = Mathf.Cos(angle) * drapeRadius;
-                    z = Mathf.Sin(angle) * drapeRadius;
-                    normal = Vector3.up;
+                    // Free drape section below the cinch rope cascading into water
+                    float lowerT = (0.78f - y) / (0.78f - hemY);
+                    float standOff = Mathf.Lerp(0.018f, 0.065f, lowerT);
+                    float folds = (0.022f * Mathf.Sin(angle * 7f) + 0.014f * Mathf.Cos(angle * 11f + 1.2f)) * Mathf.Sqrt(lowerT);
+                    float rad = barrelR + standOff + folds;
+
+                    x = Mathf.Cos(angle) * rad;
+                    z = Mathf.Sin(angle) * rad;
+                    norm = new Vector3(Mathf.Cos(angle), 0.10f, Mathf.Sin(angle)).normalized;
                 }
 
                 verts.Add(new Vector3(x, y, z));
-                norms.Add(normal);
-                uvs.Add(new Vector2(u * 4.0f, dist / 0.60f));
+                norms.Add(norm);
+                uvs.Add(new Vector2(u * 5.0f, (1.035f - y) * 2.2f));
             }
-        }
 
-        for (int ring = 0; ring < drapeRings; ring++)
-        {
-            int row1 = drapeStartIdx + ring * (radialSegments + 1);
-            int row2 = drapeStartIdx + (ring + 1) * (radialSegments + 1);
-
+            // Connect previous ring to this skirt ring
             for (int seg = 0; seg < radialSegments; seg++)
             {
-                tris.Add(row1 + seg); tris.Add(row2 + seg); tris.Add(row1 + seg + 1);
-                tris.Add(row1 + seg + 1); tris.Add(row2 + seg); tris.Add(row2 + seg + 1);
-                // Two-sided
-                tris.Add(row1 + seg); tris.Add(row1 + seg + 1); tris.Add(row2 + seg);
-                tris.Add(row1 + seg + 1); tris.Add(row2 + seg + 1); tris.Add(row2 + seg);
+                int p0 = prevRingStart + seg;
+                int p1 = prevRingStart + seg + 1;
+                int c0 = ringStart + seg;
+                int c1 = ringStart + seg + 1;
+
+                tris.Add(p0); tris.Add(c0); tris.Add(p1);
+                tris.Add(p1); tris.Add(c0); tris.Add(c1);
+
+                tris.Add(p0); tris.Add(p1); tris.Add(c0);
+                tris.Add(p1); tris.Add(c1); tris.Add(c0);
             }
+
+            prevRingStart = ringStart;
         }
 
         mesh.SetVertices(verts);
