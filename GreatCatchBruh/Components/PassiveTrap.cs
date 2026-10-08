@@ -12,6 +12,7 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
     private static readonly int s_trapLastTime = "greatcatch_trap_lasttime".GetStableHashCode();
     private static readonly int s_trapItems = "greatcatch_trap_items".GetStableHashCode();
     private static readonly int s_trapFuel = "greatcatch_trap_fuel".GetStableHashCode();
+    private static readonly int s_trapBait = "greatcatch_trap_bait".GetStableHashCode();
 
     private static readonly List<PassiveTrap> s_allTraps = new();
 
@@ -25,10 +26,130 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     private ZNetView m_nview;
 
+    public static bool IsFishingBait(string prefabName)
+    {
+        switch (prefabName)
+        {
+            case "FishingBait":
+            case "FishingBaitForest":
+            case "FishingBaitSwamp":
+            case "FishingBaitCave":
+            case "FishingBaitPlains":
+            case "FishingBaitOcean":
+            case "FishingBaitMistlands":
+            case "FishingBaitAshlands":
+            case "FishingBaitDeepNorth":
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public static Heightmap.Biome GetValidBiomeForBait(string baitPrefab)
+    {
+        switch (baitPrefab)
+        {
+            case "FishingBaitForest":
+                return Heightmap.Biome.BlackForest;
+            case "FishingBaitSwamp":
+                return Heightmap.Biome.Swamp;
+            case "FishingBaitCave":
+                return Heightmap.Biome.Mountain;
+            case "FishingBaitPlains":
+                return Heightmap.Biome.Plains;
+            case "FishingBaitOcean":
+                return Heightmap.Biome.Ocean;
+            case "FishingBaitMistlands":
+                return Heightmap.Biome.Mistlands;
+            case "FishingBaitAshlands":
+                return Heightmap.Biome.AshLands;
+            case "FishingBaitDeepNorth":
+                return Heightmap.Biome.DeepNorth;
+            case "FishingBait":
+            default:
+                return Heightmap.Biome.Meadows;
+        }
+    }
+
+    public string GetLoadedBait()
+    {
+        if (m_nview == null || m_nview.GetZDO() == null)
+        {
+            return string.Empty;
+        }
+
+        return m_nview.GetZDO().GetString(s_trapBait, string.Empty);
+    }
+
+    public string GetLoadedBaitDisplayName()
+    {
+        string baitPrefab = GetLoadedBait();
+        if (string.IsNullOrEmpty(baitPrefab))
+        {
+            return string.Empty;
+        }
+
+        GameObject prefab = ObjectDB.instance != null ? ObjectDB.instance.GetItemPrefab(baitPrefab) : null;
+        if (prefab != null)
+        {
+            ItemDrop itemDrop = prefab.GetComponent<ItemDrop>();
+            if (itemDrop != null)
+            {
+                return itemDrop.m_itemData.m_shared.m_name;
+            }
+        }
+
+        return "$item_fishingbait";
+    }
+
+    public string EvaluateBait(string baitPrefab, out bool converted)
+    {
+        converted = false;
+        if (baitPrefab == "FishingBait")
+        {
+            return "FishingBait";
+        }
+
+        Heightmap.Biome currentBiome = Heightmap.FindBiome(transform.position);
+        Heightmap.Biome requiredBiome = GetValidBiomeForBait(baitPrefab);
+
+        if (currentBiome == requiredBiome)
+        {
+            return baitPrefab;
+        }
+
+        converted = true;
+        return "FishingBait";
+    }
+
+    public int GetUnitsPerFuel()
+    {
+        switch (m_trapType)
+        {
+            case TrapType.BaitCreel:
+                return ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
+            case TrapType.CoastalNet:
+                return 4;
+            case TrapType.DeepNet:
+                return 4;
+            default:
+                return 1;
+        }
+    }
+
     public int GetMaxFuel()
     {
-        int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
-        return perChum * MaxChumTails;
+        switch (m_trapType)
+        {
+            case TrapType.BaitCreel:
+                return GetUnitsPerFuel() * MaxChumTails;
+            case TrapType.CoastalNet:
+                return 20;
+            case TrapType.DeepNet:
+                return 20;
+            default:
+                return 10;
+        }
     }
 
     public float GetSecPerUnit()
@@ -54,6 +175,7 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         m_nview.Register("RPC_Extract", RPC_Extract);
         m_nview.Register<string>("RPC_ExtractResponse", RPC_ExtractResponse);
         m_nview.Register<int>("RPC_AddFuel", RPC_AddFuel);
+        m_nview.Register<string, int>("RPC_AddBait", RPC_AddBait);
 
         if (m_nview.IsOwner() && m_nview.GetZDO().GetLong(s_trapLastTime, 0L) == 0L)
         {
@@ -131,14 +253,46 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         m_nview.GetZDO().Set(s_trapFuel, current + amount);
     }
 
+    private void AddBait(string baitPrefab, int fuelAmount)
+    {
+        if (m_nview != null && m_nview.IsValid())
+        {
+            if (!m_nview.HasOwner())
+            {
+                m_nview.ClaimOwnership();
+            }
+            m_nview.InvokeRPC("RPC_AddBait", baitPrefab, fuelAmount);
+        }
+    }
+
+    private void RPC_AddBait(long caller, string baitPrefab, int fuelAmount)
+    {
+        if (m_nview == null || !m_nview.IsValid() || !m_nview.IsOwner())
+        {
+            return;
+        }
+
+        int current = GetFuel();
+        m_nview.GetZDO().Set(s_trapBait, baitPrefab);
+        m_nview.GetZDO().Set(s_trapFuel, current + fuelAmount);
+    }
+
     private void Start()
     {
-        if (m_trapType == TrapType.BaitCreel)
+        Player localPlayer = Player.m_localPlayer;
+        if (localPlayer != null && Vector3.Distance(localPlayer.transform.position, transform.position) < 25.0f)
         {
-            Player localPlayer = Player.m_localPlayer;
-            if (localPlayer != null && Vector3.Distance(localPlayer.transform.position, transform.position) < 15.0f)
+            switch (m_trapType)
             {
-                HuginTutorialManager.TriggerBaitCreelPlaced();
+                case TrapType.BaitCreel:
+                    HuginTutorialManager.TriggerBaitCreelPlaced();
+                    break;
+                case TrapType.CoastalNet:
+                    HuginTutorialManager.TriggerCoastalNetPlaced();
+                    break;
+                case TrapType.DeepNet:
+                    HuginTutorialManager.TriggerDeepNetPlaced();
+                    break;
             }
         }
     }
@@ -171,12 +325,11 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             text += " ( $piece_container_empty )";
         }
 
+        int fuel = GetFuel();
+        int maxFuel = GetMaxFuel();
+
         if (m_trapType == TrapType.BaitCreel)
         {
-            int fuel = GetFuel();
-            int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
-            int maxFuel = GetMaxFuel();
-
             if (fuel > 0)
             {
                 text += $"\n$msg_trap_chum: {fuel} / {maxFuel}";
@@ -186,16 +339,64 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
                 text += "\n<color=orange>$msg_trap_needs_chum</color>";
             }
 
+            int perChum = GetUnitsPerFuel();
             if (fuel + perChum <= maxFuel)
             {
                 Player localPlayer = Player.m_localPlayer;
-                if (localPlayer != null && localPlayer.GetInventory() != null && localPlayer.GetInventory().HaveItem("$item_necktail") && currentCount == 0)
+                bool hasItem = false;
+                if (localPlayer != null && localPlayer.GetInventory() != null)
+                {
+                    hasItem = localPlayer.GetInventory().HaveItem("$item_necktail") ||
+                              localPlayer.GetInventory().GetAllItems().Exists(i => i.m_dropPrefab != null && i.m_dropPrefab.name == "NeckTail");
+                }
+
+                if (hasItem && currentCount == 0)
                 {
                     text += "\n[<color=yellow><b>$KEY_Use</b></color>] $msg_trap_add_chum";
                 }
                 else
                 {
                     text += "\n[<color=yellow><b>1-8</b></color>] $msg_trap_add_chum";
+                }
+            }
+        }
+        else
+        {
+            if (fuel > 0)
+            {
+                string baitDisplayName = Localization.instance.Localize(GetLoadedBaitDisplayName());
+                text += $"\n$msg_trap_bait: {baitDisplayName} ({fuel} / {maxFuel})";
+            }
+            else
+            {
+                text += "\n<color=orange>$msg_trap_needs_bait</color>";
+            }
+
+            int perBait = GetUnitsPerFuel();
+            if (fuel + perBait <= maxFuel)
+            {
+                Player localPlayer = Player.m_localPlayer;
+                bool hasBait = false;
+                if (localPlayer != null && localPlayer.GetInventory() != null)
+                {
+                    string loadedBait = GetLoadedBait();
+                    if (!string.IsNullOrEmpty(loadedBait) && fuel > 0)
+                    {
+                        hasBait = localPlayer.GetInventory().GetAllItems().Exists(i => i.m_dropPrefab != null && i.m_dropPrefab.name == loadedBait);
+                    }
+                    else
+                    {
+                        hasBait = localPlayer.GetInventory().GetAllItems().Exists(i => i.m_dropPrefab != null && IsFishingBait(i.m_dropPrefab.name));
+                    }
+                }
+
+                if (hasBait && currentCount == 0)
+                {
+                    text += "\n[<color=yellow><b>$KEY_Use</b></color>] $msg_trap_add_bait";
+                }
+                else
+                {
+                    text += "\n[<color=yellow><b>1-8</b></color>] $msg_trap_add_bait";
                 }
             }
         }
@@ -232,23 +433,79 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return true;
         }
 
+        int maxFuel = GetMaxFuel();
+        int currentFuel = GetFuel();
+
         if (m_trapType == TrapType.BaitCreel)
         {
-            int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
-            int maxFuel = GetMaxFuel();
-            int currentFuel = GetFuel();
-
+            int perChum = GetUnitsPerFuel();
             if (currentFuel + perChum <= maxFuel && character != null)
             {
                 Inventory inventory = character.GetInventory();
                 if (inventory != null)
                 {
-                    ItemDrop.ItemData neckTail = inventory.GetItem("$item_necktail");
-                    if (neckTail != null)
+                    ItemDrop.ItemData fuelItem = inventory.GetItem("$item_necktail");
+                    if (fuelItem == null)
                     {
-                        inventory.RemoveOneItem(neckTail);
+                        fuelItem = inventory.GetAllItems().Find(i => i.m_dropPrefab != null && i.m_dropPrefab.name == "NeckTail");
+                    }
+
+                    if (fuelItem != null)
+                    {
+                        inventory.RemoveOneItem(fuelItem);
                         AddFuel(perChum);
                         character.Message(MessageHud.MessageType.Center, $"$msg_trap_chum_added ($msg_trap_chum: {currentFuel + perChum} / {maxFuel})");
+                        return true;
+                    }
+                }
+            }
+        }
+        else
+        {
+            int perBait = GetUnitsPerFuel();
+            if (currentFuel + perBait <= maxFuel && character != null)
+            {
+                Inventory inventory = character.GetInventory();
+                if (inventory != null)
+                {
+                    ItemDrop.ItemData baitItem = null;
+                    string currentBait = GetLoadedBait();
+
+                    if (currentFuel > 0 && !string.IsNullOrEmpty(currentBait))
+                    {
+                        baitItem = inventory.GetAllItems().Find(i => i.m_dropPrefab != null && i.m_dropPrefab.name == currentBait);
+                    }
+                    else
+                    {
+                        Heightmap.Biome currentBiome = Heightmap.FindBiome(transform.position);
+                        string idealBait = GetBaitForBiome(currentBiome);
+                        baitItem = inventory.GetAllItems().Find(i => i.m_dropPrefab != null && i.m_dropPrefab.name == idealBait);
+
+                        if (baitItem == null)
+                        {
+                            baitItem = inventory.GetAllItems().Find(i => i.m_dropPrefab != null && i.m_dropPrefab.name == "FishingBait");
+                        }
+
+                        if (baitItem == null)
+                        {
+                            baitItem = inventory.GetAllItems().Find(i => i.m_dropPrefab != null && IsFishingBait(i.m_dropPrefab.name));
+                        }
+                    }
+
+                    if (baitItem != null)
+                    {
+                        string effectiveBait = EvaluateBait(baitItem.m_dropPrefab.name, out bool converted);
+                        inventory.RemoveOneItem(baitItem);
+                        AddBait(effectiveBait, perBait);
+
+                        if (converted)
+                        {
+                            character.Message(MessageHud.MessageType.Center, "$msg_trap_bait_converted_basic");
+                        }
+                        else
+                        {
+                            character.Message(MessageHud.MessageType.Center, $"$msg_trap_bait_added ($msg_trap_bait: {currentFuel + perBait} / {maxFuel})");
+                        }
                         return true;
                     }
                 }
@@ -270,9 +527,9 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         {
             character.Message(MessageHud.MessageType.Center, "$msg_trap_too_deep");
         }
-        else if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        else if (GetFuel() <= 0)
         {
-            character.Message(MessageHud.MessageType.Center, "$msg_trap_needs_chum");
+            character.Message(MessageHud.MessageType.Center, m_trapType == TrapType.BaitCreel ? "$msg_trap_needs_chum" : "$msg_trap_needs_bait");
         }
         else
         {
@@ -284,36 +541,74 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
 
     public bool UseItem(Humanoid user, ItemDrop.ItemData item)
     {
-        if (m_trapType != TrapType.BaitCreel)
+        if (item == null || user == null)
         {
             return false;
         }
 
-        if (item == null)
+        if (m_trapType == TrapType.BaitCreel)
         {
-            return false;
-        }
+            bool isNeckTail = (item.m_dropPrefab != null && item.m_dropPrefab.name == "NeckTail") || item.m_shared.m_name == "$item_necktail";
+            if (!isNeckTail)
+            {
+                return false;
+            }
 
-        bool isNeckTail = (item.m_dropPrefab != null && item.m_dropPrefab.name == "NeckTail") || item.m_shared.m_name == "$item_necktail";
-        if (!isNeckTail)
-        {
-            return false;
-        }
+            int perChum = GetUnitsPerFuel();
+            int maxFuel = GetMaxFuel();
+            int currentFuel = GetFuel();
 
-        int perChum = ConfigRegistry.CreelBaitPerChum != null ? ConfigRegistry.CreelBaitPerChum.Value : 3;
-        int maxFuel = GetMaxFuel();
-        int currentFuel = GetFuel();
+            if (currentFuel + perChum > maxFuel)
+            {
+                user.Message(MessageHud.MessageType.Center, "$msg_trap_fuel_full");
+                return true;
+            }
 
-        if (currentFuel + perChum > maxFuel)
-        {
-            user.Message(MessageHud.MessageType.Center, "$msg_trap_fuel_full");
+            user.GetInventory().RemoveOneItem(item);
+            AddFuel(perChum);
+            user.Message(MessageHud.MessageType.Center, $"$msg_trap_chum_added ($msg_trap_chum: {currentFuel + perChum} / {maxFuel})");
             return true;
         }
+        else
+        {
+            string itemPrefab = item.m_dropPrefab != null ? item.m_dropPrefab.name : string.Empty;
+            if (!IsFishingBait(itemPrefab))
+            {
+                return false;
+            }
 
-        user.GetInventory().RemoveOneItem(item);
-        AddFuel(perChum);
-        user.Message(MessageHud.MessageType.Center, $"$msg_trap_chum_added ($msg_trap_chum: {currentFuel + perChum} / {maxFuel})");
-        return true;
+            int perBait = GetUnitsPerFuel();
+            int maxFuel = GetMaxFuel();
+            int currentFuel = GetFuel();
+
+            if (currentFuel + perBait > maxFuel)
+            {
+                user.Message(MessageHud.MessageType.Center, "$msg_trap_fuel_full");
+                return true;
+            }
+
+            string currentLoaded = GetLoadedBait();
+            string effectiveBait = EvaluateBait(itemPrefab, out bool converted);
+
+            if (currentFuel > 0 && !string.IsNullOrEmpty(currentLoaded) && currentLoaded != effectiveBait)
+            {
+                user.Message(MessageHud.MessageType.Center, "$msg_trap_bait_mismatch");
+                return true;
+            }
+
+            user.GetInventory().RemoveOneItem(item);
+            AddBait(effectiveBait, perBait);
+
+            if (converted)
+            {
+                user.Message(MessageHud.MessageType.Center, "$msg_trap_bait_converted_basic");
+            }
+            else
+            {
+                user.Message(MessageHud.MessageType.Center, $"$msg_trap_bait_added ($msg_trap_bait: {currentFuel + perBait} / {maxFuel})");
+            }
+            return true;
+        }
     }
 
     private void Extract()
@@ -511,7 +806,7 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return "<color=orange>$msg_trap_too_deep</color>";
         }
 
-        if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        if (GetFuel() <= 0)
         {
             return "<color=yellow>$msg_trap_dormant</color>";
         }
@@ -558,7 +853,7 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
             return;
         }
 
-        if (m_trapType == TrapType.BaitCreel && GetFuel() <= 0)
+        if (GetFuel() <= 0)
         {
             return;
         }
@@ -584,14 +879,17 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
                     break;
                 }
 
-                if (m_trapType == TrapType.BaitCreel)
+                int fuel = GetFuel();
+                if (fuel <= 0)
                 {
-                    int fuel = GetFuel();
-                    if (fuel <= 0)
-                    {
-                        break;
-                    }
-                    m_nview.GetZDO().Set(s_trapFuel, fuel - 1);
+                    break;
+                }
+
+                int remainingFuel = fuel - 1;
+                m_nview.GetZDO().Set(s_trapFuel, remainingFuel);
+                if (remainingFuel <= 0 && m_trapType != TrapType.BaitCreel)
+                {
+                    m_nview.GetZDO().Set(s_trapBait, string.Empty);
                 }
 
                 SpawnHarvest();
@@ -640,7 +938,12 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         }
         else
         {
-            prefabName = m_trapType == TrapType.CoastalNet ? GetCoastalFishForBiome(biome) : GetDeepFishForBiome(biome);
+            string loadedBait = GetLoadedBait();
+            if (string.IsNullOrEmpty(loadedBait))
+            {
+                loadedBait = "FishingBait";
+            }
+            prefabName = GetFishForBait(loadedBait);
         }
 
         if (string.IsNullOrEmpty(prefabName))
@@ -651,6 +954,33 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
         string current = m_nview.GetZDO().GetString(s_trapItems, string.Empty);
         string updated = string.IsNullOrEmpty(current) ? prefabName : current + ";" + prefabName;
         m_nview.GetZDO().Set(s_trapItems, updated);
+    }
+
+    private string GetFishForBait(string baitPrefab)
+    {
+        float roll = UnityEngine.Random.value;
+        switch (baitPrefab)
+        {
+            case "FishingBaitForest":
+                return roll < 0.70f ? "Fish3" : "Fish2";
+            case "FishingBaitSwamp":
+                return roll < 0.70f ? "Fish5" : "Fish12";
+            case "FishingBaitCave":
+                return "Fish4_cave";
+            case "FishingBaitPlains":
+                return roll < 0.70f ? "Fish7" : "Fish12";
+            case "FishingBaitOcean":
+                return roll < 0.60f ? "Fish6" : "Fish11";
+            case "FishingBaitMistlands":
+                return roll < 0.60f ? "Fish8" : "Fish11";
+            case "FishingBaitAshlands":
+                return "Fish9";
+            case "FishingBaitDeepNorth":
+                return "Fish10";
+            case "FishingBait":
+            default:
+                return roll < 0.70f ? "Fish1" : "Fish2";
+        }
     }
 
     private string GetHarvestItemDisplayName()
@@ -704,64 +1034,6 @@ public class PassiveTrap : MonoBehaviour, Hoverable, Interactable
                 return "FishingBaitDeepNorth";
             default:
                 return "FishingBait";
-        }
-    }
-
-    private string GetCoastalFishForBiome(Heightmap.Biome biome)
-    {
-        float roll = UnityEngine.Random.value;
-        switch (biome)
-        {
-            case Heightmap.Biome.Meadows:
-                return roll < 0.70f ? "Fish1" : "Fish2";
-            case Heightmap.Biome.BlackForest:
-                return roll < 0.40f ? "Fish2" : "Fish3";
-            case Heightmap.Biome.Swamp:
-                return roll < 0.70f ? "Fish5" : "Fish12";
-            case Heightmap.Biome.Mountain:
-                return "Fish4_cave";
-            case Heightmap.Biome.Plains:
-                return "Fish7";
-            case Heightmap.Biome.Ocean:
-                return roll < 0.60f ? "Fish6" : "Fish11";
-            case Heightmap.Biome.Mistlands:
-                return roll < 0.60f ? "Fish8" : "Fish11";
-            case Heightmap.Biome.AshLands:
-                return "Fish9";
-            case Heightmap.Biome.DeepNorth:
-                return "Fish10";
-            default:
-                return "Fish1";
-        }
-    }
-
-    private string GetDeepFishForBiome(Heightmap.Biome biome)
-    {
-        float roll = UnityEngine.Random.value;
-        switch (biome)
-        {
-            case Heightmap.Biome.Ocean:
-                if (roll < 0.50f) return "Fish6";
-                if (roll < 0.80f) return "Fish11";
-                return "Fish1";
-            case Heightmap.Biome.Swamp:
-                return roll < 0.60f ? "Fish12" : "Fish5";
-            case Heightmap.Biome.Plains:
-                return roll < 0.70f ? "Fish7" : "Fish6";
-            case Heightmap.Biome.Mistlands:
-                return roll < 0.70f ? "Fish8" : "Fish11";
-            case Heightmap.Biome.AshLands:
-                return "Fish9";
-            case Heightmap.Biome.DeepNorth:
-                return "Fish10";
-            case Heightmap.Biome.BlackForest:
-                return roll < 0.50f ? "Fish3" : "Fish2";
-            case Heightmap.Biome.Meadows:
-                return roll < 0.50f ? "Fish2" : "Fish1";
-            case Heightmap.Biome.Mountain:
-                return "Fish4_cave";
-            default:
-                return "Fish6";
         }
     }
 }

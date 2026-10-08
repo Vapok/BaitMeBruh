@@ -58,6 +58,7 @@ public class GreatCatchBruh : BaseUnityPlugin, IPluginInfo
 
         RodManager.Initialize();
         BaitRecipeManager.Initialize();
+        NetKitManager.Initialize();
         TrapPieceManager.Initialize();
         FishCulinaryManager.Initialize();
 

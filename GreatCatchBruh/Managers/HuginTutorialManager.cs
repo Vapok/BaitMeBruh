@@ -8,6 +8,8 @@ public static class HuginTutorialManager
     public const string TutorialPrimitiveRod = "GC_Tutorial_PrimitiveRod";
     public const string TutorialBaitCreel = "GC_Tutorial_BaitCreel";
     public const string TutorialFirstFish = "GC_Tutorial_FirstFish";
+    public const string TutorialCoastalNet = "GC_Tutorial_CoastalNet";
+    public const string TutorialDeepNet = "GC_Tutorial_DeepNet";
 
     public const string TutorialBaitMeadows = "GC_Tutorial_Bait_Meadows";
     public const string TutorialBaitForest = "GC_Tutorial_Bait_Forest";
@@ -28,6 +30,8 @@ public static class HuginTutorialManager
 
         AddTutorial(tutorial.m_texts, TutorialPrimitiveRod, "$tutorial_gc_primitiverod_topic", "$tutorial_gc_primitiverod_label", "$tutorial_gc_primitiverod_text");
         AddTutorial(tutorial.m_texts, TutorialBaitCreel, "$tutorial_gc_baitcreel_topic", "$tutorial_gc_baitcreel_label", "$tutorial_gc_baitcreel_text");
+        AddTutorial(tutorial.m_texts, TutorialCoastalNet, "$tutorial_gc_coastalnet_topic", "$tutorial_gc_coastalnet_label", "$tutorial_gc_coastalnet_text");
+        AddTutorial(tutorial.m_texts, TutorialDeepNet, "$tutorial_gc_deepnet_topic", "$tutorial_gc_deepnet_label", "$tutorial_gc_deepnet_text");
         AddTutorial(tutorial.m_texts, TutorialFirstFish, "$tutorial_gc_firstfish_topic", "$tutorial_gc_firstfish_label", "$tutorial_gc_firstfish_text");
 
         AddTutorial(tutorial.m_texts, TutorialBaitMeadows, "$tutorial_gc_bait_meadows_topic", "$item_fishingbait", "$tutorial_gc_bait_meadows_text");
@@ -82,6 +86,28 @@ public static class HuginTutorialManager
         }
 
         localPlayer.ShowTutorial(TutorialBaitCreel);
+    }
+
+    public static void TriggerCoastalNetPlaced()
+    {
+        Player localPlayer = Player.m_localPlayer;
+        if (localPlayer == null || localPlayer.HaveSeenTutorial(TutorialCoastalNet))
+        {
+            return;
+        }
+
+        localPlayer.ShowTutorial(TutorialCoastalNet);
+    }
+
+    public static void TriggerDeepNetPlaced()
+    {
+        Player localPlayer = Player.m_localPlayer;
+        if (localPlayer == null || localPlayer.HaveSeenTutorial(TutorialDeepNet))
+        {
+            return;
+        }
+
+        localPlayer.ShowTutorial(TutorialDeepNet);
     }
 
     public static void TriggerFirstFishCaught(Player player)

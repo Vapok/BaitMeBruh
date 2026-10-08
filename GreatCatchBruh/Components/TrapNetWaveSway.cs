@@ -14,7 +14,6 @@ public class TrapNetWaveSway : MonoBehaviour
     private bool m_hasLoggedError;
 
     private const float MaxUpdateDistance = 25f;
-    private const float PinHeight = 0.82f;
 
     private void Start()
     {
@@ -50,17 +49,27 @@ public class TrapNetWaveSway : MonoBehaviour
         m_dynamicMesh.name = "Netting_DynamicInstance";
         m_meshFilter.mesh = m_dynamicMesh;
 
+        float maxY = float.MinValue;
+        float minY = float.MaxValue;
+        for (int i = 0; i < m_baseVertices.Length; i++)
+        {
+            float y = m_baseVertices[i].y;
+            if (y > maxY) maxY = y;
+            if (y < minY) minY = y;
+        }
+
+        float heightSpan = maxY - minY;
         m_weights = new float[m_baseVertices.Length];
         for (int i = 0; i < m_baseVertices.Length; i++)
         {
             float y = m_baseVertices[i].y;
-            if (y >= PinHeight)
+            if (heightSpan > 0.05f)
             {
-                m_weights[i] = 0f;
+                m_weights[i] = Mathf.Clamp01((maxY - y) / heightSpan);
             }
             else
             {
-                m_weights[i] = Mathf.Clamp01((PinHeight - y) / 0.77f);
+                m_weights[i] = 0f;
             }
         }
     }
