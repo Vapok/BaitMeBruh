@@ -34,6 +34,17 @@ public static class FishCulinaryManager
     {
         Sprite chowderIcon = LoadEmbeddedSprite("BaitMeBruh.Assets.Icons.trollfish_chowder.png");
 
+        SE_Stats sneakEffect = ScriptableObject.CreateInstance<SE_Stats>();
+        sneakEffect.name = "SE_TrollfishChowder";
+        sneakEffect.m_name = "$se_trollfish_chowder";
+        sneakEffect.m_icon = chowderIcon;
+        sneakEffect.m_ttl = 1200f;
+        sneakEffect.m_tooltip = "$se_trollfish_chowder_tooltip";
+        sneakEffect.m_skillLevel = Skills.SkillType.Sneak;
+        sneakEffect.m_skillLevelModifier = 10f;
+
+        Jotunn.Managers.ItemManager.Instance.AddStatusEffect(new CustomStatusEffect(sneakEffect, false));
+
         ItemConfig chowderConfig = new ItemConfig
         {
             Name = "$item_trollfish_chowder",
@@ -64,6 +75,7 @@ public static class FishCulinaryManager
                 shared.m_foodRegen = 2f;
                 shared.m_weight = 1.0f;
                 shared.m_maxStackSize = 10;
+                shared.m_consumeStatusEffect = sneakEffect;
                 if (chowderIcon != null)
                 {
                     shared.m_icons = new[] { chowderIcon };

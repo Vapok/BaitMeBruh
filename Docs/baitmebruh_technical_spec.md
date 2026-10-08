@@ -118,7 +118,7 @@ Early bait crafting is unlocked at appropriate stations (`piece_workbench` for M
 | Recipe Output | Station | Fish Consumed | Additional Ingredients | Duration / Effect |
 | :--- | :--- | :--- | :--- | :--- |
 | **Viking Fish Skewer** | Cooking Station | 1x Perch (`Fish1`) or Pike (`Fish2`) | None | 20 min; 35 HP, 25 Stamina |
-| **Trollfish Chowder** | Cauldron 2 | 1x Trollfish (`Fish5`) | 2x YellowMushroom, 1x Onion | 25 min; 25 HP, 65 Stamina, +10 Sneak |
+| **Trollfish Chowder** | Cauldron 1 | 1x Trollfish (`Fish5`) | 2x YellowMushroom | 20 min; 15 HP, 45 Stamina, +10 Sneak |
 | **Frost-Bite Mead Base** | Cauldron 2 | 1x Tetra (`Fish4_cave`) | 10x Honey, 5x Thistle, 2x WolfFang | Ferments into 6x Frost Resistance Mead |
 | **Swamp Broth** | Cauldron 2 | 1x Giant Herring (`Fish6`) | 4x Bloodbag, 2x Guck | 25 min; 55 HP, 30 Stamina, +25% HP Regen |
 | **Mariner's Stew** | Cauldron 3 | 1x Tuna (`Fish3`) | 2x BarleyFlour, 2x Cloudberry | 30 min; 30 HP, 75 Stamina, -30% Swim Stamina |
