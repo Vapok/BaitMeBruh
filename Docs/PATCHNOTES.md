@@ -63,3 +63,8 @@
 * **Seafaring & Seated Fishing Patches**:
   * Harmony patches on `Player.UseHotbarItem` and `Humanoid.UseItem` permitting rod casting and reeling while attached to seats, benches, and rudders (`Player.IsAttached()`).
   * Implemented `ShipTrollingPatch` dynamically adjusting line length up to rod maximum distance while moving.
+
+### Localization & Multi-Language Architecture
+* **Native Embedded Localization**:
+  * Embedded 34 JSON language files as assembly resources loaded via Jotunn `LocalizationManager`.
+  * Full native translations across 34 official Valheim languages (English, German, French, Spanish, Italian, Dutch, Swedish, Norwegian, Danish, Finnish, Icelandic, Polish, Russian, Ukrainian, Czech, Slovak, Bulgarian, Romanian, Croatian, Serbian, Macedonian, Portuguese [BR/EU], Lithuanian, Greek, Turkish, Chinese [Simplified/Traditional], Japanese, Korean, Hindi, Thai, and Georgian).

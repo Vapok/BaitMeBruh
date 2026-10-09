@@ -9,5 +9,6 @@
 * **Autonomous Harvesting**: Submerge Bait Creels in shallow water to turn Neck Tails into fishing bait over time. Deploy portable Coastal and Deep-Sea Fish Nets from land or boats to passively catch regional fish.
 * **Biome Bait Crafting**: Added 9 crafting recipes at the Workbench and Cauldron to craft all biome fishing baits using organic regional materials without merchant or trophy restrictions.
 * **Campfire & Cauldron Cooking**: Roast whole Perch and Pike directly over campfires. Brew Trollfish Chowder with yellow mushrooms at the Cauldron for a 20-minute stamina meal and +10 Sneak skill bonus, featuring a custom 3D serving bowl.
+* **Multi-Language Support**: Complete native translations across 34 official languages supported by Valheim.
 * **Fully Configurable**: All crafting recipes, food values, trap intervals, and HUD positions can be customized through the configuration file or in-game mod menu.
 * **Dependencies**: Built against Jotunn 2.30.2 and internal dependencies for stability.
