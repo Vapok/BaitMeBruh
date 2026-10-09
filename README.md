@@ -166,13 +166,26 @@ BaitMeBruh integrates caught fish directly into camp cooking and alchemy, allowi
 
 ## 🕹️ Controls Summary
 
+### Mouse & Keyboard
+
 | Action | Input / Control | Description |
 | :--- | :--- | :--- |
-| **Cast Line** | <kbd>Mouse 0</kbd> (Hold & Release) | Casts fishing float (distance scales with charge time). Operates while standing or seated. |
-| **Hook Fish** | <kbd>Mouse 1</kbd> | Sets the hook when a fish nibbles or takes the float. |
-| **Reel Line** | <kbd>Mouse 1</kbd> (Hold) | Reels line in. Build tension during struggle; reel during rest to retrieve catch. |
+| **Cast Line** | <kbd>Mouse 0</kbd> (Hold & Release) | Casts fishing float with distance scaling by hold duration (comfortable 1–2s safe draw). Tap for a 3–5m short cast. Operates while standing or seated. |
+| **Hook / Strike** | <kbd>Mouse 1</kbd> | Sets the hook when a fish nibbles or strikes the float during the bite alert window. |
+| **Reel Line** | <kbd>Mouse 1</kbd> (Hold) | Reels line in. Ease off during fish struggles; reel during rest phases to retrieve catch. |
+| **Switch Bait** | <kbd>G</kbd> / <kbd>Shift</kbd> + <kbd>G</kbd> | Cycles through fishing baits in your inventory while holding any fishing rod before casting (<kbd>Shift</kbd> + <kbd>G</kbd> cycles backward). |
 | **Harvest Catch / Bait** | <kbd>E</kbd> | Harvests catches from Bait Creels and Fish Nets. |
 | **Add Chum / Bait** | <kbd>1–8</kbd> or <kbd>E</kbd> | Uses Neck Tail on Bait Creel, or Fishing Bait on Coastal/Deep Nets to replenish fuel. |
+
+### Gamepad / Controller
+
+| Action | Input / Control | Description |
+| :--- | :--- | :--- |
+| **Cast Line** | Right Trigger (<kbd>RT</kbd> / <kbd>R2</kbd>) | Hold and release to cast line to desired distance with real-time distance gauge. |
+| **Hook / Strike** | Left Trigger (<kbd>LT</kbd> / <kbd>L2</kbd>) | Strikes the hook when a fish bites or takes the float. |
+| **Reel Line** | Left Trigger (<kbd>LT</kbd> / <kbd>L2</kbd>) | Hold to reel in catch during rest cycles; ease off during struggles. |
+| **Switch Bait** | Right Bumper (<kbd>RB</kbd> / <kbd>R1</kbd>) | Cycles forward through available fishing baits in your inventory before casting. |
+| **Harvest / Interact** | <kbd>A</kbd> / <kbd>Cross</kbd> (Use) | Harvests catches from Bait Creels and Fish Nets. |
 
 ---
 
@@ -189,6 +202,11 @@ Configuration settings are stored in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`.
 ### UI Settings (Client)
 * **HUD Horizontal Offset**: Horizontal pixel offset of the tension gauge relative to screen center (Default: `-300.0`).
 * **HUD Vertical Offset**: Vertical pixel offset of the tension gauge relative to screen center (Default: `-250.0`).
+* **Switch Bait Key**: Key to cycle through fishing bait types in inventory while holding a fishing rod before casting (Default: `G`).
+* **Switch Bait Gamepad Button**: Gamepad button name to cycle through fishing bait types (Default: `JoyRBumper`).
+
+### Dynamic Recipe & Food Customization
+All crafting recipes across the mod—including all 9 biome baits, net kits, primitive fishing rod, cauldron meals, and mead bases—can be customized or disabled in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`. You can customize crafting stations, minimum station levels, ingredient costs, and output yields, as well as food health, stamina, duration, and the Troll's Guile sneak buff.
 
 ---
 
