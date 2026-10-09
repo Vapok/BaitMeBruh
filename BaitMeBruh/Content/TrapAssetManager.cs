@@ -83,4 +83,38 @@ public static class TrapAssetManager
 
         return null;
     }
+
+    public static GameObject GetPrefab(string prefabName)
+    {
+        AssetBundle bundle = GetBundle();
+        if (bundle == null)
+        {
+            return null;
+        }
+
+        GameObject prefab = bundle.LoadAsset<GameObject>(prefabName);
+        if (prefab != null)
+        {
+            return prefab;
+        }
+
+        prefab = bundle.LoadAsset<GameObject>("Assets/Prefabs/" + prefabName + ".prefab");
+        if (prefab != null)
+        {
+            return prefab;
+        }
+
+        string[] allAssetNames = bundle.GetAllAssetNames();
+        for (int i = 0; i < allAssetNames.Length; i++)
+        {
+            string assetName = allAssetNames[i];
+            if (assetName.EndsWith(".prefab", StringComparison.OrdinalIgnoreCase) &&
+                assetName.IndexOf(prefabName, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return bundle.LoadAsset<GameObject>(assetName);
+            }
+        }
+
+        return null;
+    }
 }

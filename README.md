@@ -6,6 +6,7 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/Vapok/BaitMeBruh?include_prereleases&logo=github&style=for-the-badge)](https://github.com/Vapok/BaitMeBruh/releases)
 [![Thunderstore Version](https://img.shields.io/thunderstore/v/Vapok/BaitMeBruh?logo=thunderstore&style=for-the-badge)](https://thunderstore.io/c/valheim/p/Vapok/BaitMeBruh/)
+[![Nexus Mods](https://img.shields.io/badge/Nexus_Mods-Available-da8e35?logo=nexusmods&style=for-the-badge)](https://www.nexusmods.com/valheim/mods/4327)
 <br>
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-7289da?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/5YAJkRFBXt)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -71,8 +72,8 @@ Fish behavior dynamically responds to environmental conditions in the world:
 
 | Icon | Item & Prefab | Station | Crafting Requirements | Characteristics / Stats |
 | :---: | :--- | :---: | :--- | :--- |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fishingrod.png" width="28" height="28" alt="Primitive Fishing Rod" /> | **Primitive Fishing Rod**<br>`FishingRodPrimitive` | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Workbench 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/wood.png" width="18" height="18" alt="Wood" /> 5x Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/leatherscraps.png" width="18" height="18" alt="Leather Scraps" /> 4x Leather Scraps<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bonefragments.png" width="18" height="18" alt="Bone Fragments" /> 2x Bone Fragments | • **Max Cast Range**: 16.0m<br>• **Reel Speed**: 1.0 m/s<br>• **Weight**: 1.0<br>• **Role**: Early inland and shoreline angling |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fishingrod.png" width="28" height="28" alt="Standard Fishing Rod" /> | **Fishing Rod**<br>`FishingRod` | *Haldor Trader* | Purchased from Haldor (350 Coins) | • **Max Cast Range**: 30.0m<br>• **Reel Speed**: 1.5 m/s<br>• **Weight**: 1.5<br>• **Role**: Advanced coastal and seafaring angling |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fishingrod.png" width="28" height="28" alt="Primitive Fishing Rod" /> | **Primitive Fishing Rod**<br>`FishingRodPrimitive` | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/pieces/workbench.png" width="20" height="20" alt="Workbench" /> Workbench 1 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/wood.png" width="18" height="18" alt="Wood" /> 5x Wood<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/leatherscraps.png" width="18" height="18" alt="Leather Scraps" /> 4x Leather Scraps<br><img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/bonefragments.png" width="18" height="18" alt="Bone Fragments" /> 2x Bone Fragments | • **Max Cast Range**: 20.0m *(Overcast risk up to 30.0m)*<br>• **Reel Speed**: 1.0 m/s<br>• **Weight**: 1.0<br>• **Role**: Early inland and shoreline angling |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fishingrod.png" width="28" height="28" alt="Standard Fishing Rod" /> | **Fishing Rod**<br>`FishingRod` | *Haldor Trader* | Purchased from Haldor (350 Coins) | • **Max Cast Range**: 30.0m *(Overcast risk up to 40.0m)*<br>• **Reel Speed**: 1.5 m/s<br>• **Weight**: 1.5<br>• **Role**: Advanced coastal and seafaring angling |
 | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/HelmetFishingHat.png" width="28" height="28" alt="Fishing Hat" /> | **Fishing Hat**<br>`HelmetFishingHat` | *Haldor / Cauldron* | Crafted or purchased from Haldor | • **Armor**: 1<br>• **Snap Tolerance**: +30% Line snap time buffer<br>• **Bait Salvage**: 25% Chance to retain bait on catch |
 
 ---
@@ -147,32 +148,45 @@ BaitMeBruh integrates caught fish directly into camp cooking and alchemy, allowi
 
 ## 🐟 Valheim Native Fish Species & Biome Compendium
 
-| Icon | Species & Item ID | Primary Habitat / Biome | Preferred Bait | Catch Notes & Ecology |
-| :---: | :--- | :--- | :--- | :--- |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish1.png" width="28" height="28" alt="Perch" /> | **Perch**<br>`Fish1` | Meadows, Rivers & Coastlines | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait.png" width="18" height="18" alt="Fishing Bait" /> Fishing Bait | Common shoreline fish. Swims in quiet coves and fresh riverways. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish2.png" width="28" height="28" alt="Pike" /> | **Pike**<br>`Fish2` | Meadows & Black Forest (Rivers & Lakes) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait.png" width="18" height="18" alt="Fishing Bait" /> Fishing Bait | Aggressive predatory fish patrolling deeper inland river pools. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish3.png" width="28" height="28" alt="Tuna" /> | **Tuna**<br>`Fish3` | Ocean (Deep Open Ocean) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ocean.png" width="18" height="18" alt="Heavy Bait" /> Heavy Fishing Bait | Massive, powerful pelagic swimmer that races through deep open ocean waters. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish4.png" width="28" height="28" alt="Tetra" /> | **Tetra**<br>`Fish4_cave` | Mountains (Subterranean Frost Caves) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_cave.png" width="18" height="18" alt="Cold Bait" /> Cold Fishing Bait | Rare blind cave dweller adapted to subterranean glacial lakes. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish5.png" width="28" height="28" alt="Trollfish" /> | **Trollfish**<br>`Fish5` | Black Forest (Coast & Ocean borders) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_forest.png" width="18" height="18" alt="Mossy Bait" /> Mossy Fishing Bait | Heavy, moss-colored fish lurking near rocky points and troll shorelines. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish6.png" width="28" height="28" alt="Giant Herring" /> | **Giant Herring**<br>`Fish6` | Swamp (Marsh Shorelines & Channels) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_swamp.png" width="18" height="18" alt="Sticky Bait" /> Sticky Fishing Bait | Heavy schooling fish that feeds on decaying organic silt in the murky swamps. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish7.png" width="28" height="28" alt="Grouper" /> | **Grouper**<br>`Fish7` | Plains (Warm Coastal Shallows & Shoals) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_plains.png" width="18" height="18" alt="Stingy Bait" /> Stingy Fishing Bait | Powerful predatory reef fish dwelling near sunny sandy shoals. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish8.png" width="28" height="28" alt="Coral Cod" /> | **Coral Cod**<br>`Fish8` | Ocean (Offshore Waters & Reefs) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ocean.png" width="18" height="18" alt="Heavy Bait" /> Heavy Fishing Bait | Vibrant deep-water cod swimming along open ocean ridges and reefs. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish9.png" width="28" height="28" alt="Anglerfish" /> | **Anglerfish**<br>`Fish9` | Mistlands (Mist-covered Oceans & Fjords) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_mistlands.png" width="18" height="18" alt="Misty Bait" /> Misty Fishing Bait | Bioluminescent deep-dweller with a glowing lure that pierces heavy fog. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish10.png" width="28" height="28" alt="Northern Salmon" /> | **Northern Salmon**<br>`Fish10` | Deep North (Frigid Coastal Shelf) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_deepnorth.png" width="18" height="18" alt="Frosty Bait" /> Frosty Fishing Bait | Powerful oceanic salmon thriving in freezing ice floe corridors. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish11.png" width="28" height="28" alt="Magmafish" /> | **Magmafish**<br>`Fish11` | Ashlands (Boiling Seas & Lava Banks) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ashlands.png" width="18" height="18" alt="Hot Bait" /> Hot Fishing Bait | Armored volcanic swimmer immune to boiling seas and sulfur shores. |
-| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish12.png" width="28" height="28" alt="Pufferfish" /> | **Pufferfish**<br>`Fish12` | Mistlands & Deep Ocean | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_mistlands.png" width="18" height="18" alt="Misty Bait" /> Misty Fishing Bait | Venomous pufferfish that swells defensively with toxic spines when hooked. |
+| Icon | Species & Item ID | Primary Habitat / Biome | Preferred Bait | Bonus Catch Drops (20% Base Chance) | Catch Notes & Ecology |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish1.png" width="28" height="28" alt="Perch" /> | **Perch**<br>`Fish1` | Meadows, Rivers & Coastlines | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait.png" width="18" height="18" alt="Fishing Bait" /> Fishing Bait | • **Stone** (x1–2, 83.3%)<br>• **Amber** (x1, 16.7%) | Common shoreline fish. Swims in quiet coves and fresh riverways. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish2.png" width="28" height="28" alt="Pike" /> | **Pike**<br>`Fish2` | Meadows & Black Forest (Rivers & Lakes) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait.png" width="18" height="18" alt="Fishing Bait" /> Fishing Bait | • **Flint** (x1–2, 83.3%)<br>• **Amber Pearl** (x1, 16.7%) | Aggressive predatory fish patrolling deeper inland river pools. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish3.png" width="28" height="28" alt="Tuna" /> | **Tuna**<br>`Fish3` | Ocean (Deep Open Ocean) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ocean.png" width="18" height="18" alt="Heavy Bait" /> Heavy Fishing Bait | • **Tin Ore** (x1–2, 83.3%)<br>• **Ruby** (x1–2, 16.7%) | Massive, powerful pelagic swimmer that races through deep open ocean waters. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish4.png" width="28" height="28" alt="Tetra" /> | **Tetra**<br>`Fish4_cave` | Mountains (Subterranean Frost Caves) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_cave.png" width="18" height="18" alt="Cold Bait" /> Cold Fishing Bait | • **Obsidian** (x1–2, 83.3%)<br>• **Coins** (x1–15, 16.7%) | Rare blind cave dweller adapted to subterranean glacial lakes. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish5.png" width="28" height="28" alt="Trollfish" /> | **Trollfish**<br>`Fish5` | Black Forest (Coast & Ocean borders) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_forest.png" width="18" height="18" alt="Mossy Bait" /> Mossy Fishing Bait | • **Troll Hide** (x1–2, 50.0%)<br>• **Copper Ore** (x1, 50.0%) | Heavy, moss-colored fish lurking near rocky points and troll shorelines. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish6.png" width="28" height="28" alt="Giant Herring" /> | **Giant Herring**<br>`Fish6` | Swamp (Marsh Shorelines & Channels) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_swamp.png" width="18" height="18" alt="Sticky Bait" /> Sticky Fishing Bait | • **Iron Ore** (x1–2, 83.3%)<br>• **Chain** (x1–2, 16.7%) | Heavy schooling fish that feeds on decaying organic silt in the murky swamps. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish7.png" width="28" height="28" alt="Grouper" /> | **Grouper**<br>`Fish7` | Plains (Warm Coastal Shallows & Shoals) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_plains.png" width="18" height="18" alt="Stingy Bait" /> Stingy Fishing Bait | • **Black Metal Scrap** (x1–2, 50.0%)<br>• **Barley** (x1–2, 50.0%) | Powerful predatory reef fish dwelling near sunny sandy shoals. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish8.png" width="28" height="28" alt="Coral Cod" /> | **Coral Cod**<br>`Fish8` | Ocean (Offshore Waters & Reefs) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ocean.png" width="18" height="18" alt="Heavy Bait" /> Heavy Fishing Bait | • **Chitin** (x1–2, 66.7%)<br>• **Onion Seeds** (x1–2, 33.3%) | Vibrant deep-water cod swimming along open ocean ridges and reefs. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish9.png" width="28" height="28" alt="Anglerfish" /> | **Anglerfish**<br>`Fish9` | Mistlands (Mist-covered Oceans & Fjords) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_mistlands.png" width="18" height="18" alt="Misty Bait" /> Misty Fishing Bait | • **Soft Tissue** (x1–2, 50.0%)<br>• **Blue Jute** (x1–2, 50.0%) | Bioluminescent deep-dweller with a glowing lure that pierces heavy fog. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish10.png" width="28" height="28" alt="Northern Salmon" /> | **Northern Salmon**<br>`Fish10` | Deep North (Frigid Coastal Shelf) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_deepnorth.png" width="18" height="18" alt="Frosty Bait" /> Frosty Fishing Bait | • **Carrot Seeds** (x1–2, 66.7%)<br>• **Silver** (x1, 33.3%) | Powerful oceanic salmon thriving in freezing ice floe corridors. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish11.png" width="28" height="28" alt="Magmafish" /> | **Magmafish**<br>`Fish11` | Ashlands (Boiling Seas & Lava Banks) | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_ashlands.png" width="18" height="18" alt="Hot Bait" /> Hot Fishing Bait | • **Flametal Ore** (x1–2, 23.1%)<br>• **Surtling Core** (x1, 38.5%)<br>• **Grausten** (x1, 38.5%) | Armored volcanic swimmer immune to boiling seas and sulfur shores. |
+| <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/fish12.png" width="28" height="28" alt="Pufferfish" /> | **Pufferfish**<br>`Fish12` | Mistlands & Deep Ocean | <img src="https://raw.githubusercontent.com/Vapok/ValheimDifferences/main/assets/icons/items/FishingBait_mistlands.png" width="18" height="18" alt="Misty Bait" /> Misty Fishing Bait | • **Sap** (x1–2, 50.0%)<br>• **Ooze** (x1–2, 50.0%) | Venomous pufferfish that swells defensively with toxic spines when hooked. |
 
 ---
 
 ## 🕹️ Controls Summary
 
+### Mouse & Keyboard
+
 | Action | Input / Control | Description |
 | :--- | :--- | :--- |
-| **Cast Line** | <kbd>Mouse 0</kbd> (Hold & Release) | Casts fishing float (distance scales with charge time). Operates while standing or seated. |
-| **Hook Fish** | <kbd>Mouse 1</kbd> | Sets the hook when a fish nibbles or takes the float. |
-| **Reel Line** | <kbd>Mouse 1</kbd> (Hold) | Reels line in. Build tension during struggle; reel during rest to retrieve catch. |
+| **Cast Line** | <kbd>Mouse 0</kbd> (Hold & Release) | Casts fishing float with distance scaling by hold duration (comfortable 1–2s safe draw). Tap for a 3–5m short cast. Operates while standing or seated. |
+| **Hook / Strike** | <kbd>Mouse 1</kbd> | Sets the hook when a fish nibbles or strikes the float during the bite alert window. |
+| **Reel Line** | <kbd>Mouse 1</kbd> (Hold) | Reels line in. Ease off during fish struggles; reel during rest phases to retrieve catch. |
+| **Switch Bait** | <kbd>G</kbd> / <kbd>Shift</kbd> + <kbd>G</kbd> | Cycles through fishing baits in your inventory while holding any fishing rod before casting (<kbd>Shift</kbd> + <kbd>G</kbd> cycles backward). |
 | **Harvest Catch / Bait** | <kbd>E</kbd> | Harvests catches from Bait Creels and Fish Nets. |
 | **Add Chum / Bait** | <kbd>1–8</kbd> or <kbd>E</kbd> | Uses Neck Tail on Bait Creel, or Fishing Bait on Coastal/Deep Nets to replenish fuel. |
+
+### Gamepad / Controller
+
+| Action | Input / Control | Description |
+| :--- | :--- | :--- |
+| **Cast Line** | Right Trigger (<kbd>RT</kbd> / <kbd>R2</kbd>) | Hold and release to cast line to desired distance with real-time distance gauge. |
+| **Hook / Strike** | Left Trigger (<kbd>LT</kbd> / <kbd>L2</kbd>) | Strikes the hook when a fish bites or takes the float. |
+| **Reel Line** | Left Trigger (<kbd>LT</kbd> / <kbd>L2</kbd>) | Hold to reel in catch during rest cycles; ease off during struggles. |
+| **Switch Bait** | Right Bumper (<kbd>RB</kbd> / <kbd>R1</kbd>) | Cycles forward through available fishing baits in your inventory before casting. |
+| **Harvest / Interact** | <kbd>A</kbd> / <kbd>Cross</kbd> (Use) | Harvests catches from Bait Creels and Fish Nets. |
 
 ---
 
@@ -187,8 +201,13 @@ Configuration settings are stored in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`.
 * **Bait Creel Minutes Per Bait**: Real-world minutes required to produce one unit of bait (Default: `5.0`).
 
 ### UI Settings (Client)
-* **HUD Horizontal Offset**: Horizontal pixel offset of the tension gauge relative to screen center (Default: `-180.0`).
-* **HUD Vertical Offset**: Vertical pixel offset of the tension gauge relative to screen center (Default: `-46.0`).
+* **HUD Horizontal Offset**: Horizontal pixel offset of the tension gauge relative to screen center (Default: `-300.0`).
+* **HUD Vertical Offset**: Vertical pixel offset of the tension gauge relative to screen center (Default: `-250.0`).
+* **Switch Bait Key**: Key to cycle through fishing bait types in inventory while holding a fishing rod before casting (Default: `G`).
+* **Switch Bait Gamepad Button**: Gamepad button name to cycle through fishing bait types (Default: `JoyRBumper`).
+
+### Dynamic Recipe & Food Customization
+All crafting recipes across the mod—including all 9 biome baits, net kits, primitive fishing rod, cauldron meals, and mead bases—can be customized or disabled in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`. You can customize crafting stations, minimum station levels, ingredient costs, and output yields, as well as food health, stamina, duration, and the Troll's Guile sneak buff.
 
 ---
 
@@ -213,7 +232,30 @@ Configuration settings are stored in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`.
 
 ---
 
-## 💬 Feedback & Community
+## 🔒 Anonymous Telemetry, Error Reporting & Privacy
 
-* Report issues or request features on [GitHub](https://github.com/Vapok/BaitMeBruh/issues).
-* Join the community on [Discord](https://discord.gg/5YAJkRFBXt) for discussions and support.
+BaitMeBruh includes lightweight, privacy-first telemetry and error reporting to help monitor mod stability, diagnose unhandled bugs, and track active version adoption across game updates.
+
+* **100% Anonymous**: We never collect personal data, Steam IDs, IP addresses, character/world names, or file system paths. Stack traces from errors are automatically sanitized to strip local user directories.
+* **Granular Player Control**:
+  * **Anonymous Telemetry (Opt-In)**: Tracks version adoption and session launches. Defaults to **unchecked / disabled** when first loaded (`Enable Anonymous Telemetry = false`).
+  * **Error Reporting (Opt-Out)**: Captures sanitized mod crash diagnostics to rapidly identify and fix bugs. Defaults to **enabled** (`Send Error Reports = true`) with one-click opt-out.
+  * **Data Disclaimers**: Hover over any toggle in the startup modal for interactive tooltip disclaimers detailing exactly what data is transmitted.
+* **In-Game & Online Privacy Policy**: The full privacy policy can be viewed directly in-game by clicking **`[ PRIVACY POLICY ]`** on the startup splash modal, or online at [vapok.io/privacy-policy](https://vapok.io/privacy-policy/).
+* **Configuration Files**: Settings can be managed in-game via the startup modal, through the BepInEx Configuration Manager, or under `[Local Config]` in `BepInEx/config/vapok.mods.BaitMeBruh.cfg`.
+
+---
+
+<div align="center">
+
+### 👨‍💻 Created by Vapok Gaming
+
+[![Vapok Gaming](https://avatars.githubusercontent.com/u/1264136?s=120&v=4)](https://github.com/Vapok)
+
+**Author**: [Vapok](https://github.com/Vapok)  
+**Source Code**: [GitHub Repository](https://github.com/Vapok/BaitMeBruh)  
+**Community & Support**: [Discord Server](https://discord.gg/5YAJkRFBXt)  
+**Changelog**: [Release Notes](https://github.com/Vapok/BaitMeBruh/blob/main/CHANGELOG.md)
+
+</div>
+

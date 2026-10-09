@@ -1,6 +1,6 @@
 {
   "name": "BaitMeBruh",
-  "version_number": "0.0.3",
+  "version_number": "1.0.0",
   "website_url": "https://github.com/Vapok/BaitMeBruh",
   "description": "An entire overhaul of the vanilla fishing system featuring dynamic line tension, primitive rod progression, biome bait crafting, passive harvesting nets, seated seafaring angling, and culinary expansions.",
   "dependencies": [

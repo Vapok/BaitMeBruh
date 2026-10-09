@@ -1,5 +1,6 @@
 using System;
 using BepInEx.Configuration;
+using UnityEngine;
 using Vapok.Common.Abstractions;
 using Vapok.Common.Managers.Configuration;
 
@@ -10,6 +11,8 @@ public class ConfigRegistry : ConfigSyncBase
     internal static ConfigEntry<bool> Enabled;
     public static ConfigEntry<float> HudHorizontalOffset;
     public static ConfigEntry<float> HudVerticalOffset;
+    public static ConfigEntry<KeyCode> SwitchBaitKey;
+    public static ConfigEntry<string> SwitchBaitGamepadButton;
     public static ConfigEntry<float> CreelProximityDistance;
     public static ConfigEntry<int> CreelBaitPerChum;
     public static ConfigEntry<float> CreelMinutesPerBait;
@@ -32,13 +35,21 @@ public class ConfigRegistry : ConfigSyncBase
             new ConfigDescription("If enabled, enables BaitMeBruh features.",
                 null, new ConfigurationManagerAttributes { IsAdminOnly = true, Order = 1 }), ref Enabled);
 
-        SyncedConfig("UI Settings", "HUD Horizontal Offset", -180.0f,
+        SyncedConfig("UI Settings", "HUD Horizontal Offset", -300.0f,
             new ConfigDescription("Horizontal pixel offset of the fishing tension and retrieval HUD relative to screen center. Negative values offset to the left.",
                 null, new ConfigurationManagerAttributes { Order = 2 }), ref HudHorizontalOffset, synchronizedSetting: false);
 
-        SyncedConfig("UI Settings", "HUD Vertical Offset", -46.0f,
+        SyncedConfig("UI Settings", "HUD Vertical Offset", -250.0f,
             new ConfigDescription("Vertical pixel offset of the fishing tension and retrieval HUD relative to screen center. Negative values offset downward.",
                 null, new ConfigurationManagerAttributes { Order = 3 }), ref HudVerticalOffset, synchronizedSetting: false);
+
+        SyncedConfig("UI Settings", "Switch Bait Key", KeyCode.G,
+            new ConfigDescription("Key to cycle through fishing bait types in inventory while holding a fishing rod before casting.",
+                null, new ConfigurationManagerAttributes { Order = 4 }), ref SwitchBaitKey, synchronizedSetting: false);
+
+        SyncedConfig("UI Settings", "Switch Bait Gamepad Button", "JoyRBumper",
+            new ConfigDescription("Gamepad button name to cycle through fishing bait types while holding a fishing rod before casting.",
+                null, new ConfigurationManagerAttributes { Order = 5 }), ref SwitchBaitGamepadButton, synchronizedSetting: false);
 
         SyncedConfig("Trap Settings", "Bait Creel Proximity Distance", 20.0f,
             new ConfigDescription("Minimum distance (in meters) required between Bait Creels before waters become overcrowded.",
