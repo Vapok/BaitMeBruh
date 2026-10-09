@@ -32,7 +32,7 @@ public static class NetKitManager
             "forge",
             1,
             1,
-            "ElderBark:15,Iron:6,IronNails:12,Chain:4,Guck:4");
+            "ElderBark:15,IronNails:12,Chain:4,Guck:4");
 
         PrefabManager.OnVanillaPrefabsAvailable += RegisterNetKits;
     }

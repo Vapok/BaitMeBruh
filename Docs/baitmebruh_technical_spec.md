@@ -92,7 +92,7 @@ graph LR
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Bait Creel** | Biome-specific `FishingBait*` | 360s (6 min) | 20 bait | $0.5\text{m} - 2.0\text{m}$ (Shallow) | 10 Wood, 4 FineWood, 2 Stone |
 | **Coastal Fish Net** | Local freshwater & coastal fish | 900s (15 min) | 3 fish | $1.5\text{m} - 4.0\text{m}$ (Medium) | 10 CoreWood, 6 LeatherScraps, 4 BronzeNails, 2 Stone |
-| **Deep-Sea Anchored Net** | Full biome & pelagic ocean fish | 600s (10 min) | 6 fish | $3.5\text{m} - 12.0\text{m}$ (Deep) | 10 AncientBark, 8 IronNails, 4 Guck, 2 Chain |
+| **Deep-Sea Anchored Net** | Full biome & pelagic ocean fish | 600s (10 min) | 6 fish | $3.5\text{m} - 12.0\text{m}$ (Deep) | 15 AncientBark, 12 IronNails, 4 Chain, 4 Guck |
 
 ---
 
