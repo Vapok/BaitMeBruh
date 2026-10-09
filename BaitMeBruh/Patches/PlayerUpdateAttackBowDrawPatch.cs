@@ -17,6 +17,20 @@ internal static class PlayerUpdateAttackBowDrawPatch
     private static readonly MethodInfo _canBowDrawWhenAttachedMethod =
         AccessTools.Method(typeof(PlayerUpdateAttackBowDrawPatch), nameof(CanBowDrawWhenAttached));
 
+    [HarmonyPrefix]
+    private static bool Prefix(Player __instance, ItemDrop.ItemData weapon)
+    {
+        if (__instance != null && InventoryGui.IsVisible())
+        {
+            if (weapon != null && weapon.m_dropPrefab != null && weapon.m_dropPrefab.name.StartsWith("FishingRod"))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {

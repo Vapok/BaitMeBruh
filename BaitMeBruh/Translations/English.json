@@ -69,5 +69,12 @@
   "tutorial_gc_bait_ashlands_topic": "Hot Bait",
   "tutorial_gc_bait_ashlands_text": "Forged in sulfur stone and charred ash. In the boiling southern seas, the armored Magmafish swim through liquid fire; only this heat-tempered bait can survive their scalding strike.",
   "tutorial_gc_bait_deepnorth_topic": "Frosty Bait",
-  "tutorial_gc_bait_deepnorth_text": "Woven with downy feathers and permafrost crystals. The legendary Northern Salmon of the frozen northern wastes require a bait hardy enough to withstand endless winter."
+  "tutorial_gc_bait_deepnorth_text": "Woven with downy feathers and permafrost crystals. The legendary Northern Salmon of the frozen northern wastes require a bait hardy enough to withstand endless winter.",
+  "hud_fishing_ready_to_cast": "Ready to Cast",
+  "hud_fishing_casting": "Casting...",
+  "hud_fishing_line_break_risk": "LINE BREAK RISK!",
+  "hud_fishing_switch_bait": "Switch Bait",
+  "hud_fishing_line": "Line:",
+  "hud_fishing_no_bait": "No Bait",
+  "hud_fishing_no_bait_in_bags": "No Bait in Bags"
 }

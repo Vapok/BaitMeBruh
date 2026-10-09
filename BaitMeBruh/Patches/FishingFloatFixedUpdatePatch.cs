@@ -38,6 +38,17 @@ internal static class FishingFloatFixedUpdatePatch
             return true;
         }
 
+        if (owner is Player && InventoryGui.IsVisible())
+        {
+            Rigidbody floatBody = __instance.GetComponent<Rigidbody>();
+            if (floatBody != null)
+            {
+                floatBody.linearVelocity = Vector3.zero;
+                floatBody.angularVelocity = Vector3.zero;
+            }
+            return false;
+        }
+
         Transform rodTop = __instance.GetRodTop(owner);
         if (rodTop != null)
         {

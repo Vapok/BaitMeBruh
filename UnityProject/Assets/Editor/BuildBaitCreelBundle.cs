@@ -90,6 +90,9 @@ public static class BuildBaitCreelBundle
         // 6. Trollfish Chowder Drop Model & HD Textures
         BuildTrollfishChowder.Build();
 
+        // 7. Primitive Fishing Rod Model
+        BuildPrimitiveRod.Build();
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
@@ -105,6 +108,7 @@ public static class BuildBaitCreelBundle
         ConfigureIconSprite("I_BaitCreel.png");
         ConfigureIconSprite("I_FishnetCoastal.png");
         ConfigureIconSprite("I_FishnetDeep.png");
+        ConfigureIconSprite("I_FishingRodPrimitive.png");
 
         BuildPipeline.BuildAssetBundles(BundlesDir, BuildAssetBundleOptions.None, BuildTarget.StandaloneLinux64);
 

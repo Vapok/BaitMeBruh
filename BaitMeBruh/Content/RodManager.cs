@@ -35,13 +35,16 @@ public static class RodManager
 
         _registered = true;
 
+        Sprite primitiveIcon = TrapAssetManager.GetSprite("I_FishingRodPrimitive");
+
         ItemConfig rodConfig = new ItemConfig
         {
             Name = "$item_fishingrod_primitive",
             Description = "$item_fishingrod_primitive_desc",
             CraftingStation = _primitiveRodRecipe.GetStationString(),
             MinStationLevel = _primitiveRodRecipe.MinStationLevel.Value,
-            Requirements = _primitiveRodRecipe.GetRequirementConfigs()
+            Requirements = _primitiveRodRecipe.GetRequirementConfigs(),
+            Icons = primitiveIcon != null ? new Sprite[] { primitiveIcon } : null
         };
 
         CustomItem primitiveRod = new CustomItem("FishingRodPrimitive", "FishingRod", rodConfig);
@@ -54,41 +57,72 @@ public static class RodManager
             ItemDrop itemDrop = prefab.GetComponent<ItemDrop>();
             if (itemDrop != null)
             {
-                itemDrop.m_itemData.m_shared.m_attack.m_projectileVel = 16.0f;
-                itemDrop.m_itemData.m_shared.m_attack.m_projectileVelMin = 6.0f;
+                itemDrop.m_itemData.m_shared.m_attack.m_projectileVel = 22.0f;
+                itemDrop.m_itemData.m_shared.m_attack.m_projectileVelMin = 2.0f;
+                itemDrop.m_itemData.m_shared.m_attack.m_drawDurationMin = 2.8f;
                 itemDrop.m_itemData.m_shared.m_weight = 1.0f;
+
+                if (primitiveIcon != null)
+                {
+                    itemDrop.m_itemData.m_shared.m_icons = new Sprite[] { primitiveIcon };
+                }
             }
+
+            GameObject vanillaRodPrefab = PrefabManager.Instance.GetPrefab("FishingRod");
+            if (vanillaRodPrefab != null)
+            {
+                ItemDrop vanillaDrop = vanillaRodPrefab.GetComponent<ItemDrop>();
+                if (vanillaDrop != null)
+                {
+                    vanillaDrop.m_itemData.m_shared.m_attack.m_projectileVel = 26.0f;
+                    vanillaDrop.m_itemData.m_shared.m_attack.m_projectileVelMin = 2.0f;
+                    vanillaDrop.m_itemData.m_shared.m_attack.m_drawDurationMin = 2.8f;
+                }
+            }
+
+            GameObject rodAssetPrefab = TrapAssetManager.GetPrefab("primitive_fishing_rod");
 
             Transform attach = prefab.transform.Find("attach");
             if (attach != null)
             {
-                attach.localScale = new Vector3(0.78f, 0.78f, 0.78f);
+                attach.localScale = Vector3.one;
+                attach.localPosition = new Vector3(0.00f, 0.05f, -0.85f);
+
+                Transform vanillaDefault = attach.Find("default");
+                if (vanillaDefault != null)
+                {
+                    vanillaDefault.gameObject.SetActive(false);
+                }
+
+                if (rodAssetPrefab != null)
+                {
+                    GameObject newModel = UnityEngine.Object.Instantiate(rodAssetPrefab, attach);
+                    newModel.name = "primitive_model";
+                    newModel.transform.localPosition = Vector3.zero;
+                    newModel.transform.localRotation = Quaternion.identity;
+                    newModel.transform.localScale = Vector3.one;
+
+                    Transform vanillaRodTop = attach.Find("_RodTop");
+                    Transform newRodTop = newModel.transform.Find("_RodTop");
+                    if (vanillaRodTop != null && newRodTop != null)
+                    {
+                        vanillaRodTop.localPosition = newRodTop.localPosition;
+                    }
+                }
+
+                BoxCollider collider = attach.GetComponent<BoxCollider>();
+                if (collider == null)
+                {
+                    collider = attach.gameObject.AddComponent<BoxCollider>();
+                }
+                collider.center = new Vector3(0.0f, -0.05f, 0.85f);
+                collider.size = new Vector3(0.08f, 0.08f, 2.45f);
             }
 
             Transform attachBack = prefab.transform.Find("attach_back");
             if (attachBack != null)
             {
-                attachBack.localScale = new Vector3(0.78f, 0.78f, 0.78f);
-            }
-
-            Renderer[] renderers = prefab.GetComponentsInChildren<Renderer>(true);
-            foreach (Renderer renderer in renderers)
-            {
-                Material[] materials = renderer.materials;
-                for (int i = 0; i < materials.Length; i++)
-                {
-                    Material mat = materials[i];
-                    mat.color = new Color(0.65f, 0.58f, 0.48f, 1.0f);
-                    if (mat.HasProperty("_Metallic"))
-                    {
-                        mat.SetFloat("_Metallic", 0.0f);
-                    }
-                    if (mat.HasProperty("_Glossiness"))
-                    {
-                        mat.SetFloat("_Glossiness", 0.10f);
-                    }
-                }
-                renderer.materials = materials;
+                attachBack.localScale = Vector3.one;
             }
         }
 
