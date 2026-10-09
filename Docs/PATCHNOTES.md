@@ -1,3 +1,17 @@
+# 1.0.1 - Recipe & Documentation Adjustments
+
+### Crafting & Station UI Alignment
+* **Deep-Sea Anchored Net Kit (`ItemFishnetDeep`)**:
+  * Reduced default crafting cost in `NetKitManager.cs` from 5 ingredients to 4 (`ElderBark:15,IronNails:12,Chain:4,Guck:4`), eliminating raw `Iron:6` to prevent exceeding Valheim's 4-ingredient station UI display limit (`m_recipeRequirementList`).
+  * Updated recipe references across `README.md` and `Docs/baitmebruh_technical_spec.md`.
+
+### Documentation & Asset Alignment
+* **README Recipe Synchronization**:
+  * Corrected `Swamp Fish Broth` (`BlackSoup`) recipe in `README.md` to `1x Giant Herring, 2x Honey, 2x Turnip` yielding `2x BlackSoup` (replacing legacy bloodbag/entrails placeholder).
+  * Corrected `Heavy Fishing Bait` (`FishingBaitOcean`) recipe in `README.md` to `20x Fishing Bait, 2x Serpent Scale, 4x Guck` (replacing legacy chitin/serpent meat placeholder).
+* **Primitive Fishing Rod Asset Icon**:
+  * Exported `I_FishingRodPrimitive.png` into `images/` directory and updated `README.md` to display the custom rod sprite instead of the vanilla `fishingrod.png` icon.
+
 # 1.0.0 - Initial Release
 
 ### Core Architecture & Framework

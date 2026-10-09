@@ -1,3 +1,8 @@
+# 1.0.1 - Recipe & Documentation Adjustments
+* **Deep-Sea Net Kit Recipe**: Adjusted the Deep-Sea Anchored Net Kit recipe to require 15 Ancient Bark, 12 Iron Nails, 4 Chain, and 4 Guck so all required materials fit cleanly within the crafting station window.
+* **Recipe Guide Corrections**: Corrected crafting requirements in the guide for Swamp Fish Broth and Heavy Fishing Bait to match their in-game cauldron recipes.
+* **Primitive Rod Icon**: Updated the guide to feature the custom wooden model icon for the Primitive Fishing Rod.
+
 # 1.0.0 - Initial Release
 * **Early Rod Progression**: Craft the new Primitive Fishing Rod at a level 1 Workbench using wood, leather scraps, and bone fragments. Includes a custom 3D model and inventory icon.
 * **Dynamic Line Tension**: Replaced vanilla flat stamina drain with a line tension system. Fish cycle between struggling and resting; reel during rest to pull fish in, and ease off during struggles to avoid breaking the line.
