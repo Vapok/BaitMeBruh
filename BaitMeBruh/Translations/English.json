@@ -76,5 +76,9 @@
   "hud_fishing_switch_bait": "Switch Bait",
   "hud_fishing_line": "Line:",
   "hud_fishing_no_bait": "No Bait",
-  "hud_fishing_no_bait_in_bags": "No Bait in Bags"
+  "hud_fishing_no_bait_in_bags": "No Bait in Bags",
+  "hud_fishing_pull": "Pull",
+  "hud_fishing_strike": "Strike",
+  "hud_fishing_reel": "Reel",
+  "hud_fishing_release": "Release"
 }

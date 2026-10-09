@@ -353,11 +353,21 @@ public class FishingTensionHud : MonoBehaviour
 
         if (activeFloat == null && drawPercentage <= 0.01f)
         {
-            KeyCode switchKey = ConfigRegistry.SwitchBaitKey != null ? ConfigRegistry.SwitchBaitKey.Value : KeyCode.G;
-            if (Input.GetKeyDown(switchKey))
+            bool chatFocused = Chat.instance != null && Chat.instance.HasFocus();
+            bool menuOpen = Menu.IsVisible() || TextInput.IsVisible();
+            if (!chatFocused && !menuOpen)
             {
-                bool reverse = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-                BaitSelectionManager.CycleBait(localPlayer, currentWeapon, reverse);
+                KeyCode switchKey = ConfigRegistry.SwitchBaitKey != null ? ConfigRegistry.SwitchBaitKey.Value : KeyCode.G;
+                bool kbTriggered = Input.GetKeyDown(switchKey);
+
+                string gpButton = ConfigRegistry.SwitchBaitGamepadButton != null ? ConfigRegistry.SwitchBaitGamepadButton.Value : "JoyRBumper";
+                bool gpTriggered = (!string.IsNullOrEmpty(gpButton) && ZInput.GetButtonDown(gpButton)) || Input.GetKeyDown(KeyCode.JoystickButton5);
+
+                if (kbTriggered || gpTriggered)
+                {
+                    bool reverse = kbTriggered && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+                    BaitSelectionManager.CycleBait(localPlayer, currentWeapon, reverse);
+                }
             }
         }
 

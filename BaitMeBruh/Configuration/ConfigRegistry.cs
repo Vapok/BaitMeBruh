@@ -12,6 +12,7 @@ public class ConfigRegistry : ConfigSyncBase
     public static ConfigEntry<float> HudHorizontalOffset;
     public static ConfigEntry<float> HudVerticalOffset;
     public static ConfigEntry<KeyCode> SwitchBaitKey;
+    public static ConfigEntry<string> SwitchBaitGamepadButton;
     public static ConfigEntry<float> CreelProximityDistance;
     public static ConfigEntry<int> CreelBaitPerChum;
     public static ConfigEntry<float> CreelMinutesPerBait;
@@ -45,6 +46,10 @@ public class ConfigRegistry : ConfigSyncBase
         SyncedConfig("UI Settings", "Switch Bait Key", KeyCode.G,
             new ConfigDescription("Key to cycle through fishing bait types in inventory while holding a fishing rod before casting.",
                 null, new ConfigurationManagerAttributes { Order = 4 }), ref SwitchBaitKey, synchronizedSetting: false);
+
+        SyncedConfig("UI Settings", "Switch Bait Gamepad Button", "JoyRBumper",
+            new ConfigDescription("Gamepad button name to cycle through fishing bait types while holding a fishing rod before casting.",
+                null, new ConfigurationManagerAttributes { Order = 5 }), ref SwitchBaitGamepadButton, synchronizedSetting: false);
 
         SyncedConfig("Trap Settings", "Bait Creel Proximity Distance", 20.0f,
             new ConfigDescription("Minimum distance (in meters) required between Bait Creels before waters become overcrowded.",
