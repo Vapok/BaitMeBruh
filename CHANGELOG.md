@@ -1,7 +1,7 @@
-# 1.0.1 - Recipe & Guide Fixes
+# 1.0.1 - Recipe & README Fixes
 * Fixed Deep-Sea Anchored Net Kit recipe to fit within the crafting station window.
-* Corrected Swamp Fish Broth and Heavy Fishing Bait recipes in the guide.
-* Updated Primitive Fishing Rod icon in the guide.
+* Corrected Swamp Fish Broth and Heavy Fishing Bait recipes in the README.
+* Updated Primitive Fishing Rod icon in the README.
 
 # 1.0.0 - Initial Release
 * Added Primitive Fishing Rod craftable at Workbench level 1 with custom model and icon.
