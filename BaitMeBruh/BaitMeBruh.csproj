@@ -140,7 +140,7 @@
         <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Translations\English.json" />
+        <EmbeddedResource Include="Translations\*.json" />
         <EmbeddedResource Include="Assets\Bundles\greatcatch" />
         <EmbeddedResource Include="Assets\Icons\trollfish_chowder.png" />
         <Content Include="ILRepack.Config.props" />
@@ -151,7 +151,11 @@
         <DevPluginsFolder Condition="'$(DevPluginsFolder)' == ''">/home/vapok/Modding/Gale Profiles/Default/BepInEx/plugins</DevPluginsFolder>
     </PropertyGroup>
     <Target Name="CopyToDev" AfterTargets="ILRepack" Condition="('$(Configuration)' == 'Debug' or '$(Configuration)' == 'Local' or '$(Configuration)' == 'Release') and Exists('$(DevPluginsFolder)')">
+        <ItemGroup>
+            <DevTranslationFiles Include="$(ProjectDir)Translations\*.json" />
+        </ItemGroup>
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DevPluginsFolder)/Vapok-$(ProjectName)" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(DevTranslationFiles)" DestinationFolder="$(DevPluginsFolder)/Vapok-$(ProjectName)/Translations" SkipUnchangedFiles="true" />
     </Target>
     <Target Name="Copy" AfterTargets="ILRepack" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <ItemGroup>
