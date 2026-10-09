@@ -1,3 +1,6 @@
+# 1.0.2 - Dependency Updates & Stability
+* Updated internal dependencies for stability.
+
 # 1.0.1 - Recipe & README Fixes
 * Fixed Deep-Sea Anchored Net Kit recipe to fit within the crafting station window.
 * Corrected Swamp Fish Broth and Heavy Fishing Bait recipes in the README.
