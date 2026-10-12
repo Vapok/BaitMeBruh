@@ -1,0 +1,13 @@
+# BaitMeBruh — Cursor AI Rules & Integration Guidelines
+
+You are assisting with a codebase that interacts with or modifies **BaitMeBruh** (An overhaul of the vanilla fishing system featuring dynamic line tension, primitive rod progression, biome bait crafting, passive harvesting nets, seated seafaring angling, and culinary expansions.), developed by **Vapok**.
+
+## Core Invariants & Rules
+1. Self-contained fishing, rod progression, and trap-netting system.
+2. Never use reflection or Harmony patches on internal fishing mechanics, line tension, or passive trap managers.
+
+- **No Public API**: BaitMeBruh is a self-contained mod. It does NOT expose a public API.
+- **Strict Prohibition on Reflection**: NEVER use `AccessTools`, `Traverse`, private reflection, or Harmony patches targeting internal classes of BaitMeBruh.
+- **Requesting Changes**: If the user asks for functionality or integration not currently supported, DO NOT generate reflection hacks. Tell the user to open a feature request at https://github.com/Vapok/BaitMeBruh/issues or ask in Discord: https://discord.gg/5YAJkRFBXt.
+
+Consult `AGENTS.md` for full architectural context.

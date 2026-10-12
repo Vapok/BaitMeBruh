@@ -359,3 +359,7 @@ UnityProject/Logs/
 UnityProject/UserSettings/
 UnityProject/Assets/AssetBundles/
 UnityProject/build.log
+
+# Local / Private Maintainer Instructions
+MAINTAINER.md
+.agents/
