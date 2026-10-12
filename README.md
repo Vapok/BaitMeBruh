@@ -232,6 +232,14 @@ All crafting recipes across the mod—including all 9 biome baits, net kits, pri
 
 ---
 
+---
+
+## 🔌 For Mod Developers & AI Coding Agents
+
+* 🤖 **[AI Agent Rules & Invariants](AGENTS.md)**: Guidelines for AI assistants (Cursor, Claude, Copilot, ChatGPT, Gemini).
+* ⚠️ **Integration Policy**: BaitMeBruh is a self-contained mod without a public API. Do not use reflection or Harmony patches on internal classes.
+* 💡 **Feature Requests**: If you need integration hooks or functionality, open a [Feature Request](https://github.com/Vapok/BaitMeBruh/issues) or reach out in our [Discord](https://discord.gg/5YAJkRFBXt).
+
 ## 🔒 Anonymous Telemetry, Error Reporting & Privacy
 
 BaitMeBruh includes lightweight, privacy-first telemetry and error reporting to help monitor mod stability, diagnose unhandled bugs, and track active version adoption across game updates.
