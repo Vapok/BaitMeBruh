@@ -1,3 +1,7 @@
+# 1.0.3 - Item Stand Display & Dependency Updates
+* **Item Stands**: Fixed an issue where placed food items were not aligned or positioned correctly on horizontal item stands.
+* **Compatibility**: Updated internal dependencies for stability and Valheim 1.0.20 compatibility.
+
 # 1.0.2 - Dependency Updates & Stability
 * Updated internal dependencies for stability.
 

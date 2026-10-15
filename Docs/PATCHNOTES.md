@@ -1,3 +1,10 @@
+# 1.0.3 - Item Stand Display & Dependency Updates
+* **Item Stand Display**:
+  * Corrected orientation settings and attachment parent offsets on horizontal item stands in `FoodFactory`.
+* **Dependency & Engine Alignment**:
+  * Updated internalized dependency `Vapok.Valheim.Common` to 3.1020.1.
+  * Aligned game assembly references to Valheim 1.0.20.
+
 # 1.0.2 - Dependency Updates & Stability
 * **Dependency & Engine Alignment**:
   * Updated internalized dependency `Vapok.Valheim.Common` to 3.1017.1.
