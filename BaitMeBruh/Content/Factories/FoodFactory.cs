@@ -358,11 +358,38 @@ internal class FoodFactory : AssetFactory
             UnityEngine.Object.Destroy(existingVisual.gameObject);
         }
 
+        Transform existingAttach = itemPrefab.transform.Find("attach");
+        if (existingAttach != null)
+        {
+            UnityEngine.Object.Destroy(existingAttach.gameObject);
+        }
+
         GameObject visualInstance = UnityEngine.Object.Instantiate(visualPrefab, itemPrefab.transform);
         visualInstance.name = "visual";
         visualInstance.transform.localPosition = Vector3.zero;
         visualInstance.transform.localRotation = Quaternion.identity;
         visualInstance.transform.localScale = Vector3.one;
+
+        Rigidbody childRb = visualInstance.GetComponent<Rigidbody>();
+        if (childRb != null)
+        {
+            UnityEngine.Object.Destroy(childRb);
+        }
+
+        Collider childCol = visualInstance.GetComponent<Collider>();
+        if (childCol != null)
+        {
+            UnityEngine.Object.Destroy(childCol);
+        }
+
+        Transform childAttach = visualInstance.transform.Find("attach");
+        if (childAttach != null)
+        {
+            childAttach.SetParent(itemPrefab.transform, false);
+            childAttach.localPosition = Vector3.zero;
+            childAttach.localRotation = Quaternion.identity;
+            childAttach.localScale = Vector3.one;
+        }
 
         Shader litShader = FindGameShader("Custom/Piece");
         if (litShader == null)
@@ -371,6 +398,10 @@ internal class FoodFactory : AssetFactory
         }
 
         SetupVisualShaders(visualInstance, litShader, carrotSoupMaterial);
+        if (childAttach != null)
+        {
+            SetupVisualShaders(childAttach.gameObject, litShader, carrotSoupMaterial);
+        }
 
         Collider col = itemPrefab.GetComponent<Collider>();
         if (col != null)
@@ -381,19 +412,6 @@ internal class FoodFactory : AssetFactory
         BoxCollider box = itemPrefab.AddComponent<BoxCollider>();
         box.size = new Vector3(0.36f, 0.165f, 0.36f);
         box.center = new Vector3(0f, 0.0825f, 0f);
-
-        Transform attach = itemPrefab.transform.Find("attach");
-        if (attach == null)
-        {
-            GameObject attachObj = new GameObject("attach");
-            attachObj.transform.SetParent(itemPrefab.transform, false);
-            attachObj.transform.localPosition = new Vector3(0f, 0.005f, 0f);
-            attachObj.transform.localRotation = Quaternion.identity;
-        }
-        else
-        {
-            attach.localPosition = new Vector3(0f, 0.005f, 0f);
-        }
     }
 
     private static void SetupVisualShaders(GameObject visual, Shader litShader, Material sourceMaterial)
@@ -468,6 +486,24 @@ internal class FoodFactory : AssetFactory
         {
             return;
         }
+
+        ItemDrop.ItemData.SharedData shared = itemDrop.m_itemData.m_shared;
+        if (shared.m_itemStandOffsets == null)
+        {
+            shared.m_itemStandOffsets = new List<ItemStand.OrientationSettings>();
+        }
+        else
+        {
+            shared.m_itemStandOffsets.Clear();
+        }
+
+        shared.m_itemStandOffsets.Add(new ItemStand.OrientationSettings
+        {
+            m_orientations = ItemStand.Orientation.Horizontal,
+            m_position = new Vector3(0f, 0.015f, 0f),
+            m_rotation = Vector3.zero,
+            m_scale = Vector3.one
+        });
 
         GameObject standH = PrefabManager.Instance.GetPrefab("itemstandh");
         if (standH != null)
