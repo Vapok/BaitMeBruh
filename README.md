@@ -240,6 +240,24 @@ All crafting recipes across the mod—including all 9 biome baits, net kits, pri
 * ⚠️ **Integration Policy**: BaitMeBruh is a self-contained mod without a public API. Do not use reflection or Harmony patches on internal classes.
 * 💡 **Feature Requests**: If you need integration hooks or functionality, open a [Feature Request](https://github.com/Vapok/BaitMeBruh/issues) or reach out in our [Discord](https://discord.gg/5YAJkRFBXt).
 
+---
+
+## 🤖 AI Disclosure & Transparency Audit
+
+In accordance with mod store's various AI policies, below is the full transparency breakdown for **BaitMeBruh**:
+
+* **Audit Status**: `AI GENERATED`
+* **Weighted LLM Score**: `66.6%`
+
+| Category | Evaluated Surface | LLM Score | Status |
+| :--- | :--- | :--- | :--- |
+| **C# Assembly & Logic** | Decompiled C# source (131 files) | `74.1%` | C# logic exhibits significant programmatic authoring with 74.1% of substantive code lines across 10 files (3,040 lines) utilizing LLM architectural idioms including Roslyn hashed property tables, custom procedural UI builders, and static guards. |
+| **Package Manifest & Structure** | Manifest, structure & icon (v1.0.4) | `50.0%` | Manifest wrapper is authentic, but storefront icon.png contains a 100% AI-generated Viking angling illustration with stylized title graphics lacking desktop editor PNG headers. |
+| **Documentation & Copywriting** | Package documentation (44845 chars) | `75.0%` | Documentation features extensive LLM formatting architecture, systematic emoji headers, comprehensive LaTeX math syntax, parallel comparison tables, and HTML badges. |
+| **Visual & Audio Media** | In-package Unity & media assets | `60.0%` | In-package assets contain AI-illustrated food icons (trollfish_chowder.png) and hybrid AI-rendered 2D item icon sprites inside the UnityFS AssetBundle. |
+
+---
+
 ## 🔒 Anonymous Telemetry, Error Reporting & Privacy
 
 BaitMeBruh includes lightweight, privacy-first telemetry and error reporting to help monitor mod stability, diagnose unhandled bugs, and track active version adoption across game updates.
