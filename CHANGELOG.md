@@ -1,5 +1,5 @@
 # 1.0.4 - Valheim 1.0.21 Update & Dependency Alignment
-* **Documentation**: Added AI Mod Checker transparency audit disclosure to README.
+* **Documentation**: Added AI transparency audit disclosure to README.
 * **Compatibility**: Marked incompatible with NoPopUpsInMyValheim, and updated dependencies for Valheim 1.0.21 and BepInEx 5.4.2360.
 
 # 1.0.3 - Item Stand Display & Dependency Updates
