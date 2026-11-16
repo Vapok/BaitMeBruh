@@ -21,11 +21,11 @@ namespace BaitMeBruh;
 [BepInPlugin(_pluginId, _displayName, _version)]
 [BepInDependency(Jotunn.Main.ModGuid)]
 [BepInDependency("com.ValheimModding.YamlDotNetDetector")]
-public class BaitMeBruh : BaseUnityPlugin, IPluginInfo
+public class BaitMeBruh : VapokModBase, IPluginInfo
 {
     private const string _pluginId = "vapok.mods.BaitMeBruh";
     private const string _displayName = "BaitMeBruh!";
-    private const string _version = "1.0.3";
+    private const string _version = "1.0.4";
     public static bool ValheimAwake;
     public static Waiting Waiter;
 

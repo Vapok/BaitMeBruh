@@ -1,3 +1,9 @@
+# 1.0.4 - Valheim 1.0.21 Update & Dependency Alignment
+* **Dependency & Engine Alignment**:
+  * Inherited `VapokModBase` to declare `[BepInIncompatibility("IAmOnTheInternetAndItIsScary.NoPopUpsInMyValheim")]`.
+  * Updated internalized dependency `Vapok.Valheim.Common` to 3.1021.2.
+  * Aligned game assembly references to Valheim 1.0.21 and BepInEx 5.4.2360.
+
 # 1.0.3 - Item Stand Display & Dependency Updates
 * **Item Stand Display**:
   * Corrected orientation settings and attachment parent offsets on horizontal item stands in `FoodFactory`.
