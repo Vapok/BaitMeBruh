@@ -1,3 +1,12 @@
+# 1.0.5 - Glowfin Eitr Mead Recipe Fix & Valheim 1.0.30 Update
+* **Glowfin Eitr Mead Base Recipe Prefab Fix (`Content/Factories/FoodFactory.cs`)**:
+  * Corrected default ingredient prefab in `Recipe_GlowfinEitrMeadBase` from `Magecap:2` to canonical `MushroomMagecap:2`, resolving Jotunn `MockResolveFailure: Mock 'Magecap' ItemDrop could not be resolved`.
+* **TMP Default Font Fallback (`UI/FishingTensionHud.cs`)**:
+  * Assigned `TMP_Settings.defaultFontAsset` prior to adding `TextMeshProUGUI` components on `BaitText`, `CenterText`, and `StrikePrompt`, eliminating Unity `The LiberationSans SDF Font Asset was not found` log warnings during HUD initialization.
+* **Dependency & Engine Alignment**:
+  * Updated internalized dependency `Vapok.Valheim.Common` to 3.1030.1.
+  * Aligned game assembly references to Valheim 1.0.30.
+
 # 1.0.4 - Valheim 1.0.21 Update & Dependency Alignment
 * **Dependency & Engine Alignment**:
   * Inherited `VapokModBase` to declare `[BepInIncompatibility("IAmOnTheInternetAndItIsScary.NoPopUpsInMyValheim")]`.

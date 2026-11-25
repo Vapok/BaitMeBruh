@@ -104,7 +104,7 @@ internal class FoodFactory : AssetFactory
                 "piece_cauldron",
                 4,
                 1,
-                "Fish9:1,Honey:10,Magecap:2"));
+                "Fish9:1,Honey:10,MushroomMagecap:2"));
         }
 
         int foodOrder = 10;

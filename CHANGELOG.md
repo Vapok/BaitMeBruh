@@ -1,3 +1,7 @@
+# 1.0.5 - Glowfin Eitr Mead Recipe Fix & Valheim 1.0.30 Update
+* **Glowfin Eitr Mead Recipe**: Fixed the default Magecap ingredient prefab name so the Glowfin Eitr Mead Base recipe resolves cleanly at the Cauldron.
+* **Compatibility**: Updated dependencies for Valheim 1.0.30.
+
 # 1.0.4 - Valheim 1.0.21 Update & Dependency Alignment
 * **Documentation**: Added AI transparency audit disclosure to README.
 * **Compatibility**: Updated dependencies for Valheim 1.0.21 and BepInEx 5.4.2360.
