@@ -118,6 +118,15 @@ public class FishingTensionHud : MonoBehaviour
         {
             fontAsset = hud.m_actionName.font;
         }
+        else if (Jotunn.Managers.GUIManager.Instance != null && Jotunn.Managers.GUIManager.Instance.TMP_AveriaSansLibre != null)
+        {
+            fontAsset = Jotunn.Managers.GUIManager.Instance.TMP_AveriaSansLibre;
+        }
+
+        if (fontAsset != null && (TMP_Settings.defaultFontAsset == null || TMP_Settings.defaultFontAsset.name.IndexOf("LiberationSans", System.StringComparison.OrdinalIgnoreCase) >= 0))
+        {
+            TMP_Settings.defaultFontAsset = fontAsset;
+        }
 
         // 1. Bait Display Widget (Top Box, touching gauge with 0 gap)
         GameObject baitObject = new GameObject("BaitContainer");
